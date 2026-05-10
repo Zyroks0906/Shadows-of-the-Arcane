@@ -1,14 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://b2m3n4o5p6q7r"]
+[gd_scene format=3 uid="uid://vy5ifsjlp5v0"]
 
-[ext_resource type="Script" path="res://scripts/entities/enemy.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/slime-Sheet.png" id="2_slime"]
+[ext_resource type="Script" uid="uid://btgyguiosjds8" path="res://scripts/entities/enemy.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://c1m8qi3tyi40x" path="res://assets/sprites/enemies/slime-Sheet.png" id="2_slime"]
 
-[node name="SlimeBase" type="CharacterBody2D"]
+[node name="SlimeBase" type="CharacterBody2D" unique_id=1643625654]
 script = ExtResource("1_script")
 
-[node name="Sprite" type="Sprite2D" parent="."]
+[node name="Sprite" type="Sprite2D" parent="." unique_id=1543175304]
+position = Vector2(0.5, -4.25)
+scale = Vector2(1.03125, 1.34)
 texture = ExtResource("2_slime")
 hframes = 8
 vframes = 3
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2020685066]
