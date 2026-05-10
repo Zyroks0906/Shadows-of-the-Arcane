@@ -1,12 +1,12 @@
-[gd_scene format=4 uid="uid://dh03b87fynh6e"]
+[gd_scene format=4 uid="uid://dfvk7pdf51n00"]
 
-[ext_resource type="Texture2D" uid="uid://cit1lmmet7jdo" path="res://assets/tilesets/mainlevbuild.png" id="1_ngr63"]
+[ext_resource type="Texture2D" uid="uid://gncqffjotbch" path="res://assets/tilesets/mainlevbuild.png" id="1_ngr63"]
 [ext_resource type="Texture2D" uid="uid://b420av3yadlp8" path="res://assets/tilesets/character and tileset/Dungeon_Tileset.png" id="2_s6mhf"]
-[ext_resource type="Texture2D" uid="uid://bre42lvv2t4sl" path="res://assets/tilesets/Farm Game Dungeon Cellar Tileset/Tilesets/FG_Cellar.png" id="3_1nyyj"]
+[ext_resource type="Texture2D" uid="uid://ctdyg131yys4f" path="res://assets/tilesets/Farm Game Dungeon Cellar Tileset/Tilesets/FG_Cellar.png" id="3_1nyyj"]
 [ext_resource type="Texture2D" uid="uid://bg33oiw1l0the" path="res://assets/tilesets/items and trap_animation/arrow/arrow_2.png" id="4_by2vd"]
-[ext_resource type="Texture2D" uid="uid://dhct2s15lp000" path="res://assets/tilesets/decorative.png" id="4_ha0t5"]
+[ext_resource type="Texture2D" uid="uid://5mevo15bgg5p" path="res://assets/tilesets/decorative.png" id="4_ha0t5"]
 [ext_resource type="Texture2D" uid="uid://cqxlspbt4e5in" path="res://assets/tilesets/items and trap_animation/arrow/arrow_3.png" id="5_t3atn"]
-[ext_resource type="Texture2D" uid="uid://bqeo68f8iuqh8" path="res://assets/tilesets/Farm Game Dungeon Cellar Tileset/Tilesets/FG_Cellar_Doors.png" id="5_yrcjl"]
+[ext_resource type="Texture2D" uid="uid://cdiuxno5vk0wp" path="res://assets/tilesets/Farm Game Dungeon Cellar Tileset/Tilesets/FG_Cellar_Doors.png" id="5_yrcjl"]
 [ext_resource type="Texture2D" uid="uid://bwetfoqy86igq" path="res://assets/tilesets/items and trap_animation/arrow/arrow_4.png" id="6_akh1h"]
 [ext_resource type="Texture2D" uid="uid://cx3bxgakl0teo" path="res://assets/tilesets/items and trap_animation/arrow/arrow_1.png" id="7_gkro6"]
 [ext_resource type="Texture2D" uid="uid://e7xmf24cjujv" path="res://assets/tilesets/items and trap_animation/chest/chest_1.png" id="8_iipn5"]
@@ -3653,112 +3653,6 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iipn5"]
-texture = ExtResource("2_s6mhf")
-0:0/0 = 0
-1:0/0 = 0
-2:0/0 = 0
-3:0/0 = 0
-4:0/0 = 0
-5:0/0 = 0
-6:0/0 = 0
-7:0/0 = 0
-8:0/0 = 0
-9:0/0 = 0
-0:1/0 = 0
-1:1/0 = 0
-2:1/0 = 0
-3:1/0 = 0
-4:1/0 = 0
-5:1/0 = 0
-6:1/0 = 0
-7:1/0 = 0
-8:1/0 = 0
-9:1/0 = 0
-0:2/0 = 0
-1:2/0 = 0
-2:2/0 = 0
-3:2/0 = 0
-4:2/0 = 0
-5:2/0 = 0
-6:2/0 = 0
-7:2/0 = 0
-8:2/0 = 0
-9:2/0 = 0
-0:3/0 = 0
-1:3/0 = 0
-2:3/0 = 0
-3:3/0 = 0
-4:3/0 = 0
-5:3/0 = 0
-6:3/0 = 0
-7:3/0 = 0
-8:3/0 = 0
-9:3/0 = 0
-0:4/0 = 0
-1:4/0 = 0
-2:4/0 = 0
-3:4/0 = 0
-4:4/0 = 0
-5:4/0 = 0
-6:4/0 = 0
-7:4/0 = 0
-8:4/0 = 0
-9:4/0 = 0
-0:5/0 = 0
-1:5/0 = 0
-2:5/0 = 0
-3:5/0 = 0
-4:5/0 = 0
-5:5/0 = 0
-6:5/0 = 0
-7:5/0 = 0
-8:5/0 = 0
-9:5/0 = 0
-0:6/0 = 0
-1:6/0 = 0
-2:6/0 = 0
-3:6/0 = 0
-4:6/0 = 0
-5:6/0 = 0
-6:6/0 = 0
-7:6/0 = 0
-8:6/0 = 0
-9:6/0 = 0
-0:7/0 = 0
-1:7/0 = 0
-2:7/0 = 0
-3:7/0 = 0
-4:7/0 = 0
-5:7/0 = 0
-6:7/0 = 0
-7:7/0 = 0
-8:7/0 = 0
-9:7/0 = 0
-0:8/0 = 0
-1:8/0 = 0
-2:8/0 = 0
-3:8/0 = 0
-4:8/0 = 0
-5:8/0 = 0
-6:8/0 = 0
-7:8/0 = 0
-8:8/0 = 0
-9:8/0 = 0
-0:9/0 = 0
-1:9/0 = 0
-2:9/0 = 0
-3:9/0 = 0
-4:9/0 = 0
-5:9/0 = 0
-6:9/0 = 0
-7:9/0 = 0
-8:9/0 = 0
-9:9/0 = 0
-
-[sub_resource type="TileSet" id="TileSet_jtfls"]
-sources/0 = SubResource("TileSetAtlasSource_iipn5")
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_5a1j7"]
 animations = [{
 "frames": [{
@@ -3773,26 +3667,6 @@ animations = [{
 }, {
 "duration": 1.4,
 "texture": ExtResource("35_agv0l")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_01mn5"]
-animations = [{
-"frames": [{
-"duration": 1.3,
-"texture": ExtResource("36_qeldt")
-}, {
-"duration": 1.3,
-"texture": ExtResource("37_q2wju")
-}, {
-"duration": 1.3,
-"texture": ExtResource("38_pi7t0")
-}, {
-"duration": 1.3,
-"texture": ExtResource("39_qan4e")
 }],
 "loop": true,
 "name": &"default",
@@ -3899,6 +3773,26 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_01mn5"]
+animations = [{
+"frames": [{
+"duration": 1.3,
+"texture": ExtResource("36_qeldt")
+}, {
+"duration": 1.3,
+"texture": ExtResource("37_q2wju")
+}, {
+"duration": 1.3,
+"texture": ExtResource("38_pi7t0")
+}, {
+"duration": 1.3,
+"texture": ExtResource("39_qan4e")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
 [node name="Map" type="Node2D" unique_id=884577421]
 position = Vector2(-200, -14)
 
@@ -3935,7 +3829,8 @@ position = Vector2(-34.31447, 39.73065)
 rotation = 3.140088
 sprite_frames = SubResource("SpriteFrames_2ho2r")
 animation = &"new_animation_1"
-frame_progress = 0.083166994
+frame = 1
+frame_progress = 0.22058046
 
 [node name="ArrowTrap4" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/ArrowTrap1" unique_id=1000805861]
 position = Vector2(-50.31395, 39.60437)
@@ -3964,21 +3859,25 @@ frame_progress = 0.41653866
 [node name="Coin1" type="AnimatedSprite2D" parent="Background/Tileset/Decorations" unique_id=2112402478]
 position = Vector2(840, 168)
 sprite_frames = SubResource("SpriteFrames_pat1i")
+autoplay = "default"
 frame_progress = 0.7171821
 
 [node name="Coin2" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Coin1" unique_id=2034831587]
 position = Vector2(65, -1)
 sprite_frames = SubResource("SpriteFrames_pat1i")
+autoplay = "default"
 frame_progress = 0.97297704
 
 [node name="Coin3" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Coin1" unique_id=1392136331]
 position = Vector2(-112, 417)
 sprite_frames = SubResource("SpriteFrames_pat1i")
+autoplay = "default"
 frame_progress = 0.68780273
 
 [node name="Coin4" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Coin1" unique_id=2127206272]
 position = Vector2(80, 401)
 sprite_frames = SubResource("SpriteFrames_pat1i")
+autoplay = "default"
 frame_progress = 0.7035994
 
 [node name="Peaks" type="AnimatedSprite2D" parent="Background/Tileset/Decorations" unique_id=1163891047]
@@ -3990,128 +3889,141 @@ frame_progress = 0.95322096
 [node name="Torch1" type="AnimatedSprite2D" parent="Background/Tileset/Decorations" unique_id=1398480274]
 position = Vector2(567, 344)
 sprite_frames = SubResource("SpriteFrames_u0ldo")
+autoplay = "default"
 frame_progress = 0.5945282
 
 [node name="Torch2" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Torch1" unique_id=1356321126]
 position = Vector2(65, 16)
 sprite_frames = SubResource("SpriteFrames_u0ldo")
+autoplay = "default"
 frame_progress = 0.27925885
 
 [node name="Torch3" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Torch1" unique_id=1356902149]
 position = Vector2(241, 0)
 sprite_frames = SubResource("SpriteFrames_u0ldo")
+autoplay = "default"
 frame_progress = 0.15682846
 
 [node name="Torch4" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Torch1" unique_id=2046878736]
 position = Vector2(321, 0)
 sprite_frames = SubResource("SpriteFrames_u0ldo")
+autoplay = "default"
 frame_progress = 0.27995676
 
 [node name="Torch5" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Torch1" unique_id=433862280]
 position = Vector2(352, -96)
 sprite_frames = SubResource("SpriteFrames_u0ldo")
+autoplay = "default"
 frame_progress = 0.9292507
 
 [node name="Torch6" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Torch1" unique_id=390815213]
 position = Vector2(208, -96)
 sprite_frames = SubResource("SpriteFrames_u0ldo")
+autoplay = "default"
 frame_progress = 0.38602656
 
 [node name="Torch7" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Torch1" unique_id=1419501104]
 position = Vector2(177, 160)
 sprite_frames = SubResource("SpriteFrames_u0ldo")
+autoplay = "default"
 frame_progress = 0.14419824
 
 [node name="Torch8" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Torch1" unique_id=698612497]
 position = Vector2(337, 160)
 sprite_frames = SubResource("SpriteFrames_u0ldo")
+autoplay = "default"
 frame_progress = 0.27726346
 
 [node name="Torch9" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Torch1" unique_id=1495982742]
 position = Vector2(273, -192)
 sprite_frames = SubResource("SpriteFrames_u0ldo")
+autoplay = "default"
 frame_progress = 0.7275943
 
 [node name="Torch10" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Torch1" unique_id=639779849]
 position = Vector2(337, -192)
 sprite_frames = SubResource("SpriteFrames_u0ldo")
+autoplay = "default"
 frame_progress = 0.34057987
-
-[node name="TileMapLayer" type="TileMapLayer" parent="Background/Tileset/Decorations" unique_id=1098037162]
-tile_set = SubResource("TileSet_jtfls")
 
 [node name="GoldKey" type="AnimatedSprite2D" parent="Background/Tileset/Decorations" unique_id=1636442231]
 position = Vector2(873, 185)
 sprite_frames = SubResource("SpriteFrames_5a1j7")
+autoplay = "default"
 frame_progress = 0.3739321
-
-[node name="SilverKey" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/GoldKey" unique_id=769339244]
-position = Vector2(112, 228)
-rotation = 1.5707964
-sprite_frames = SubResource("SpriteFrames_01mn5")
-frame_progress = 0.8988413
-flip_h = true
-flip_v = true
 
 [node name="Candle1" type="AnimatedSprite2D" parent="Background/Tileset/Decorations" unique_id=2001548696]
 position = Vector2(712, 405)
 sprite_frames = SubResource("SpriteFrames_5v711")
+autoplay = "default"
 
 [node name="Candle2" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Candle1" unique_id=2027413353]
 position = Vector2(-32, -32)
 sprite_frames = SubResource("SpriteFrames_5v711")
+autoplay = "default"
 
 [node name="Candle3" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Candle1" unique_id=1781193694]
 position = Vector2(16, -64)
 sprite_frames = SubResource("SpriteFrames_5v711")
+autoplay = "default"
 
 [node name="Candle4" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Candle1" unique_id=1448918]
 position = Vector2(16, 207)
 sprite_frames = SubResource("SpriteFrames_5v711")
+autoplay = "default"
 frame_progress = 0.5693668
 
 [node name="Candle5" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Candle1" unique_id=348451573]
 position = Vector2(208, 207)
 sprite_frames = SubResource("SpriteFrames_5v711")
+autoplay = "default"
 
 [node name="HealFlask1" type="AnimatedSprite2D" parent="Background/Tileset/Decorations" unique_id=1784590741]
 position = Vector2(713, 553)
 sprite_frames = SubResource("SpriteFrames_aheg4")
+autoplay = "default"
 
-[node name="Flask2" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/HealFlask1" unique_id=1845256072]
+[node name="HealFlask2" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/HealFlask1" unique_id=1845256072]
 position = Vector2(159, 48)
 sprite_frames = SubResource("SpriteFrames_aheg4")
+autoplay = "default"
 frame_progress = 0.49368837
 
-[node name="Flask3" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/HealFlask1" unique_id=1082149090]
+[node name="HealFlask3" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/HealFlask1" unique_id=1082149090]
 position = Vector2(64, 77)
 sprite_frames = SubResource("SpriteFrames_aheg4")
+autoplay = "default"
 frame_progress = 0.74566764
 
-[node name="Flask4" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/HealFlask1" unique_id=1261592006]
+[node name="HealFlask4" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/HealFlask1" unique_id=1261592006]
 position = Vector2(273, -166)
 sprite_frames = SubResource("SpriteFrames_aheg4")
+autoplay = "default"
 frame_progress = 0.9874063
 
 [node name="ManaFlask1" type="AnimatedSprite2D" parent="Background/Tileset/Decorations" unique_id=737006452]
 position = Vector2(888, 520)
 sprite_frames = SubResource("SpriteFrames_mfj0i")
+autoplay = "default"
 frame_progress = 0.14739281
 
 [node name="ManaFlask2" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/ManaFlask1" unique_id=142849809]
 position = Vector2(-128, 16)
 sprite_frames = SubResource("SpriteFrames_mfj0i")
+autoplay = "default"
 frame_progress = 0.43279654
 
 [node name="ManaFlask3" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/ManaFlask1" unique_id=1844131996]
 position = Vector2(-16, 111)
 sprite_frames = SubResource("SpriteFrames_mfj0i")
+autoplay = "default"
 frame_progress = 0.78494465
 
 [node name="SideTorch1" type="AnimatedSprite2D" parent="Background/Tileset/Decorations" unique_id=1097095693]
 position = Vector2(633, 406)
 rotation = -3.1415925
 sprite_frames = SubResource("SpriteFrames_a3qci")
+autoplay = "default"
 frame_progress = 0.48012266
 flip_v = true
 
@@ -4119,15 +4031,27 @@ flip_v = true
 position = Vector2(-142.99997, 95.00003)
 rotation = 3.1415925
 sprite_frames = SubResource("SpriteFrames_a3qci")
+autoplay = "default"
 frame_progress = 0.92801774
 
 [node name="SideTorch3" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/SideTorch1" unique_id=1789056074]
 position = Vector2(-287.99997, 96.00003)
 sprite_frames = SubResource("SpriteFrames_a3qci")
+autoplay = "default"
 frame_progress = 0.05344769
 flip_v = true
 
 [node name="Flag1" type="AnimatedSprite2D" parent="Background/Tileset/Decorations" unique_id=1490224346]
 position = Vector2(872, 151)
 sprite_frames = SubResource("SpriteFrames_58uhv")
+autoplay = "default"
 frame_progress = 0.7589137
+
+[node name="SilverKey" type="AnimatedSprite2D" parent="Background/Tileset/Decorations" unique_id=769339244]
+position = Vector2(985, 413)
+rotation = 1.5707964
+sprite_frames = SubResource("SpriteFrames_01mn5")
+autoplay = "default"
+frame_progress = 0.8988413
+flip_h = true
+flip_v = true

@@ -11,13 +11,17 @@ config_version=5
 [application]
 
 config/name="Shadows of the Arcane"
-run/main_scene="uid://dh03b87fynh6e"
+run/main_scene="uid://5qgc13riwcb5"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 ElementalSystem="*uid://crrgo6ryv0bjq"
+
+[display]
+
+window/stretch/mode="viewport"
 
 [physics]
 
