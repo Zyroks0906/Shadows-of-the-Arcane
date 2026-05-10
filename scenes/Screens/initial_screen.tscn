@@ -148,7 +148,7 @@ alignment = 1
 metadata/_edit_use_anchors_ = true
 
 [node name="PlayButton" type="AnimatedSprite2D" parent="CanvasLayer/Background/ContainerButtons" unique_id=1327704700]
-position = Vector2(574, 313)
+position = Vector2(575, 313)
 sprite_frames = SubResource("SpriteFrames_tyuhy")
 animation = &"Play"
 
@@ -160,7 +160,7 @@ position = Vector2(-2.5, 1)
 shape = SubResource("RectangleShape2D_dhvw7")
 
 [node name="QuitButton" type="AnimatedSprite2D" parent="CanvasLayer/Background/ContainerButtons" unique_id=302798077]
-position = Vector2(272, 313)
+position = Vector2(273, 313)
 sprite_frames = SubResource("SpriteFrames_tyuhy")
 animation = &"Quit"
 frame_progress = 0.044529293
@@ -173,7 +173,7 @@ position = Vector2(-5, 2)
 shape = SubResource("RectangleShape2D_sab8f")
 
 [node name="OptionButton" type="AnimatedSprite2D" parent="CanvasLayer/Background/ContainerButtons" unique_id=1397034361]
-position = Vector2(880, 313)
+position = Vector2(881, 313)
 sprite_frames = SubResource("SpriteFrames_tyuhy")
 animation = &"Options"
 
