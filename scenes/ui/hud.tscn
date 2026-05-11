@@ -1,0 +1,552 @@
+[gd_scene format=3 uid="uid://cfrgglegiqyh6"]
+
+[ext_resource type="Script" uid="uid://dtaall1g7m84u" path="res://scripts/ui/hud_manager.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://3a6imv7sxeqf" path="res://assets/HUD/Hp_and_Mana/Life/life1.png" id="2_life1"]
+[ext_resource type="Texture2D" uid="uid://clalgx16unf8v" path="res://assets/HUD/Hp_and_Mana/Life/life2.png" id="3_life2"]
+[ext_resource type="Texture2D" uid="uid://djaxkr47s48in" path="res://assets/HUD/Hp_and_Mana/Life/life3.png" id="4_life3"]
+[ext_resource type="Texture2D" uid="uid://dvo1emmu0mxgv" path="res://assets/HUD/Hp_and_Mana/Life/life4.png" id="5_life4"]
+[ext_resource type="Texture2D" uid="uid://d2jw4ufd5ygce" path="res://assets/HUD/Hp_and_Mana/Life/life5.png" id="6_life5"]
+[ext_resource type="Texture2D" uid="uid://tkjjxxp7pfla" path="res://assets/HUD/Hp_and_Mana/Life/life6.png" id="7_life6"]
+[ext_resource type="Texture2D" uid="uid://dsolg27gc2hfo" path="res://assets/HUD/Hp_and_Mana/Blue Potion/blue1.png" id="8_blue1"]
+[ext_resource type="Texture2D" uid="uid://trtct5l8sfg5" path="res://assets/HUD/Hp_and_Mana/Blue Potion/blue2.png" id="9_blue2"]
+[ext_resource type="Texture2D" uid="uid://dxre2ns67jtw0" path="res://assets/HUD/Hp_and_Mana/Blue Potion/blue3.png" id="10_blue3"]
+[ext_resource type="Texture2D" uid="uid://bhmjx0elo7cqj" path="res://assets/HUD/Hp_and_Mana/Blue Potion/blue4.png" id="11_blue4"]
+[ext_resource type="Texture2D" uid="uid://c7510pcadq0b7" path="res://assets/HUD/Hp_and_Mana/Blue Potion/blue5.png" id="12_blue5"]
+[ext_resource type="Texture2D" uid="uid://pa0n6fdvfxr" path="res://assets/HUD/Hp_and_Mana/Blue Potion/blue6.png" id="13_blue6"]
+[ext_resource type="Texture2D" uid="uid://3s8tllscxp2o" path="res://assets/tilesets/items and trap_animation/coin/coin_1.png" id="14_coin1"]
+[ext_resource type="Texture2D" uid="uid://8qaptt86t02f" path="res://assets/tilesets/items and trap_animation/coin/coin_2.png" id="15_coin2"]
+[ext_resource type="Texture2D" uid="uid://bpcyd3j56rmi0" path="res://assets/tilesets/items and trap_animation/coin/coin_3.png" id="16_coin3"]
+[ext_resource type="Texture2D" uid="uid://bknvicvx25qpl" path="res://assets/tilesets/items and trap_animation/coin/coin_4.png" id="17_coin4"]
+[ext_resource type="Texture2D" uid="uid://ckcwoqyg64a3s" path="res://assets/tilesets/items and trap_animation/keys/keys_2_1.png" id="18_key1"]
+[ext_resource type="Texture2D" uid="uid://bhn606vg0lyij" path="res://assets/tilesets/items and trap_animation/keys/keys_2_2.png" id="19_key2"]
+[ext_resource type="Texture2D" uid="uid://bj3btabgxlah8" path="res://assets/tilesets/items and trap_animation/keys/keys_2_3.png" id="20_key3"]
+[ext_resource type="Texture2D" uid="uid://c66h0b58iptbx" path="res://assets/tilesets/items and trap_animation/keys/keys_2_4.png" id="21_key4"]
+[ext_resource type="Texture2D" uid="uid://s3p0dpltf2ik" path="res://assets/HUD/Keyboard/Keyboard Black Corn.png" id="22_1e6lo"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_health"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_life1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_life2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_life3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_life4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_life5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_life6")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mana"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_blue1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_blue2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_blue3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_blue4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_blue5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_blue6")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_coin"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_coin1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_coin2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_coin3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_coin4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_key"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("18_key1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_key2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_key3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_key4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4mi7y"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(64, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pkwgd"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(64, 146, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d5po8"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(96, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7yoph"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(96, 146, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qmm8d"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(48, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t0png"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(48, 146, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b6swc"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(80, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_27rlx"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(80, 146, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vuvg6"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(64, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_emer0"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(64, 130, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kfdjh"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(48, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xdlig"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(48, 130, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lptj4"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(80, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_74gae"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(80, 130, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_33vp1"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(80, 64, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jpd3y"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(80, 162, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4h7mh"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(96, 64, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4vegw"]
+atlas = ExtResource("22_1e6lo")
+region = Rect2(96, 162, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kwu3u"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4mi7y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pkwgd")
+}],
+"loop": true,
+"name": &"Down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d5po8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7yoph")
+}],
+"loop": true,
+"name": &"Interact",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qmm8d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t0png")
+}],
+"loop": true,
+"name": &"Left",
+"speed": 0.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b6swc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_27rlx")
+}],
+"loop": true,
+"name": &"Right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vuvg6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_emer0")
+}],
+"loop": true,
+"name": &"Up",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kfdjh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xdlig")
+}],
+"loop": true,
+"name": &"attack1",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lptj4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_74gae")
+}],
+"loop": true,
+"name": &"attack2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_33vp1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jpd3y")
+}],
+"loop": true,
+"name": &"heal_potion",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4h7mh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4vegw")
+}],
+"loop": true,
+"name": &"mana_potion",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t4m8u"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b6swc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_27rlx")
+}],
+"loop": true,
+"name": &"Right",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_04enw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kfdjh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xdlig")
+}],
+"loop": true,
+"name": &"attack1",
+"speed": 2.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rvhgw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lptj4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_74gae")
+}],
+"loop": true,
+"name": &"attack2",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_sj4ew"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_33vp1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jpd3y")
+}],
+"loop": true,
+"name": &"heal_potion",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_83uk5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4h7mh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4vegw")
+}],
+"loop": true,
+"name": &"mana_potion",
+"speed": 5.0
+}]
+
+[node name="HUD" type="CanvasLayer" unique_id=1025465274]
+script = ExtResource("1_script")
+
+[node name="Control" type="Control" parent="." unique_id=426144638]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopLeft" type="MarginContainer" parent="Control" unique_id=668461419]
+layout_mode = 0
+offset_right = 400.0
+offset_bottom = 150.0
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+
+[node name="StatusVBox" type="VBoxContainer" parent="Control/TopLeft" unique_id=1522224954]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="HealthContainer" type="Control" parent="Control/TopLeft/StatusVBox" unique_id=1322009566]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+
+[node name="HealthSprite" type="AnimatedSprite2D" parent="Control/TopLeft/StatusVBox/HealthContainer" unique_id=1082022553]
+unique_name_in_owner = true
+position = Vector2(2, 0)
+scale = Vector2(0.6092715, 0.3584906)
+sprite_frames = SubResource("SpriteFrames_health")
+centered = false
+
+[node name="ManaContainer" type="Control" parent="Control/TopLeft/StatusVBox" unique_id=1665427918]
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
+
+[node name="ManaSprite" type="AnimatedSprite2D" parent="Control/TopLeft/StatusVBox/ManaContainer" unique_id=1035655913]
+unique_name_in_owner = true
+position = Vector2(1, -64)
+scale = Vector2(0.613, 0.357)
+sprite_frames = SubResource("SpriteFrames_mana")
+centered = false
+
+[node name="TopRight" type="MarginContainer" parent="Control" unique_id=482472274]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -250.0
+offset_bottom = 100.0
+grow_horizontal = 0
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+
+[node name="CountersVBox" type="VBoxContainer" parent="Control/TopRight" unique_id=1105916162]
+layout_mode = 2
+alignment = 2
+
+[node name="CoinCounter" type="HBoxContainer" parent="Control/TopRight/CountersVBox" unique_id=1340805142]
+layout_mode = 2
+alignment = 2
+
+[node name="CoinIcon" type="AnimatedSprite2D" parent="Control/TopRight/CountersVBox/CoinCounter" unique_id=927654677]
+unique_name_in_owner = true
+position = Vector2(98, 24)
+scale = Vector2(2.5, 2.5)
+sprite_frames = SubResource("SpriteFrames_coin")
+autoplay = "default"
+
+[node name="CoinLabel" type="Label" parent="Control/TopRight/CountersVBox/CoinCounter" unique_id=1438773037]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0"
+horizontal_alignment = 2
+
+[node name="KeyCounter" type="HBoxContainer" parent="Control/TopRight/CountersVBox" unique_id=2008563014]
+layout_mode = 2
+alignment = 2
+
+[node name="KeyIcon" type="AnimatedSprite2D" parent="Control/TopRight/CountersVBox/KeyCounter" unique_id=908420986]
+unique_name_in_owner = true
+position = Vector2(96.00006, 25)
+scale = Vector2(2.5, 2.5)
+sprite_frames = SubResource("SpriteFrames_key")
+autoplay = "default"
+
+[node name="KeyLabel" type="Label" parent="Control/TopRight/CountersVBox/KeyCounter" unique_id=1334057747]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0/3"
+horizontal_alignment = 2
+
+[node name="BottomCenter" type="MarginContainer" parent="Control" unique_id=641295142]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -592.0
+offset_top = -118.0
+offset_right = -192.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_bottom = 40
+
+[node name="SkillHBox" type="HBoxContainer" parent="Control/BottomCenter" unique_id=483744138]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="Movement_keys" type="Control" parent="Control/BottomCenter/SkillHBox" unique_id=1087503562]
+custom_minimum_size = Vector2(103, 64)
+layout_mode = 2
+
+[node name="Up" type="AnimatedSprite2D" parent="Control/BottomCenter/SkillHBox/Movement_keys" unique_id=1200067717]
+unique_name_in_owner = true
+position = Vector2(36, 0)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_kwu3u")
+animation = &"Up"
+centered = false
+
+[node name="Left" type="AnimatedSprite2D" parent="Control/BottomCenter/SkillHBox/Movement_keys" unique_id=652604179]
+unique_name_in_owner = true
+position = Vector2(0, 32)
+scale = Vector2(2.124999, 2)
+sprite_frames = SubResource("SpriteFrames_kwu3u")
+animation = &"Left"
+centered = false
+
+[node name="Down" type="AnimatedSprite2D" parent="Control/BottomCenter/SkillHBox/Movement_keys" unique_id=1758349431]
+unique_name_in_owner = true
+position = Vector2(36, 32)
+scale = Vector2(2, 2.0000017)
+sprite_frames = SubResource("SpriteFrames_kwu3u")
+animation = &"Down"
+centered = false
+
+[node name="Right" type="AnimatedSprite2D" parent="Control/BottomCenter/SkillHBox/Movement_keys" unique_id=1750265584]
+unique_name_in_owner = true
+position = Vector2(70, 32)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_t4m8u")
+animation = &"Right"
+centered = false
+
+[node name="Attacks" type="Control" parent="Control/BottomCenter/SkillHBox" unique_id=140724487]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="Attack1" type="AnimatedSprite2D" parent="Control/BottomCenter/SkillHBox/Attacks" unique_id=205933630]
+unique_name_in_owner = true
+position = Vector2(-131, 0)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_04enw")
+animation = &"attack1"
+centered = false
+
+[node name="Attack2" type="AnimatedSprite2D" parent="Control/BottomCenter/SkillHBox/Attacks" unique_id=1870372214]
+unique_name_in_owner = true
+position = Vector2(-63, 0)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_rvhgw")
+animation = &"attack2"
+centered = false
+
+[node name="Potions" type="Control" parent="Control/BottomCenter/SkillHBox" unique_id=813300326]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="Heal" type="AnimatedSprite2D" parent="Control/BottomCenter/SkillHBox/Potions" unique_id=555013280]
+unique_name_in_owner = true
+position = Vector2(-129, 60)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_sj4ew")
+animation = &"heal_potion"
+centered = false
+
+[node name="Mana" type="AnimatedSprite2D" parent="Control/BottomCenter/SkillHBox/Potions" unique_id=1548782381]
+unique_name_in_owner = true
+position = Vector2(-95, 60)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_83uk5")
+animation = &"mana_potion"
+centered = false
