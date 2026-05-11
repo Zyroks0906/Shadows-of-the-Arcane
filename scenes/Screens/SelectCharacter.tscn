@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://5tbjq5bwuwth"]
 
-[ext_resource type="Texture2D" uid="uid://dj13crtkslg6c" path="res://scenes/levels/CharacterSelector.jpg" id="1_q643g"]
+[ext_resource type="Texture2D" uid="uid://ck24gsxkp2gh6" path="res://assets/InitialScreen/CharacterSelector/CharacterSelector.png" id="1_6ltoi"]
 [ext_resource type="Texture2D" uid="uid://cj2akpogsac52" path="res://assets/InitialScreen/CharacterSelector/Buttons_.png" id="2_imblf"]
 [ext_resource type="Script" uid="uid://cxt3wmvcikwsx" path="res://scripts/Screens/SelectCharacter/selection_screen.gd" id="3_2gokd"]
 [ext_resource type="Texture2D" uid="uid://cfrj4e1sx45fb" path="res://assets/InitialScreen/CharacterSelector/CharacterHover.png" id="4_6fsi2"]
@@ -888,7 +888,7 @@ offset_bottom = -2.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("1_q643g")
+texture = ExtResource("1_6ltoi")
 expand_mode = 1
 metadata/_edit_use_anchors_ = true
 
