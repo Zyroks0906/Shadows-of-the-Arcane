@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bc87k50dfvvl5"]
+
+[ext_resource type="Script" uid="uid://sf3508vwqhv1" path="res://scripts/entities/player.gd" id="1_xhfnw"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kpjcp"]
+
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=989539257]
+script = ExtResource("1_xhfnw")
+metadata/_custom_type_script = "uid://sf3508vwqhv1"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=416903800]
+shape = SubResource("CapsuleShape2D_kpjcp")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1904822823]
+
+[node name="ElementIcon" type="Sprite2D" parent="." unique_id=1485689700]
+
+[node name="ElementTimer" type="Timer" parent="." unique_id=125424152]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1070156220]
+zoom = Vector2(3, 3)

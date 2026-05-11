@@ -1,19 +1,16 @@
 extends BaseCharacter
 class_name Player
 
-## Velocidad de movimiento del jugador en píxeles por segundo.
 @export var speed: float = 200.0
 
-# Nodos requeridos (según lo pedido)
 @onready var element_icon: Sprite2D = $ElementIcon
 @onready var element_timer: Timer = $ElementTimer
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
-# Precargar la escena de texto flotante
 const FLOATING_TEXT_SCENE: PackedScene = preload("res://scenes/ui/floating_text.tscn")
 
 func _ready() -> void:
 	super._ready()
-	# Configurar el temporizador si no está configurado en el editor
 	if element_timer:
 		element_timer.one_shot = true
 		element_timer.timeout.connect(_on_element_timer_timeout)
@@ -26,27 +23,51 @@ func _physics_process(_delta: float) -> void:
 		return
 	
 	_handle_movement()
+	_update_animations()
 
-## Gestiona la entrada de usuario y el movimiento físico del CharacterBody2D.
 func _handle_movement() -> void:
-	# Input.get_vector maneja automáticamente la normalización para movimiento diagonal.
 	var direction: Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	
 	velocity = direction * speed
 	move_and_slide()
 
-# El jugador recibe un golpe de un enemigo con un elemento
+func _update_animations() -> void:
+	if not animated_sprite: return
+	
+	if animated_sprite.animation == "Attack" and animated_sprite.is_playing():
+		return
+	
+	if Input.is_action_just_pressed("ui_accept"):
+		play_animation("Attack")
+		return
+
+	if velocity.length() > 0:
+		play_animation("Walk")
+		if velocity.x != 0:
+			animated_sprite.flip_h = velocity.x < 0
+	else:
+		play_animation("Idle")
+
+func play_animation(anim_name: String) -> void:
+	if not animated_sprite: return
+	
+	var final_anim = anim_name
+	if anim_name == "Walk" and not animated_sprite.sprite_frames.has_animation("Walk"):
+		if animated_sprite.sprite_frames.has_animation("Run"):
+			final_anim = "Run"
+	
+	if animated_sprite.animation != final_anim:
+		if animated_sprite.sprite_frames.has_animation(final_anim):
+			animated_sprite.play(final_anim)
+
 func aplicar_elemento(nuevo_elemento: ElementalSystem.Element) -> void:
 	if nuevo_elemento == ElementalSystem.Element.NONE:
 		return
 	
 	if current_imbued_element == ElementalSystem.Element.NONE:
-		# Primera imbuición
 		current_imbued_element = nuevo_elemento
 		actualizar_icono_elemento()
-		element_timer.start(3.0) # Dura 3 segundos
+		element_timer.start(3.0)
 	else:
-		# Segunda imbuición -> Procesar Reacción
 		procesar_reaccion(nuevo_elemento)
 
 func procesar_reaccion(segundo_elemento: ElementalSystem.Element) -> void:
@@ -55,29 +76,23 @@ func procesar_reaccion(segundo_elemento: ElementalSystem.Element) -> void:
 	var data: Dictionary = reaction_info["data"]
 	
 	if reaction_name != "None":
-		# Aplicar multiplicador de daño (aquí podrías recibir el daño base como parámetro)
-		# Por ahora mostramos el feedback
 		mostrar_texto_flotante(reaction_name, data["color"])
-		
-		# Consumir el estado elemental
 		limpiar_elemento()
 	else:
-		# Si no hay reacción (mismo elemento), refrescamos el timer
 		if current_imbued_element == segundo_elemento:
 			element_timer.start(3.0)
 
 func mostrar_texto_flotante(texto: String, color: Color) -> void:
 	if FLOATING_TEXT_SCENE:
 		var ft: Node2D = FLOATING_TEXT_SCENE.instantiate()
-		get_parent().add_child(ft) # Añadir a la escena raíz del nivel
-		ft.global_position = global_position + Vector2(0, -50) # Sobre la cabeza
+		get_parent().add_child(ft)
+		ft.global_position = global_position + Vector2(0, -50)
 		if ft.has_method("set_text"):
 			ft.set_text(texto, color)
 
 func actualizar_icono_elemento() -> void:
 	if element_icon:
 		element_icon.visible = true
-		# Aquí cargarías la textura correspondiente (opcional por ahora)
 		pass
 
 func limpiar_elemento() -> void:
@@ -90,7 +105,13 @@ func limpiar_elemento() -> void:
 func _on_element_timer_timeout() -> void:
 	limpiar_elemento()
 
-## Sobrescribe la recepción de daño para incluir lógica elemental.
+func die() -> void:
+	is_alive = false
+	if animated_sprite and animated_sprite.sprite_frames.has_animation("Death"):
+		animated_sprite.play("Death")
+		await animated_sprite.animation_finished
+	queue_free()
+
 func take_elemental_hit(damage: int, element: ElementalSystem.Element) -> void:
 	receive_damage(damage)
 	aplicar_elemento(element)
