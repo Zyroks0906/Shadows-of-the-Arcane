@@ -29,7 +29,7 @@ func _animate_and_execute():
 	
 	match sprite.name:
 		"PlayButton":
-			get_tree().change_scene_to_file("res://scenes/Screens/SelectCharacter.tscn")
+			SceneManager.load_scene("res://scenes/Screens/SelectCharacter.tscn")
 		"QuitButton":
 			get_tree().quit()
 		"OptionButton":

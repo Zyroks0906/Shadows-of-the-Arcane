@@ -7,6 +7,8 @@ var _base_scale: Vector2
 
 static var selected_character: Area2D = null
 
+@onready var popup: AcceptDialog = _create_character_popup()
+
 func _ready() -> void:
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
@@ -18,7 +20,7 @@ func _ready() -> void:
 func _create_character_popup() -> AcceptDialog:
 	var dialog = AcceptDialog.new()
 	dialog.title = "Selection Required"
-	dialog.dialog_text = "Please select a character before proceeding."
+	dialog.dialog_text = "Please select a character before proceeding to the chamber."
 	add_child(dialog)
 	return dialog
 
@@ -56,13 +58,16 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 			_sprite.frame = 3
 			await get_tree().create_timer(0.1).timeout
 			match _sprite.name:
-				"Confirm":
+				"Confirm": 
 					if selected_character:
-						get_tree().change_scene_to_file("res://scenes/levels/Map_1.tscn")
+						SceneManager.load_scene(GameData.current_level_path)
 					else:
 						popup.popup_centered()
-				"SelectChamber":
-					get_tree().change_scene_to_file("res://scenes/Screens/Initial_screen.tscn")
+				"SelectChamber": 
+					if selected_character:
+						SceneManager.load_scene("res://scenes/Screens/SelectChamber.tscn")
+					else:
+						popup.popup_centered()
 
 func _update_game_manager_selection() -> void:
 	for child in _sprite.get_children():

@@ -1,0 +1,85 @@
+[gd_scene format=3 uid="uid://2o0e6aaak65a"]
+
+[ext_resource type="Script" uid="uid://lhhjllc3tt2p" path="res://scripts/Screens/SelectChamber/select_chamber.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://c2yt21osdw5tg" path="res://assets/InitialScreen/MapSelector/Map1unlocked.png" id="1_thhcc"]
+[ext_resource type="Texture2D" uid="uid://b13x70282pxct" path="res://assets/InitialScreen/MapSelector/Map2unlocked.png" id="2_8cmh0"]
+[ext_resource type="Texture2D" uid="uid://htta1luv8hbd" path="res://assets/InitialScreen/MapSelector/Map3unlocked.png" id="3_5df50"]
+
+[node name="Node2D" type="Node2D" unique_id=2086107114]
+script = ExtResource("1_script")
+
+[node name="Capa1" type="CanvasLayer" parent="." unique_id=184956850]
+
+[node name="Map1unlocked" type="TextureRect" parent="Capa1" unique_id=682846547]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("1_thhcc")
+expand_mode = 1
+
+[node name="Capa2" type="CanvasLayer" parent="." unique_id=30313268]
+
+[node name="Map2unlocked" type="TextureRect" parent="Capa2" unique_id=331214372]
+light_mask = 2
+visibility_layer = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_8cmh0")
+expand_mode = 1
+
+[node name="Capa3" type="CanvasLayer" parent="." unique_id=1212573890]
+
+[node name="Map3unlocked" type="TextureRect" parent="Capa3" unique_id=630082070]
+light_mask = 4
+visibility_layer = 4
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_5df50")
+expand_mode = 1
+
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=661467243]
+layer = 2
+
+[node name="Buttons" type="Control" parent="UILayer" unique_id=1670754036]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="on_map_1_pressed" type="Button" parent="UILayer/Buttons" unique_id=2118952123]
+layout_mode = 0
+offset_left = 315.0
+offset_top = 434.0
+offset_right = 427.0
+offset_bottom = 520.0
+flat = true
+
+[node name="on_map_2_pressed" type="Button" parent="UILayer/Buttons" unique_id=1124418593]
+layout_mode = 0
+offset_left = 682.0
+offset_top = 333.0
+offset_right = 794.0
+offset_bottom = 419.0
+flat = true
+
+[node name="on_map_3_pressed" type="Button" parent="UILayer/Buttons" unique_id=710756859]
+layout_mode = 0
+offset_left = 770.0
+offset_top = 129.0
+offset_right = 882.0
+offset_bottom = 215.0
+flat = true
