@@ -18,6 +18,8 @@ config/icon="res://icon.svg"
 [autoload]
 
 ElementalSystem="*uid://crrgo6ryv0bjq"
+GameData="*res://scripts/global/game_data.gd"
+SceneManager="*res://scripts/global/scene_manager.gd"
 
 [display]
 
