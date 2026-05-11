@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://cw4hddeyqjxyp"]
+
+[ext_resource type="Script" uid="uid://d12108axqgb1b" path="res://scripts/items/collectible.gd" id="1_3y30o"]
+[ext_resource type="Texture2D" uid="uid://bvnvnv0xesigr" path="res://assets/tilesets/items and trap_animation/keys/keys_1_1.png" id="1_admsv"]
+[ext_resource type="Texture2D" uid="uid://dooq6smyq30yw" path="res://assets/tilesets/items and trap_animation/keys/keys_1_2.png" id="2_3y30o"]
+[ext_resource type="Texture2D" uid="uid://ctcmsgaqjdoxm" path="res://assets/tilesets/items and trap_animation/keys/keys_1_3.png" id="3_2nfba"]
+[ext_resource type="Texture2D" uid="uid://dhcdjxv8tsmd" path="res://assets/tilesets/items and trap_animation/keys/keys_1_4.png" id="4_0jf5s"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4872r"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_admsv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_3y30o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_2nfba")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_0jf5s")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4gdqi"]
+radius = 6.0
+
+[node name="GoldenKey" type="Node2D" unique_id=1494136221]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=448923752]
+sprite_frames = SubResource("SpriteFrames_4872r")
+autoplay = "default"
+
+[node name="Area2D" type="Area2D" parent="." unique_id=684326738]
+script = ExtResource("1_3y30o")
+type = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=790787149]
+shape = SubResource("CircleShape2D_4gdqi")

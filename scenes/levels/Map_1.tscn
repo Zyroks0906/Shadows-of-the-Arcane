@@ -1,75 +1,48 @@
 [gd_scene format=4 uid="uid://dfvk7pdf51n00"]
 
-[ext_resource type="Texture2D" uid="uid://gncqffjotbch" path="res://assets/tilesets/mainlevbuild.png" id="1_ngr63"]
-[ext_resource type="Texture2D" uid="uid://b420av3yadlp8" path="res://assets/tilesets/character and tileset/Dungeon_Tileset.png" id="2_s6mhf"]
-[ext_resource type="Texture2D" uid="uid://ctdyg131yys4f" path="res://assets/tilesets/Farm Game Dungeon Cellar Tileset/Tilesets/FG_Cellar.png" id="3_1nyyj"]
-[ext_resource type="Texture2D" uid="uid://bg33oiw1l0the" path="res://assets/tilesets/items and trap_animation/arrow/arrow_2.png" id="4_by2vd"]
-[ext_resource type="Texture2D" uid="uid://5mevo15bgg5p" path="res://assets/tilesets/decorative.png" id="4_ha0t5"]
-[ext_resource type="Texture2D" uid="uid://cqxlspbt4e5in" path="res://assets/tilesets/items and trap_animation/arrow/arrow_3.png" id="5_t3atn"]
-[ext_resource type="Texture2D" uid="uid://cdiuxno5vk0wp" path="res://assets/tilesets/Farm Game Dungeon Cellar Tileset/Tilesets/FG_Cellar_Doors.png" id="5_yrcjl"]
-[ext_resource type="Texture2D" uid="uid://bwetfoqy86igq" path="res://assets/tilesets/items and trap_animation/arrow/arrow_4.png" id="6_akh1h"]
-[ext_resource type="Texture2D" uid="uid://cx3bxgakl0teo" path="res://assets/tilesets/items and trap_animation/arrow/arrow_1.png" id="7_gkro6"]
-[ext_resource type="Texture2D" uid="uid://e7xmf24cjujv" path="res://assets/tilesets/items and trap_animation/chest/chest_1.png" id="8_iipn5"]
-[ext_resource type="Texture2D" uid="uid://cluw2t3byqsgq" path="res://assets/tilesets/items and trap_animation/chest/chest_2.png" id="9_jtfls"]
-[ext_resource type="Texture2D" uid="uid://djf8vaq2ygxnt" path="res://assets/tilesets/items and trap_animation/chest/chest_3.png" id="10_r50bh"]
-[ext_resource type="Texture2D" uid="uid://bysr1srmhuv7f" path="res://assets/tilesets/items and trap_animation/chest/chest_4.png" id="11_7ptvj"]
-[ext_resource type="Texture2D" uid="uid://biyjda5ucln00" path="res://assets/tilesets/items and trap_animation/chest/chest_open_1.png" id="12_qshex"]
-[ext_resource type="Texture2D" uid="uid://bbiub16u58xyj" path="res://assets/tilesets/items and trap_animation/chest/chest_open_2.png" id="13_nwi8y"]
-[ext_resource type="Texture2D" uid="uid://dex4vlfdja1w4" path="res://assets/tilesets/items and trap_animation/chest/chest_open_3.png" id="14_53qsk"]
-[ext_resource type="Texture2D" uid="uid://bfwii7l57ds7x" path="res://assets/tilesets/items and trap_animation/chest/chest_open_4.png" id="15_lyy6p"]
-[ext_resource type="Texture2D" uid="uid://3s8tllscxp2o" path="res://assets/tilesets/items and trap_animation/coin/coin_1.png" id="16_aheg4"]
-[ext_resource type="Texture2D" uid="uid://8qaptt86t02f" path="res://assets/tilesets/items and trap_animation/coin/coin_2.png" id="17_0xs6e"]
-[ext_resource type="Texture2D" uid="uid://bpcyd3j56rmi0" path="res://assets/tilesets/items and trap_animation/coin/coin_3.png" id="18_ha0t5"]
-[ext_resource type="Texture2D" uid="uid://bknvicvx25qpl" path="res://assets/tilesets/items and trap_animation/coin/coin_4.png" id="19_yrcjl"]
-[ext_resource type="Texture2D" uid="uid://ds0q7am7nbdrf" path="res://assets/tilesets/items and trap_animation/torch/side_torch_1.png" id="20_kin0c"]
-[ext_resource type="Texture2D" uid="uid://crqw8cd4st7u7" path="res://assets/tilesets/items and trap_animation/torch/side_torch_2.png" id="21_aiixn"]
-[ext_resource type="Texture2D" uid="uid://d3r7dxd6cf6yc" path="res://assets/tilesets/items and trap_animation/torch/side_torch_3.png" id="22_7j7ta"]
-[ext_resource type="Texture2D" uid="uid://ce88wt1a0jsrf" path="res://assets/tilesets/items and trap_animation/torch/side_torch_4.png" id="23_shlsu"]
-[ext_resource type="Texture2D" uid="uid://dsosxh4lhajjl" path="res://assets/tilesets/items and trap_animation/peaks/peaks_1.png" id="24_a55ak"]
-[ext_resource type="Texture2D" uid="uid://ce51qn08mgayu" path="res://assets/tilesets/items and trap_animation/peaks/peaks_2.png" id="25_4bde1"]
-[ext_resource type="Texture2D" uid="uid://dcv1yb342epnm" path="res://assets/tilesets/candleB_01.png" id="26_g7y4m"]
-[ext_resource type="Texture2D" uid="uid://buyunnnw04fge" path="res://assets/tilesets/items and trap_animation/peaks/peaks_3.png" id="26_mfj0i"]
-[ext_resource type="Texture2D" uid="uid://df7ri4d44ssfh" path="res://assets/tilesets/candleB_02.png" id="27_a0qog"]
-[ext_resource type="Texture2D" uid="uid://brh0nkrkl88cw" path="res://assets/tilesets/items and trap_animation/peaks/peaks_4.png" id="27_j0lta"]
-[ext_resource type="Texture2D" uid="uid://x0m51mp3caal" path="res://assets/tilesets/items and trap_animation/torch/torch_1.png" id="28_58uhv"]
-[ext_resource type="Texture2D" uid="uid://2thxv54a6uef" path="res://assets/tilesets/candleB_03.png" id="28_ifnw3"]
-[ext_resource type="Texture2D" uid="uid://bj6hnyrg4yi6m" path="res://assets/tilesets/candleB_04.png" id="29_mtwj5"]
-[ext_resource type="Texture2D" uid="uid://ctpp85cmbqfci" path="res://assets/tilesets/items and trap_animation/torch/torch_2.png" id="29_ywjpr"]
-[ext_resource type="Texture2D" uid="uid://ctl1hdf4ow4dy" path="res://assets/tilesets/candleA_01.png" id="30_oc8gn"]
-[ext_resource type="Texture2D" uid="uid://cmevpsg5lmhw4" path="res://assets/tilesets/items and trap_animation/torch/torch_3.png" id="30_xckv6"]
-[ext_resource type="Texture2D" uid="uid://biucm5e1j8wbl" path="res://assets/tilesets/candleA_02.png" id="31_g53qm"]
-[ext_resource type="Texture2D" uid="uid://cf1ipe2u6bx8p" path="res://assets/tilesets/items and trap_animation/torch/torch_4.png" id="31_rx3jx"]
-[ext_resource type="Texture2D" uid="uid://b0483o06f6cmt" path="res://assets/tilesets/items and trap_animation/keys/keys_1_1.png" id="32_3sx6y"]
-[ext_resource type="Texture2D" uid="uid://dyyouhx72uqfq" path="res://assets/tilesets/candleA_03.png" id="32_cyial"]
-[ext_resource type="Texture2D" uid="uid://brqgpv4dxnwm4" path="res://assets/tilesets/items and trap_animation/keys/keys_1_2.png" id="33_2jixj"]
-[ext_resource type="Texture2D" uid="uid://r6t8cswhhdku" path="res://assets/tilesets/candleA_04.png" id="33_q1rhu"]
-[ext_resource type="Texture2D" uid="uid://c0wl6nb1rp22x" path="res://assets/tilesets/torch_1.png" id="34_65xq1"]
-[ext_resource type="Texture2D" uid="uid://cyuqu662ni36w" path="res://assets/tilesets/items and trap_animation/keys/keys_1_3.png" id="34_ddrsw"]
-[ext_resource type="Texture2D" uid="uid://ci5wgtllnoga6" path="res://assets/tilesets/torch_2.png" id="35_62304"]
-[ext_resource type="Texture2D" uid="uid://ncp8u8c6q6tx" path="res://assets/tilesets/items and trap_animation/keys/keys_1_4.png" id="35_agv0l"]
-[ext_resource type="Texture2D" uid="uid://bm155tlxdqij0" path="res://assets/tilesets/torch_3.png" id="36_emg3n"]
-[ext_resource type="Texture2D" uid="uid://ckcwoqyg64a3s" path="res://assets/tilesets/items and trap_animation/keys/keys_2_1.png" id="36_qeldt"]
-[ext_resource type="Texture2D" uid="uid://bb1iqnswa3cwy" path="res://assets/tilesets/torch_4.png" id="37_kngks"]
-[ext_resource type="Texture2D" uid="uid://bhn606vg0lyij" path="res://assets/tilesets/items and trap_animation/keys/keys_2_2.png" id="37_q2wju"]
-[ext_resource type="Texture2D" uid="uid://bj3btabgxlah8" path="res://assets/tilesets/items and trap_animation/keys/keys_2_3.png" id="38_pi7t0"]
-[ext_resource type="Texture2D" uid="uid://c66h0b58iptbx" path="res://assets/tilesets/items and trap_animation/keys/keys_2_4.png" id="39_qan4e"]
-[ext_resource type="Texture2D" uid="uid://jnjj8x52fq3l" path="res://assets/tilesets/items and trap_animation/torch/candlestick_1_1.png" id="40_hax05"]
-[ext_resource type="Texture2D" uid="uid://be6dn0vynvu70" path="res://assets/tilesets/items and trap_animation/torch/candlestick_1_2.png" id="41_iymvj"]
-[ext_resource type="Texture2D" uid="uid://du2ayouhe61d8" path="res://assets/tilesets/items and trap_animation/torch/candlestick_1_3.png" id="42_u5a4l"]
-[ext_resource type="Texture2D" uid="uid://d2rifajynbyg6" path="res://assets/tilesets/items and trap_animation/torch/candlestick_1_4.png" id="43_tjgod"]
-[ext_resource type="Texture2D" uid="uid://6se5eacfu7ls" path="res://assets/tilesets/items and trap_animation/flasks/flasks_1_1.png" id="44_qshex"]
-[ext_resource type="Texture2D" uid="uid://dbta66ulgbfm7" path="res://assets/tilesets/items and trap_animation/flasks/flasks_1_2.png" id="45_nwi8y"]
-[ext_resource type="Texture2D" uid="uid://b7ta1gwmcrelq" path="res://assets/tilesets/items and trap_animation/flasks/flasks_1_3.png" id="46_53qsk"]
-[ext_resource type="Texture2D" uid="uid://csm723qvxefjl" path="res://assets/tilesets/items and trap_animation/flasks/flasks_1_4.png" id="47_lyy6p"]
-[ext_resource type="Texture2D" uid="uid://cg80mhlo7a2ag" path="res://assets/tilesets/items and trap_animation/flasks/flasks_2_1.png" id="50_kin0c"]
-[ext_resource type="Texture2D" uid="uid://cyhh4glh43n77" path="res://assets/tilesets/items and trap_animation/flasks/flasks_2_2.png" id="51_aiixn"]
-[ext_resource type="Texture2D" uid="uid://v2y0ygkin4oa" path="res://assets/tilesets/items and trap_animation/flasks/flasks_2_3.png" id="52_7j7ta"]
-[ext_resource type="Texture2D" uid="uid://iwm80nr3wjet" path="res://assets/tilesets/items and trap_animation/flasks/flasks_2_4.png" id="53_shlsu"]
-[ext_resource type="Texture2D" uid="uid://ynwd3klj57j4" path="res://assets/tilesets/items and trap_animation/flag/flag_1.png" id="54_7j7ta"]
-[ext_resource type="Texture2D" uid="uid://dkpf41fmf4i6k" path="res://assets/tilesets/items and trap_animation/flag/flag_2.png" id="55_shlsu"]
-[ext_resource type="Texture2D" uid="uid://cplxjlx5grsdr" path="res://assets/tilesets/items and trap_animation/flag/flag_3.png" id="56_a55ak"]
-[ext_resource type="Texture2D" uid="uid://ckpvoloklj8nh" path="res://assets/tilesets/items and trap_animation/flag/flag_4.png" id="57_4bde1"]
-[ext_resource type="PackedScene" uid="uid://cfrgglegiqyh6" path="res://scenes/ui/hud.tscn" id="58_jpgod"]
+[ext_resource type="Texture2D" uid="uid://cit1lmmet7jdo" path="res://assets/tilesets/mainlevbuild.png" id="1_ngr63"]
+[ext_resource type="Texture2D" uid="uid://cb838evjqxipg" path="res://assets/tilesets/character and tileset/Dungeon_Tileset.png" id="2_s6mhf"]
+[ext_resource type="Texture2D" uid="uid://bre42lvv2t4sl" path="res://assets/tilesets/Farm Game Dungeon Cellar Tileset/Tilesets/FG_Cellar.png" id="3_1nyyj"]
+[ext_resource type="Texture2D" uid="uid://3p6u4l3rpht2" path="res://assets/tilesets/items and trap_animation/arrow/arrow_2.png" id="4_by2vd"]
+[ext_resource type="Texture2D" uid="uid://dhct2s15lp000" path="res://assets/tilesets/decorative.png" id="4_ha0t5"]
+[ext_resource type="Texture2D" uid="uid://kq1t0fbj70cc" path="res://assets/tilesets/items and trap_animation/arrow/arrow_3.png" id="5_t3atn"]
+[ext_resource type="Texture2D" uid="uid://bqeo68f8iuqh8" path="res://assets/tilesets/Farm Game Dungeon Cellar Tileset/Tilesets/FG_Cellar_Doors.png" id="5_yrcjl"]
+[ext_resource type="Texture2D" uid="uid://dpk54nb7bogil" path="res://assets/tilesets/items and trap_animation/arrow/arrow_4.png" id="6_akh1h"]
+[ext_resource type="Texture2D" uid="uid://b287hqr2fj3x" path="res://assets/tilesets/items and trap_animation/arrow/arrow_1.png" id="7_gkro6"]
+[ext_resource type="Texture2D" uid="uid://bw0iiwaoj7u03" path="res://assets/tilesets/items and trap_animation/torch/side_torch_1.png" id="20_kin0c"]
+[ext_resource type="Texture2D" uid="uid://dw4p2ke6ma6s6" path="res://assets/tilesets/items and trap_animation/torch/side_torch_2.png" id="21_aiixn"]
+[ext_resource type="Texture2D" uid="uid://cy8d12yldie2g" path="res://assets/tilesets/items and trap_animation/torch/side_torch_3.png" id="22_7j7ta"]
+[ext_resource type="Texture2D" uid="uid://b72s1u4lrfrk7" path="res://assets/tilesets/items and trap_animation/torch/side_torch_4.png" id="23_shlsu"]
+[ext_resource type="Texture2D" uid="uid://cxtnnrmvnhaax" path="res://assets/tilesets/items and trap_animation/peaks/peaks_1.png" id="24_a55ak"]
+[ext_resource type="Texture2D" uid="uid://65dxg1mxm1kn" path="res://assets/tilesets/items and trap_animation/peaks/peaks_2.png" id="25_4bde1"]
+[ext_resource type="Texture2D" uid="uid://b3koc1ur30hc2" path="res://assets/tilesets/items and trap_animation/peaks/peaks_3.png" id="26_mfj0i"]
+[ext_resource type="Texture2D" uid="uid://dpoldf7w8sfld" path="res://assets/tilesets/items and trap_animation/peaks/peaks_4.png" id="27_j0lta"]
+[ext_resource type="Texture2D" uid="uid://cvhf455e210xm" path="res://assets/tilesets/items and trap_animation/torch/torch_1.png" id="28_58uhv"]
+[ext_resource type="Texture2D" uid="uid://bfp7wqtth8jk8" path="res://assets/tilesets/items and trap_animation/torch/torch_2.png" id="29_ywjpr"]
+[ext_resource type="Texture2D" uid="uid://cs3ypuameqctr" path="res://assets/tilesets/items and trap_animation/torch/torch_3.png" id="30_xckv6"]
+[ext_resource type="Texture2D" uid="uid://duxef7vq28vta" path="res://assets/tilesets/items and trap_animation/torch/torch_4.png" id="31_rx3jx"]
+[ext_resource type="PackedScene" uid="uid://bfiqfceglldvn" path="res://assets/sprites/sprite_frames/Chest.tscn" id="32_x0tn0"]
+[ext_resource type="Script" uid="uid://cmcqty8lq8lc3" path="res://scripts/world/chest.gd" id="33_x0tn0"]
+[ext_resource type="PackedScene" path="res://scenes/world/ManaPotion.tscn" id="34_ajou1"]
+[ext_resource type="PackedScene" path="res://scenes/world/HealthPotion.tscn" id="35_1bwfi"]
+[ext_resource type="PackedScene" path="res://scenes/world/SilverKey.tscn" id="37_f7155"]
+[ext_resource type="Texture2D" uid="uid://6k72e0gmtlum" path="res://assets/tilesets/items and trap_animation/torch/candlestick_1_1.png" id="40_hax05"]
+[ext_resource type="Texture2D" uid="uid://cdttgti7uc05x" path="res://assets/tilesets/items and trap_animation/torch/candlestick_1_2.png" id="41_iymvj"]
+[ext_resource type="Texture2D" uid="uid://dr3eh010xyiwh" path="res://assets/tilesets/items and trap_animation/torch/candlestick_1_3.png" id="42_u5a4l"]
+[ext_resource type="Texture2D" uid="uid://b8tyxe0ofwgvo" path="res://assets/tilesets/items and trap_animation/torch/candlestick_1_4.png" id="43_tjgod"]
+[ext_resource type="PackedScene" uid="uid://cw4hddeyqjxyp" path="res://assets/sprites/sprite_frames/GoldenKey.tscn" id="51_gcvcy"]
+[ext_resource type="PackedScene" uid="uid://dir7hqidppslc" path="res://assets/sprites/sprite_frames/Coin.tscn" id="52_owxll"]
+[ext_resource type="Texture2D" uid="uid://4ojdoa704n34" path="res://assets/tilesets/items and trap_animation/flag/flag_1.png" id="54_7j7ta"]
+[ext_resource type="Texture2D" uid="uid://cybw2p72fnoi" path="res://assets/tilesets/items and trap_animation/flag/flag_2.png" id="55_shlsu"]
+[ext_resource type="Texture2D" uid="uid://dxnfi64gkc0aw" path="res://assets/tilesets/items and trap_animation/flag/flag_3.png" id="56_a55ak"]
+[ext_resource type="Texture2D" uid="uid://b00bqpf3wtst7" path="res://assets/tilesets/items and trap_animation/flag/flag_4.png" id="57_4bde1"]
+[ext_resource type="Script" uid="uid://dsnor4r0kdi4j" path="res://scripts/levels/player_spawner.gd" id="58_jpgod"]
+[ext_resource type="PackedScene" uid="uid://c8y8q6x1n7p2k" path="res://scenes/ui/hud.tscn" id="60_hud"]
+[ext_resource type="Texture2D" uid="uid://dcv1yb342epnm" path="res://assets/tilesets/candleB_01.png" id="70_g7y4m"]
+[ext_resource type="Texture2D" uid="uid://df7ri4d44ssfh" path="res://assets/tilesets/candleB_02.png" id="71_a0qog"]
+[ext_resource type="Texture2D" uid="uid://2thxv54a6uef" path="res://assets/tilesets/candleB_03.png" id="72_ifnw3"]
+[ext_resource type="Texture2D" uid="uid://bj6hnyrg4yi6m" path="res://assets/tilesets/candleB_04.png" id="73_mtwj5"]
+
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r50bh"]
 texture = ExtResource("2_s6mhf")
@@ -1207,61 +1180,88 @@ texture = ExtResource("1_ngr63")
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_by2vd"]
 texture = ExtResource("2_s6mhf")
 0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(1.0791531, -8, 8, -8, 8, 8, 0.71943474, 8)
 1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 2:0/0 = 0
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 3:0/0 = 0
+3:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 4:0/0 = 0
+4:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 5:0/0 = 0
+5:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, -0.71943474, -8, -1.0791512, 8, -8, 8)
 6:0/0 = 0
 7:0/0 = 0
 8:0/0 = 0
 9:0/0 = 0
 0:1/0 = 0
+0:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(1.0791531, -8, 8, -8, 8, 8, 0.71943474, 8)
 1:1/0 = 0
 2:1/0 = 0
 3:1/0 = 0
 4:1/0 = 0
 5:1/0 = 0
+5:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, -0.71943474, -8, -1.0791512, 8, -8, 8)
 6:1/0 = 0
 7:1/0 = 0
 8:1/0 = 0
 9:1/0 = 0
 0:2/0 = 0
+0:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(1.0791531, -8, 8, -8, 8, 8, 0.71943474, 8)
 1:2/0 = 0
 2:2/0 = 0
 3:2/0 = 0
 4:2/0 = 0
 5:2/0 = 0
+5:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, -0.71943474, -8, -1.0791512, 8, -8, 8)
 6:2/0 = 0
 7:2/0 = 0
 8:2/0 = 0
 9:2/0 = 0
 0:3/0 = 0
+0:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(1.0791531, -8, 8, -8, 8, 8, 0.71943474, 8)
 1:3/0 = 0
 2:3/0 = 0
 3:3/0 = 0
 4:3/0 = 0
 5:3/0 = 0
+5:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, -0.71943474, -8, -1.0791512, 8, -8, 8)
 6:3/0 = 0
+6:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 7:3/0 = 0
+7:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 8:3/0 = 0
 9:3/0 = 0
 0:4/0 = 0
+0:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(1.2590122, -8, 8, -8, 8, 8, 1.4388695, 8)
 1:4/0 = 0
+1:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 2:4/0 = 0
+2:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 3:4/0 = 0
+3:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+4:4/next_alternative_id = 2
 4:4/0 = 0
+4:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 5:4/0 = 0
+5:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, -0.8992939, -8, -1.2590103, 8, -8, 8)
 6:4/0 = 0
 7:4/0 = 0
 8:4/0 = 0
 9:4/0 = 0
 0:5/0 = 0
+0:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:5/0 = 0
+1:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 2:5/0 = 0
+2:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 3:5/0 = 0
+3:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 4:5/0 = 0
+4:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 5:5/0 = 0
+5:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 6:5/0 = 0
 7:5/0 = 0
 8:5/0 = 0
@@ -1273,7 +1273,9 @@ texture = ExtResource("2_s6mhf")
 4:6/0 = 0
 5:6/0 = 0
 6:6/0 = 0
+6:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 7:6/0 = 0
+7:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 8:6/0 = 0
 9:6/0 = 0
 0:7/0 = 0
@@ -2133,6 +2135,7 @@ texture = ExtResource("3_1nyyj")
 31:31/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_akh1h"]
+physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_x02mp")
 sources/1 = SubResource("TileSetAtlasSource_by2vd")
 sources/2 = SubResource("TileSetAtlasSource_t3atn")
@@ -2305,6 +2308,7 @@ texture = ExtResource("2_s6mhf")
 7:3/0 = 0
 8:3/0 = 0
 9:3/0 = 0
+9:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 0:4/0 = 0
 1:4/0 = 0
 2:4/0 = 0
@@ -2312,8 +2316,11 @@ texture = ExtResource("2_s6mhf")
 4:4/0 = 0
 5:4/0 = 0
 6:4/0 = 0
+6:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-3.057598, -8, 2.8777409, -8, 3.2374573, 8, -3.2374573, 8)
 7:4/0 = 0
+7:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, -1.978445, -8, -2.1583042, 8, -8, 8)
 8:4/0 = 0
+8:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, -1.978445, -8, -2.1583042, 8, -8, 8)
 9:4/0 = 0
 0:5/0 = 0
 1:5/0 = 0
@@ -2322,7 +2329,9 @@ texture = ExtResource("2_s6mhf")
 4:5/0 = 0
 5:5/0 = 0
 6:5/0 = 0
+6:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-3.057598, -8, 2.8777409, -8, 3.2374573, 8, -3.2374573, 8)
 7:5/0 = 0
+7:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, -1.978445, -8, -2.1583042, 8, -8, 8)
 8:5/0 = 0
 9:5/0 = 0
 0:6/0 = 0
@@ -2332,7 +2341,9 @@ texture = ExtResource("2_s6mhf")
 4:6/0 = 0
 5:6/0 = 0
 6:6/0 = 0
+6:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 7:6/0 = 0
+7:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 8:6/0 = 0
 9:6/0 = 0
 0:7/0 = 0
@@ -3548,6 +3559,7 @@ texture = ExtResource("1_ngr63")
 14:33/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_1nyyj"]
+physics_layer_0/collision_layer = 1
 sources/1 = SubResource("TileSetAtlasSource_ngr63")
 sources/0 = SubResource("TileSetAtlasSource_a55ak")
 sources/3 = SubResource("TileSetAtlasSource_4bde1")
@@ -3575,6 +3587,7 @@ animations = [{
 }]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_br6ta"]
+
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -3615,6 +3628,8 @@ animations = [{
 }]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_5v711"]
+
+
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -3654,6 +3669,7 @@ animations = [{
 "speed": 5.0
 }]
 
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_0gius"]
 animations = [{
 "frames": [{
@@ -3692,6 +3708,9 @@ animations = [{
 }]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_w6qq4"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5v711"]
+
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -3710,6 +3729,7 @@ animations = [{
 "name": &"default",
 "speed": 5.0
 }]
+
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_aheg4"]
 animations = [{
@@ -3752,6 +3772,9 @@ animations = [{
 }]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_5a1j7"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_a3qci"]
+
 animations = [{
 "frames": [{
 "duration": 1.4,
@@ -3843,6 +3866,7 @@ animations = [{
 "speed": 5.0
 }]
 
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_58uhv"]
 animations = [{
 "frames": [{
@@ -3862,6 +3886,8 @@ animations = [{
 "name": &"default",
 "speed": 5.0
 }]
+
+
 
 [node name="Map" type="Node2D" unique_id=884577421]
 position = Vector2(-200, -14)
@@ -3921,12 +3947,16 @@ sprite_frames = SubResource("SpriteFrames_2ho2r")
 animation = &"new_animation_1"
 frame_progress = 0.15849912
 
+
 [node name="Peaks" type="Control" parent="Background/Tileset/Decorations/Traps" unique_id=2087930391]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="Peaks" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Traps/Peaks" unique_id=1163891047]
+
+[node name="Peaks" type="AnimatedSprite2D" parent="Background/Tileset/Decorations" unique_id=1163891047]
+
 position = Vector2(936, 391.5)
 scale = Vector2(1, 0.9375)
 sprite_frames = SubResource("SpriteFrames_br6ta")
@@ -4003,12 +4033,16 @@ sprite_frames = SubResource("SpriteFrames_u0ldo")
 autoplay = "default"
 frame_progress = 0.34057987
 
+
 [node name="Candles" type="Control" parent="Background/Tileset/Decorations/Illumination" unique_id=1456659457]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="Candle1" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Illumination/Candles" unique_id=2001548696]
+
+[node name="Candle1" type="AnimatedSprite2D" parent="Background/Tileset/Decorations" unique_id=2001548696]
+
 position = Vector2(712, 405)
 sprite_frames = SubResource("SpriteFrames_5v711")
 autoplay = "default"
@@ -4048,6 +4082,7 @@ autoplay = "default"
 position = Vector2(752, 181)
 sprite_frames = SubResource("SpriteFrames_5v711")
 autoplay = "default"
+
 
 [node name="Candle9" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Illumination/Candles" unique_id=1006680580]
 position = Vector2(546, 181)
@@ -4213,6 +4248,12 @@ offset_bottom = 40.0
 [node name="GoldKey" type="AnimatedSprite2D" parent="Background/Tileset/Decorations/Key" unique_id=1636442231]
 position = Vector2(873, 185)
 sprite_frames = SubResource("SpriteFrames_5a1j7")
+
+[node name="SideTorch1" type="AnimatedSprite2D" parent="Background/Tileset/Decorations" unique_id=1097095693]
+position = Vector2(633, 406)
+rotation = -3.1415925
+sprite_frames = SubResource("SpriteFrames_a3qci")
+
 autoplay = "default"
 frame_progress = 0.3739321
 
@@ -4319,4 +4360,82 @@ sprite_frames = SubResource("SpriteFrames_58uhv")
 autoplay = "default"
 frame_progress = 0.7589137
 
+
 [node name="HUD" parent="." unique_id=1025465274 instance=ExtResource("58_jpgod")]
+
+[node name="Spawner" type="Node2D" parent="." unique_id=389851338]
+script = ExtResource("58_jpgod")
+
+[node name="PlayerSpawn" type="Marker2D" parent="Spawner" unique_id=1025910985]
+position = Vector2(913, 222)
+
+[node name="Coins" type="Node2D" parent="." unique_id=601621287]
+position = Vector2(1094, 153)
+
+[node name="Coin2" parent="Coins" unique_id=604905401 instance=ExtResource("52_owxll")]
+position = Vector2(32, -14)
+
+[node name="Coin3" parent="Coins" unique_id=1967892627 instance=ExtResource("52_owxll")]
+position = Vector2(-145, 387)
+
+[node name="Coin4" parent="Coins" unique_id=240934355 instance=ExtResource("52_owxll")]
+position = Vector2(30, 419)
+
+[node name="Coin" parent="Coins" unique_id=1500456409 instance=ExtResource("52_owxll")]
+position = Vector2(-33, -14)
+
+[node name="Chests" type="Node2D" parent="." unique_id=824496636]
+
+[node name="Chest" parent="Chests" unique_id=83327496 node_paths=PackedStringArray("hidden_item") instance=ExtResource("32_x0tn0")]
+position = Vector2(1093, 139)
+script = ExtResource("33_x0tn0")
+hidden_item = NodePath("../../Keys/GoldenKey")
+
+[node name="Chest2" parent="Chests" unique_id=1375946942 node_paths=PackedStringArray("hidden_item") instance=ExtResource("32_x0tn0")]
+position = Vector2(1220, 360)
+rotation = 1.5707964
+script = ExtResource("33_x0tn0")
+hidden_item = NodePath("../../HealthPotions/HealthPotion4")
+
+[node name="Chest3" parent="Chests" unique_id=1778650394 node_paths=PackedStringArray("hidden_item") instance=ExtResource("32_x0tn0")]
+position = Vector2(1220, 385)
+rotation = 1.5707964
+script = ExtResource("33_x0tn0")
+hidden_item = NodePath("../../Keys/SilverKey")
+
+[node name="ManaPotions" type="Node2D" parent="." unique_id=1111859842]
+
+[node name="ManaPotion2" parent="ManaPotions" unique_id=232375374 instance=ExtResource("34_ajou1")]
+position = Vector2(981, 508)
+
+[node name="ManaPotion" parent="ManaPotions" unique_id=1674259633 instance=ExtResource("34_ajou1")]
+position = Vector2(1093, 602)
+
+[node name="ManaPotion3" parent="ManaPotions" unique_id=202150669 instance=ExtResource("34_ajou1")]
+position = Vector2(1109, 492)
+
+[node name="HealthPotions" type="Node2D" parent="." unique_id=1473701282]
+
+[node name="HealthPotion" parent="HealthPotions" unique_id=1675642979 instance=ExtResource("35_1bwfi")]
+position = Vector2(998, 602)
+
+[node name="HealthPotion2" parent="HealthPotions" unique_id=1917929295 instance=ExtResource("35_1bwfi")]
+position = Vector2(1093, 573)
+
+[node name="HealthPotion3" parent="HealthPotions" unique_id=2114517740 instance=ExtResource("35_1bwfi")]
+position = Vector2(934, 525)
+
+[node name="HealthPotion4" parent="HealthPotions" unique_id=458192513 instance=ExtResource("35_1bwfi")]
+position = Vector2(1207, 359)
+
+[node name="Keys" type="Node2D" parent="." unique_id=730281744]
+
+[node name="GoldenKey" parent="Keys" unique_id=1494136221 instance=ExtResource("51_gcvcy")]
+position = Vector2(1094, 153)
+
+[node name="SilverKey" parent="Keys" unique_id=2120773244 instance=ExtResource("37_f7155")]
+position = Vector2(1207, 385)
+rotation = 1.5707964
+
+
+[node name="HUD" parent="." instance=ExtResource("60_hud")]

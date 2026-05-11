@@ -3,6 +3,7 @@ extends Area2D
 var _tween: Tween
 var _base_scale: Vector2
 @onready var _sprite = get_parent()
+@onready var popup: AcceptDialog = _create_character_popup()
 
 static var selected_character: Area2D = null
 
@@ -49,6 +50,7 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 			if selected_character and selected_character != self:
 				selected_character.deselect()
 			selected_character = self
+			_update_game_manager_selection()
 		
 		if _sprite is AnimatedSprite2D:
 			_sprite.frame = 2
@@ -66,6 +68,19 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 						SceneManager.load_scene("res://scenes/Screens/SelectChamber.tscn")
 					else:
 						popup.popup_centered()
+
+func _update_game_manager_selection() -> void:
+	for child in _sprite.get_children():
+		if child is AnimatedSprite2D:
+			match child.name:
+				"Archer": GameManager.set_selected_class(GameManager.CharacterClass.ARCHER)
+				"Knight": GameManager.set_selected_class(GameManager.CharacterClass.KNIGHT)
+				"Warrior": GameManager.set_selected_class(GameManager.CharacterClass.WARRIOR)
+				"Necromancer": GameManager.set_selected_class(GameManager.CharacterClass.NECROMANCER)
+				"Samurai": GameManager.set_selected_class(GameManager.CharacterClass.ASSASSIN)
+				"Mage": GameManager.set_selected_class(GameManager.CharacterClass.MAGE)
+				"Cleric": GameManager.set_selected_class(GameManager.CharacterClass.CLERIC)
+				"Gladiator": GameManager.set_selected_class(GameManager.CharacterClass.BARBARIAN)
 
 func deselect() -> void:
 	if _sprite.name.contains("Selector"): _sprite.self_modulate.a = 0

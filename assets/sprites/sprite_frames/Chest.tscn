@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://bfiqfceglldvn"]
+
+[ext_resource type="Texture2D" uid="uid://6aado63jrusu" path="res://assets/tilesets/items and trap_animation/chest/chest_1.png" id="1_mvi2e"]
+[ext_resource type="Texture2D" uid="uid://cxbsdxa80ocrw" path="res://assets/tilesets/items and trap_animation/chest/chest_2.png" id="2_ailik"]
+[ext_resource type="Texture2D" uid="uid://nif3veutftdr" path="res://assets/tilesets/items and trap_animation/chest/chest_3.png" id="3_h1om3"]
+[ext_resource type="Texture2D" uid="uid://c7ehrtedbi7uf" path="res://assets/tilesets/items and trap_animation/chest/chest_4.png" id="4_cdeiy"]
+[ext_resource type="Texture2D" uid="uid://cvmv7rj3oq2f8" path="res://assets/tilesets/items and trap_animation/chest/chest_open_1.png" id="5_bib3d"]
+[ext_resource type="Texture2D" uid="uid://qsnxw00fj5uw" path="res://assets/tilesets/items and trap_animation/chest/chest_open_2.png" id="6_cl8o3"]
+[ext_resource type="Texture2D" uid="uid://hqlg13m43udg" path="res://assets/tilesets/items and trap_animation/chest/chest_open_3.png" id="7_xv6m6"]
+[ext_resource type="Texture2D" uid="uid://bp1rg376bd2gw" path="res://assets/tilesets/items and trap_animation/chest/chest_open_4.png" id="8_ieitr"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_krblq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_mvi2e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_ailik")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_h1om3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_cdeiy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_bib3d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_cl8o3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_xv6m6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_ieitr")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mvfoc"]
+size = Vector2(16, 14)
+
+[node name="Chest" type="Node2D" unique_id=83327496]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1432472936]
+sprite_frames = SubResource("SpriteFrames_krblq")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1962606305]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=710371774]
+shape = SubResource("RectangleShape2D_mvfoc")
