@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://dir7hqidppslc"]
+[gd_scene format=3 uid="uid://ctvyeqmjboh7m"]
 
 [ext_resource type="Script" uid="uid://d12108axqgb1b" path="res://scripts/items/collectible.gd" id="1_8h8j3"]
 [ext_resource type="Texture2D" uid="uid://c2ars12d3sm7l" path="res://assets/tilesets/items and trap_animation/coin/coin_1.png" id="1_abxb0"]
