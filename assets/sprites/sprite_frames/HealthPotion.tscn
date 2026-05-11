@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://ee20jv053pif"]
+
+[ext_resource type="Texture2D" uid="uid://c5vu0ofxej2ey" path="res://assets/tilesets/items and trap_animation/flasks/flasks_1_1.png" id="1_6pvgy"]
+[ext_resource type="Script" uid="uid://d12108axqgb1b" path="res://scripts/items/collectible.gd" id="1_plyio"]
+[ext_resource type="Texture2D" uid="uid://bse2rsy11g6er" path="res://assets/tilesets/items and trap_animation/flasks/flasks_1_2.png" id="2_plyio"]
+[ext_resource type="Texture2D" uid="uid://1ie0f4u6jd4f" path="res://assets/tilesets/items and trap_animation/flasks/flasks_1_3.png" id="3_4p5di"]
+[ext_resource type="Texture2D" uid="uid://chwnkserjgfhm" path="res://assets/tilesets/items and trap_animation/flasks/flasks_1_4.png" id="4_alalv"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ycb7o"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_6pvgy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_plyio")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_4p5di")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_alalv")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mhil8"]
+radius = 6.0827627
+
+[node name="HealthPotion" type="Node2D" unique_id=1675642979]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1294117361]
+sprite_frames = SubResource("SpriteFrames_ycb7o")
+autoplay = "default"
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1109724591]
+script = ExtResource("1_plyio")
+type = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1525382238]
+shape = SubResource("CircleShape2D_mhil8")
