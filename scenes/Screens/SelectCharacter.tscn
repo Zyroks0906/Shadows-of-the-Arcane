@@ -4,12 +4,12 @@
 [ext_resource type="Texture2D" uid="uid://cj2akpogsac52" path="res://assets/InitialScreen/CharacterSelector/Buttons_.png" id="2_imblf"]
 [ext_resource type="Script" uid="uid://cxt3wmvcikwsx" path="res://scripts/Screens/SelectCharacter/selection_screen.gd" id="3_2gokd"]
 [ext_resource type="Texture2D" uid="uid://cfrj4e1sx45fb" path="res://assets/InitialScreen/CharacterSelector/CharacterHover.png" id="4_6fsi2"]
-[ext_resource type="Texture2D" uid="uid://c5ngswgftcoho" path="res://assets/sprites/player/Archer/Sprites/Character/Idle.png" id="5_18y2k"]
-[ext_resource type="Texture2D" uid="uid://d3b0t8cvhmme8" path="res://assets/sprites/player/Knight 2D Pixel Art/Sprites/without_outline/IDLE.png" id="6_t87d4"]
-[ext_resource type="Texture2D" uid="uid://1e5l52hbory1" path="res://assets/sprites/player/Medieval Warrior Pack 3/Sprites/Idle.png" id="7_di5td"]
-[ext_resource type="Texture2D" uid="uid://dsreveyui23fr" path="res://assets/sprites/player/Necromancer/Sprites/Idle.png" id="8_a7a7q"]
-[ext_resource type="Texture2D" uid="uid://bexhpw461hciu" path="res://assets/sprites/player/Samurai 2D Pixel Art v1.2/Sprites/IDLE.png" id="9_a7a7q"]
-[ext_resource type="Texture2D" uid="uid://d2pocaa4oh7he" path="res://assets/sprites/player/Wizard/Idle.png" id="10_er5yf"]
+[ext_resource type="Texture2D" uid="uid://6d2i3xcrmnr8" path="res://assets/sprites/player/Archer/Sprites/Character/Idle.png" id="5_18y2k"]
+[ext_resource type="Texture2D" uid="uid://dfqa3yth00u43" path="res://assets/sprites/player/Knight 2D Pixel Art/Sprites/without_outline/IDLE.png" id="6_t87d4"]
+[ext_resource type="Texture2D" uid="uid://c2crhjn0whs43" path="res://assets/sprites/player/Medieval Warrior Pack 3/Sprites/Idle.png" id="7_di5td"]
+[ext_resource type="Texture2D" uid="uid://bg4nrxs1nh3v" path="res://assets/sprites/player/Necromancer/Sprites/Idle.png" id="8_a7a7q"]
+[ext_resource type="Texture2D" uid="uid://behxv1atxvcgx" path="res://assets/sprites/player/Samurai 2D Pixel Art v1.2/Sprites/IDLE.png" id="9_a7a7q"]
+[ext_resource type="Texture2D" uid="uid://cslwai3l7bemk" path="res://assets/sprites/player/Wizard/Idle.png" id="10_er5yf"]
 [ext_resource type="Texture2D" uid="uid://cuqggh3mm2k1y" path="res://assets/sprites/player/Priest/cultist_priest_idle_1.png" id="11_30c4p"]
 [ext_resource type="Texture2D" uid="uid://dens5f3asesfb" path="res://assets/sprites/player/Barbarian/Free_Demo/Barbarian_pixel_art_idle.png" id="11_a7a7q"]
 [ext_resource type="Texture2D" uid="uid://dgb088wtp6jbg" path="res://assets/sprites/player/Priest/cultist_priest_idle_2.png" id="12_l4h2f"]
@@ -929,7 +929,7 @@ shape = SubResource("RectangleShape2D_m47wo")
 [node name="Containers" type="Node2D" parent="CanvasLayer/TextureRect/HBoxContainer" unique_id=768372855]
 
 [node name="Selector1" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=985697242]
-position = Vector2(135.74646, 320.6416)
+position = Vector2(141.74646, 320.6416)
 scale = Vector2(0.35397208, 0.37987387)
 sprite_frames = SubResource("SpriteFrames_63hbh")
 frame_progress = 0.6919918
@@ -949,7 +949,7 @@ animation = &"Archer"
 frame_progress = 0.68101627
 
 [node name="Selector2" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=2122649197]
-position = Vector2(261.36646, 320.78394)
+position = Vector2(267.36646, 320.7839)
 scale = Vector2(0.3585265, 0.38030526)
 sprite_frames = SubResource("SpriteFrames_63hbh")
 frame_progress = 0.84675294
@@ -971,7 +971,7 @@ animation = &"Knight"
 frame_progress = 0.5374447
 
 [node name="Selector3" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=1119183618]
-position = Vector2(385.5934, 318.6416)
+position = Vector2(393.59344, 318.6416)
 scale = Vector2(0.35397208, 0.37987387)
 sprite_frames = SubResource("SpriteFrames_63hbh")
 frame_progress = 0.98156124
@@ -992,7 +992,7 @@ animation = &"Warrior"
 frame_progress = 0.4274281
 
 [node name="Selector4" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=727198631]
-position = Vector2(511.24255, 320.64417)
+position = Vector2(519.2425, 320.64417)
 scale = Vector2(0.35563532, 0.37683573)
 sprite_frames = SubResource("SpriteFrames_63hbh")
 frame_progress = 0.84675294
@@ -1014,7 +1014,7 @@ animation = &"Necromancer"
 frame_progress = 0.8730632
 
 [node name="Selector5" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=490392541]
-position = Vector2(635, 320)
+position = Vector2(645, 320)
 scale = Vector2(0.35397208, 0.37987387)
 sprite_frames = SubResource("SpriteFrames_63hbh")
 frame_progress = 0.84675294
@@ -1035,7 +1035,7 @@ animation = &"Samurai"
 frame_progress = 0.5717398
 
 [node name="Selector6" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=1604637529]
-position = Vector2(759.9997, 320)
+position = Vector2(768.9997, 320)
 scale = Vector2(0.35397208, 0.37987387)
 sprite_frames = SubResource("SpriteFrames_63hbh")
 frame_progress = 0.84675294
@@ -1056,7 +1056,7 @@ animation = &"Mage"
 frame_progress = 0.3404998
 
 [node name="Selector7" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=1378853029]
-position = Vector2(883.9999, 320)
+position = Vector2(894.99994, 320)
 scale = Vector2(0.35397208, 0.37987387)
 sprite_frames = SubResource("SpriteFrames_63hbh")
 frame_progress = 0.84675294
@@ -1076,7 +1076,7 @@ sprite_frames = SubResource("SpriteFrames_k5ejk")
 frame_progress = 0.76210797
 
 [node name="Selector8" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=368788343]
-position = Vector2(1008.99835, 320)
+position = Vector2(1019.99835, 320)
 scale = Vector2(0.35397208, 0.37987387)
 sprite_frames = SubResource("SpriteFrames_63hbh")
 frame_progress = 0.84675294
