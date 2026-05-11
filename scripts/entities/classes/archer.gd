@@ -11,4 +11,19 @@ func _init() -> void:
 	resistance = 7
 	wisdom = 9
 	speed = 220.0
-	base_scale = Vector2(0.8, 0.8)
+	base_scale = Vector2(0.4, 0.4)
+func attack() -> void:
+	var arrow_scene = load("res://scenes/Proyectiles/arrow.tscn")
+	var arrow = arrow_scene.instantiate()
+	
+	if arrow.get_script() == null:
+		arrow.set_script(load("res://scripts/entities/projectile.gd"))
+
+	arrow.damage = strength
+	arrow.element = base_element
+	arrow.direction = last_direction.normalized()
+	
+	get_parent().add_child(arrow)
+	arrow.global_position = global_position
+	
+	print("Arquero dispara flecha de elemento: ", ElementalSystem.get_element_name(base_element))

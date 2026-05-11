@@ -11,6 +11,7 @@ class_name BaseCharacter
 @export var wisdom: int = 8
 
 var base_scale: Vector2 = Vector2(1.0, 1.0)
+
 var current_health: int
 var current_mana: int
 var is_alive: bool = true
@@ -19,8 +20,8 @@ var is_alive: bool = true
 var current_imbued_element: ElementalSystem.Element = ElementalSystem.Element.NONE
 
 func _ready() -> void:
-	scale = base_scale
 	max_health = 100 + (level * 10)
+
 	current_health = max_health
 	max_mana = 50 + (level * 5)
 	current_mana = max_mana

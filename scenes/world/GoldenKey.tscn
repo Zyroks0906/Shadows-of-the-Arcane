@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://cw4hddeyqjxyp"]
+[gd_scene format=3 uid="uid://cnjbgc51p2hw4"]
 
 [ext_resource type="Script" uid="uid://d12108axqgb1b" path="res://scripts/items/collectible.gd" id="1_3y30o"]
 [ext_resource type="Texture2D" uid="uid://bvnvnv0xesigr" path="res://assets/tilesets/items and trap_animation/keys/keys_1_1.png" id="1_admsv"]

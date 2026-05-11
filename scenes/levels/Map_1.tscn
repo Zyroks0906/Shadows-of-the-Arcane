@@ -1,4 +1,4 @@
-[gd_scene format=4 uid="uid://dfvk7pdf51n00"]
+[gd_scene format=4 uid="uid://bkin3qqlw15co"]
 
 [ext_resource type="Texture2D" uid="uid://cit1lmmet7jdo" path="res://assets/tilesets/mainlevbuild.png" id="1_ngr63"]
 [ext_resource type="Texture2D" uid="uid://cb838evjqxipg" path="res://assets/tilesets/character and tileset/Dungeon_Tileset.png" id="2_s6mhf"]
@@ -21,16 +21,17 @@
 [ext_resource type="Texture2D" uid="uid://bfp7wqtth8jk8" path="res://assets/tilesets/items and trap_animation/torch/torch_2.png" id="29_ywjpr"]
 [ext_resource type="Texture2D" uid="uid://cs3ypuameqctr" path="res://assets/tilesets/items and trap_animation/torch/torch_3.png" id="30_xckv6"]
 [ext_resource type="Texture2D" uid="uid://duxef7vq28vta" path="res://assets/tilesets/items and trap_animation/torch/torch_4.png" id="31_rx3jx"]
-[ext_resource type="PackedScene" uid="uid://bmc7tdfjnubmi" path="res://assets/sprites/sprite_frames/Chest.tscn" id="32_x0tn0"]
-[ext_resource type="PackedScene" uid="uid://bxkh44daws6wx" path="res://assets/sprites/sprite_frames/ManaPotion.tscn" id="34_ajou1"]
-[ext_resource type="PackedScene" uid="uid://ee20jv053pif" path="res://assets/sprites/sprite_frames/HealthPotion.tscn" id="35_1bwfi"]
-[ext_resource type="PackedScene" uid="uid://b6e722r2dpqm0" path="res://assets/sprites/sprite_frames/SilverKey.tscn" id="37_f7155"]
+[ext_resource type="PackedScene" uid="uid://bfiqfceglldvn" path="res://assets/sprites/sprite_frames/Chest.tscn" id="32_x0tn0"]
+[ext_resource type="Script" uid="uid://cmcqty8lq8lc3" path="res://scripts/world/chest.gd" id="33_x0tn0"]
+[ext_resource type="PackedScene" path="res://scenes/world/ManaPotion.tscn" id="34_ajou1"]
+[ext_resource type="PackedScene" path="res://scenes/world/HealthPotion.tscn" id="35_1bwfi"]
+[ext_resource type="PackedScene" path="res://scenes/world/SilverKey.tscn" id="37_f7155"]
 [ext_resource type="Texture2D" uid="uid://6k72e0gmtlum" path="res://assets/tilesets/items and trap_animation/torch/candlestick_1_1.png" id="40_hax05"]
 [ext_resource type="Texture2D" uid="uid://cdttgti7uc05x" path="res://assets/tilesets/items and trap_animation/torch/candlestick_1_2.png" id="41_iymvj"]
 [ext_resource type="Texture2D" uid="uid://dr3eh010xyiwh" path="res://assets/tilesets/items and trap_animation/torch/candlestick_1_3.png" id="42_u5a4l"]
 [ext_resource type="Texture2D" uid="uid://b8tyxe0ofwgvo" path="res://assets/tilesets/items and trap_animation/torch/candlestick_1_4.png" id="43_tjgod"]
-[ext_resource type="PackedScene" uid="uid://cnjbgc51p2hw4" path="res://assets/sprites/sprite_frames/GoldenKey.tscn" id="51_gcvcy"]
-[ext_resource type="PackedScene" uid="uid://ctvyeqmjboh7m" path="res://assets/sprites/sprite_frames/Coin.tscn" id="52_owxll"]
+[ext_resource type="PackedScene" uid="uid://cw4hddeyqjxyp" path="res://assets/sprites/sprite_frames/GoldenKey.tscn" id="51_gcvcy"]
+[ext_resource type="PackedScene" uid="uid://dir7hqidppslc" path="res://assets/sprites/sprite_frames/Coin.tscn" id="52_owxll"]
 [ext_resource type="Texture2D" uid="uid://4ojdoa704n34" path="res://assets/tilesets/items and trap_animation/flag/flag_1.png" id="54_7j7ta"]
 [ext_resource type="Texture2D" uid="uid://cybw2p72fnoi" path="res://assets/tilesets/items and trap_animation/flag/flag_2.png" id="55_shlsu"]
 [ext_resource type="Texture2D" uid="uid://dxnfi64gkc0aw" path="res://assets/tilesets/items and trap_animation/flag/flag_3.png" id="56_a55ak"]
@@ -1221,7 +1222,9 @@ texture = ExtResource("2_s6mhf")
 5:3/0 = 0
 5:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, -0.71943474, -8, -1.0791512, 8, -8, 8)
 6:3/0 = 0
+6:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 7:3/0 = 0
+7:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 8:3/0 = 0
 9:3/0 = 0
 0:4/0 = 0
@@ -1242,11 +1245,17 @@ texture = ExtResource("2_s6mhf")
 8:4/0 = 0
 9:4/0 = 0
 0:5/0 = 0
+0:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:5/0 = 0
+1:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 2:5/0 = 0
+2:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 3:5/0 = 0
+3:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 4:5/0 = 0
+4:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 5:5/0 = 0
+5:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 6:5/0 = 0
 7:5/0 = 0
 8:5/0 = 0
@@ -1258,7 +1267,9 @@ texture = ExtResource("2_s6mhf")
 4:6/0 = 0
 5:6/0 = 0
 6:6/0 = 0
+6:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 7:6/0 = 0
+7:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 8:6/0 = 0
 9:6/0 = 0
 0:7/0 = 0
@@ -2291,6 +2302,7 @@ texture = ExtResource("2_s6mhf")
 7:3/0 = 0
 8:3/0 = 0
 9:3/0 = 0
+9:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 0:4/0 = 0
 1:4/0 = 0
 2:4/0 = 0
@@ -2298,8 +2310,11 @@ texture = ExtResource("2_s6mhf")
 4:4/0 = 0
 5:4/0 = 0
 6:4/0 = 0
+6:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-3.057598, -8, 2.8777409, -8, 3.2374573, 8, -3.2374573, 8)
 7:4/0 = 0
+7:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, -1.978445, -8, -2.1583042, 8, -8, 8)
 8:4/0 = 0
+8:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, -1.978445, -8, -2.1583042, 8, -8, 8)
 9:4/0 = 0
 0:5/0 = 0
 1:5/0 = 0
@@ -2308,7 +2323,9 @@ texture = ExtResource("2_s6mhf")
 4:5/0 = 0
 5:5/0 = 0
 6:5/0 = 0
+6:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-3.057598, -8, 2.8777409, -8, 3.2374573, 8, -3.2374573, 8)
 7:5/0 = 0
+7:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, -1.978445, -8, -2.1583042, 8, -8, 8)
 8:5/0 = 0
 9:5/0 = 0
 0:6/0 = 0
@@ -2318,7 +2335,9 @@ texture = ExtResource("2_s6mhf")
 4:6/0 = 0
 5:6/0 = 0
 6:6/0 = 0
+6:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 7:6/0 = 0
+7:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 8:6/0 = 0
 9:6/0 = 0
 0:7/0 = 0
@@ -3534,6 +3553,7 @@ texture = ExtResource("1_ngr63")
 14:33/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_1nyyj"]
+physics_layer_0/collision_layer = 1
 sources/1 = SubResource("TileSetAtlasSource_ngr63")
 sources/0 = SubResource("TileSetAtlasSource_a55ak")
 sources/3 = SubResource("TileSetAtlasSource_4bde1")
@@ -3830,7 +3850,7 @@ frame_progress = 0.7589137
 script = ExtResource("58_jpgod")
 
 [node name="PlayerSpawn" type="Marker2D" parent="Spawner" unique_id=1025910985]
-position = Vector2(877.368, 111.951256)
+position = Vector2(913, 222)
 
 [node name="Coins" type="Node2D" parent="." unique_id=601621287]
 position = Vector2(1094, 153)
@@ -3849,16 +3869,22 @@ position = Vector2(-33, -14)
 
 [node name="Chests" type="Node2D" parent="." unique_id=824496636]
 
-[node name="Chest" parent="Chests" unique_id=83327496 instance=ExtResource("32_x0tn0")]
+[node name="Chest" parent="Chests" unique_id=83327496 node_paths=PackedStringArray("hidden_item") instance=ExtResource("32_x0tn0")]
 position = Vector2(1093, 139)
+script = ExtResource("33_x0tn0")
+hidden_item = NodePath("../../Keys/GoldenKey")
 
-[node name="Chest2" parent="Chests" unique_id=1375946942 instance=ExtResource("32_x0tn0")]
+[node name="Chest2" parent="Chests" unique_id=1375946942 node_paths=PackedStringArray("hidden_item") instance=ExtResource("32_x0tn0")]
 position = Vector2(1220, 360)
 rotation = 1.5707964
+script = ExtResource("33_x0tn0")
+hidden_item = NodePath("../../HealthPotions/HealthPotion4")
 
-[node name="Chest3" parent="Chests" unique_id=1778650394 instance=ExtResource("32_x0tn0")]
+[node name="Chest3" parent="Chests" unique_id=1778650394 node_paths=PackedStringArray("hidden_item") instance=ExtResource("32_x0tn0")]
 position = Vector2(1220, 385)
 rotation = 1.5707964
+script = ExtResource("33_x0tn0")
+hidden_item = NodePath("../../Keys/SilverKey")
 
 [node name="ManaPotions" type="Node2D" parent="." unique_id=1111859842]
 

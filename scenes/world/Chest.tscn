@@ -1,5 +1,6 @@
-[gd_scene format=3 uid="uid://bfiqfceglldvn"]
+[gd_scene format=3 uid="uid://bmc7tdfjnubmi"]
 
+[ext_resource type="Script" path="res://scripts/world/chest.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://6aado63jrusu" path="res://assets/tilesets/items and trap_animation/chest/chest_1.png" id="1_mvi2e"]
 [ext_resource type="Texture2D" uid="uid://cxbsdxa80ocrw" path="res://assets/tilesets/items and trap_animation/chest/chest_2.png" id="2_ailik"]
 [ext_resource type="Texture2D" uid="uid://nif3veutftdr" path="res://assets/tilesets/items and trap_animation/chest/chest_3.png" id="3_h1om3"]
@@ -45,6 +46,7 @@ animations = [{
 size = Vector2(16, 14)
 
 [node name="Chest" type="Node2D" unique_id=83327496]
+script = ExtResource("1_script")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1432472936]
 sprite_frames = SubResource("SpriteFrames_krblq")

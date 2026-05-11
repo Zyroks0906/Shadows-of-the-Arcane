@@ -22,7 +22,7 @@ func spawn_player() -> void:
 func _apply_selected_class(player: CharacterBody2D) -> void:
 	var c_name = GameManager.get_selected_class_name()
 	var class_script_path = "res://scripts/entities/classes/" + c_name + ".gd"
-	var sprite_frames_path = "res://assets/sprites/sprite_frames/" + c_name + ".tres"
+	var sprite_frames_path = "res://assets/sprites/sprite_frames/" + c_name.to_lower() + ".tres"
 	
 	print("--- Debug Spawner ---")
 	print("Clase seleccionada: ", c_name)
