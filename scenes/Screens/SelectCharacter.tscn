@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cfrj4e1sx45fb" path="res://assets/InitialScreen/CharacterSelector/CharacterHover.png" id="4_6fsi2"]
 [ext_resource type="Texture2D" uid="uid://6d2i3xcrmnr8" path="res://assets/sprites/player/Archer/Sprites/Character/Idle.png" id="5_18y2k"]
 [ext_resource type="Texture2D" uid="uid://dfqa3yth00u43" path="res://assets/sprites/player/Knight 2D Pixel Art/Sprites/without_outline/IDLE.png" id="6_t87d4"]
-[ext_resource type="Texture2D" uid="uid://c2crhjn0whs43" path="res://assets/sprites/player/Medieval Warrior Pack 3/Sprites/Idle.png" id="7_di5td"]
+[ext_resource type="Texture2D" uid="uid://dhu8ktl1cllka" path="res://assets/sprites/player/Assasin/FREE_Adventurer 2D Pixel Art/Sprites/IDLE/idle_down.png" id="7_6ltoi"]
 [ext_resource type="Texture2D" uid="uid://bg4nrxs1nh3v" path="res://assets/sprites/player/Necromancer/Sprites/Idle.png" id="8_a7a7q"]
 [ext_resource type="Texture2D" uid="uid://behxv1atxvcgx" path="res://assets/sprites/player/Samurai 2D Pixel Art v1.2/Sprites/IDLE.png" id="9_a7a7q"]
 [ext_resource type="Texture2D" uid="uid://cslwai3l7bemk" path="res://assets/sprites/player/Wizard/Idle.png" id="10_er5yf"]
@@ -237,44 +237,36 @@ animations = [{
 }]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lq0u3"]
-atlas = ExtResource("7_di5td")
-region = Rect2(0, 0, 135, 135)
+atlas = ExtResource("7_6ltoi")
+region = Rect2(0, 0, 96, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_irv77"]
-atlas = ExtResource("7_di5td")
-region = Rect2(135, 0, 135, 135)
+atlas = ExtResource("7_6ltoi")
+region = Rect2(96, 0, 96, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_i56bf"]
-atlas = ExtResource("7_di5td")
-region = Rect2(270, 0, 135, 135)
+atlas = ExtResource("7_6ltoi")
+region = Rect2(192, 0, 96, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rg1fp"]
-atlas = ExtResource("7_di5td")
-region = Rect2(405, 0, 135, 135)
+atlas = ExtResource("7_6ltoi")
+region = Rect2(288, 0, 96, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_24bit"]
-atlas = ExtResource("7_di5td")
-region = Rect2(540, 0, 135, 135)
+atlas = ExtResource("7_6ltoi")
+region = Rect2(384, 0, 96, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kdh55"]
-atlas = ExtResource("7_di5td")
-region = Rect2(675, 0, 135, 135)
+atlas = ExtResource("7_6ltoi")
+region = Rect2(480, 0, 96, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7eia4"]
-atlas = ExtResource("7_di5td")
-region = Rect2(810, 0, 135, 135)
+atlas = ExtResource("7_6ltoi")
+region = Rect2(576, 0, 96, 80)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rboec"]
-atlas = ExtResource("7_di5td")
-region = Rect2(945, 0, 135, 135)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_saff0"]
-atlas = ExtResource("7_di5td")
-region = Rect2(1080, 0, 135, 135)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3cxbw"]
-atlas = ExtResource("7_di5td")
-region = Rect2(1215, 0, 135, 135)
+atlas = ExtResource("7_6ltoi")
+region = Rect2(672, 0, 96, 80)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_2tfsu"]
 animations = [{
@@ -302,15 +294,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_rboec")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_saff0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_3cxbw")
 }],
 "loop": true,
-"name": &"Warrior",
+"name": &"Assasin",
 "speed": 13.0
 }]
 
@@ -985,11 +971,11 @@ position = Vector2(715.4618, -4.3215046)
 shape = SubResource("CapsuleShape2D_m47wo")
 
 [node name="Warrior" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector3" unique_id=1754099889]
-position = Vector2(2.3846436, 22.825806)
-scale = Vector2(5.799265, 4.8871007)
+position = Vector2(6.798688, 11.473259)
+scale = Vector2(7.2064104, 6.122586)
 sprite_frames = SubResource("SpriteFrames_2tfsu")
-animation = &"Warrior"
-frame_progress = 0.4274281
+animation = &"Assasin"
+frame_progress = 0.15906546
 
 [node name="Selector4" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=727198631]
 position = Vector2(519.2425, 320.64417)
