@@ -1,17 +1,17 @@
 [gd_scene format=3 uid="uid://5tbjq5bwuwth"]
 
-[ext_resource type="Texture2D" uid="uid://dj13crtkslg6c" path="res://assets/InitialScreen/CharacterSelector/CharacterSelector.jpg" id="1_6ltoi"]
+[ext_resource type="Texture2D" uid="uid://drvfbb4d5mtrp" path="res://assets/InitialScreen/CharacterSelector/CharacterSelector.jpg" id="1_6ltoi"]
 [ext_resource type="Texture2D" uid="uid://cj2akpogsac52" path="res://assets/InitialScreen/CharacterSelector/Buttons_.png" id="2_imblf"]
 [ext_resource type="Script" uid="uid://cxt3wmvcikwsx" path="res://scripts/Screens/SelectCharacter/selection_screen.gd" id="3_2gokd"]
 [ext_resource type="Texture2D" uid="uid://cfrj4e1sx45fb" path="res://assets/InitialScreen/CharacterSelector/CharacterHover.png" id="4_6fsi2"]
-[ext_resource type="SpriteFrames" uid="uid://bgt500s6rdhb7" path="res://assets/sprites/sprite_frames/archer.tres" id="5_6ltoi"]
-[ext_resource type="SpriteFrames" uid="uid://dg7sf72tyxaig" path="res://assets/sprites/sprite_frames/knight.tres" id="6_6ltoi"]
-[ext_resource type="SpriteFrames" uid="uid://cprmy0elee620" path="res://assets/sprites/sprite_frames/warrior.tres" id="7_er5yf"]
-[ext_resource type="SpriteFrames" uid="uid://ddju57mfhk386" path="res://assets/sprites/sprite_frames/necromancer.tres" id="8_ug6m4"]
-[ext_resource type="SpriteFrames" uid="uid://bluyycy831jnv" path="res://assets/sprites/sprite_frames/samurai.tres" id="9_ou5ow"]
-[ext_resource type="SpriteFrames" uid="uid://b4o4y7jtscr5p" path="res://assets/sprites/sprite_frames/mage.tres" id="10_ub0sm"]
-[ext_resource type="SpriteFrames" uid="uid://8jtrpalgsk7i" path="res://assets/sprites/sprite_frames/cleric.tres" id="11_6ltoi"]
-[ext_resource type="SpriteFrames" uid="uid://j4hmmdpaqdw" path="res://assets/sprites/sprite_frames/gladiator.tres" id="12_30c4p"]
+[ext_resource type="SpriteFrames" uid="uid://bgt500s6rdhb7" path="res://scenes/world/archer.tres" id="5_6ltoi"]
+[ext_resource type="SpriteFrames" uid="uid://dg7sf72tyxaig" path="res://scenes/world/knight.tres" id="6_6ltoi"]
+[ext_resource type="SpriteFrames" uid="uid://cprmy0elee620" path="res://scenes/world/warrior.tres" id="7_er5yf"]
+[ext_resource type="SpriteFrames" uid="uid://ddju57mfhk386" path="res://scenes/world/necromancer.tres" id="8_ug6m4"]
+[ext_resource type="SpriteFrames" uid="uid://bluyycy831jnv" path="res://scenes/world/samurai.tres" id="9_ou5ow"]
+[ext_resource type="SpriteFrames" uid="uid://b4o4y7jtscr5p" path="res://scenes/world/mage.tres" id="10_ub0sm"]
+[ext_resource type="SpriteFrames" uid="uid://8jtrpalgsk7i" path="res://scenes/world/cleric.tres" id="11_6ltoi"]
+[ext_resource type="SpriteFrames" uid="uid://j4hmmdpaqdw" path="res://scenes/world/gladiator.tres" id="12_30c4p"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q643g"]
 atlas = ExtResource("2_imblf")
@@ -170,7 +170,6 @@ position = Vector2(6.3664246, 14.105713)
 scale = Vector2(5.48419, 5.4870186)
 sprite_frames = ExtResource("5_6ltoi")
 animation = &"Idle"
-frame_progress = 0.54873616
 
 [node name="Selector2" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=2122649197]
 position = Vector2(261.36646, 320.78394)
@@ -233,7 +232,6 @@ position = Vector2(19.00116, -52.12925)
 scale = Vector2(3.8627472, 4.5067596)
 sprite_frames = ExtResource("8_ug6m4")
 animation = &"Idle"
-frame_progress = 0.71381134
 
 [node name="Selector5" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=490392541]
 position = Vector2(635, 320)
@@ -254,7 +252,6 @@ position = Vector2(5.6502686, -92.135864)
 scale = Vector2(7.528033, 6.521148)
 sprite_frames = ExtResource("9_ou5ow")
 animation = &"Idle"
-frame_progress = 0.7050832
 
 [node name="Selector6" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=1604637529]
 position = Vector2(759.9997, 320)
@@ -275,7 +272,6 @@ position = Vector2(36.726807, 5.2648926)
 scale = Vector2(2.8250816, 2.6324527)
 sprite_frames = ExtResource("10_ub0sm")
 animation = &"Idle"
-frame_progress = 0.7972993
 
 [node name="Selector7" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=1378853029]
 position = Vector2(883.9999, 320)
@@ -296,7 +292,6 @@ position = Vector2(14.125977, 5.2648926)
 scale = Vector2(1.610737, 1.4704711)
 sprite_frames = ExtResource("11_6ltoi")
 animation = &"Idle"
-frame_progress = 0.8879807
 
 [node name="Selector8" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=368788343]
 position = Vector2(1008.99835, 320)

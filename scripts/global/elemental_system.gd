@@ -1,7 +1,5 @@
 extends Node
 
-# Sistema Elemental basado en la lógica de Java adaptada a Godot 4
-# Este script debe configurarse como Autoload (Singleton) con el nombre "ElementalSystem"
 
 enum Element { NONE, PYRO, HYDRO, ELECTRO, CRYO, ANEMO }
 
@@ -32,40 +30,31 @@ func get_reaction(element_1: Element, element_2: Element) -> Dictionary:
 	if element_1 == element_2:
 		return {"name": "None", "data": REACTION_DATA["None"]}
 
-	# Ordenar para simplificar la búsqueda (aunque el orden importa en Vaporize/Melt, 
-	# aquí usaremos una lógica simplificada similar a la solicitada)
 	
-	# Vaporize (Pyro + Hydro)
 	if (element_1 == Element.PYRO and element_2 == Element.HYDRO) or (element_1 == Element.HYDRO and element_2 == Element.PYRO):
 		var mult = 2.0 if element_1 == Element.HYDRO else 1.5
 		var data = REACTION_DATA["Vaporize"].duplicate()
 		data["multiplier"] = mult
 		return {"name": "Vaporize", "data": data}
 		
-	# Melt (Pyro + Cryo)
 	if (element_1 == Element.PYRO and element_2 == Element.CRYO) or (element_1 == Element.CRYO and element_2 == Element.PYRO):
 		var mult = 2.0 if element_1 == Element.PYRO else 1.5
 		var data = REACTION_DATA["Melt"].duplicate()
 		data["multiplier"] = mult
 		return {"name": "Melt", "data": data}
 
-	# Electro-Charged (Hydro + Electro)
 	if (element_1 == Element.HYDRO and element_2 == Element.ELECTRO) or (element_1 == Element.ELECTRO and element_2 == Element.HYDRO):
 		return {"name": "Electro-Charged", "data": REACTION_DATA["Electro-Charged"]}
 
-	# Overloaded (Pyro + Electro)
 	if (element_1 == Element.PYRO and element_2 == Element.ELECTRO) or (element_1 == Element.ELECTRO and element_2 == Element.PYRO):
 		return {"name": "Overloaded", "data": REACTION_DATA["Overloaded"]}
 
-	# Superconduct (Cryo + Electro)
 	if (element_1 == Element.CRYO and element_2 == Element.ELECTRO) or (element_1 == Element.ELECTRO and element_2 == Element.CRYO):
 		return {"name": "Superconduct", "data": REACTION_DATA["Superconduct"]}
 
-	# Frozen (Hydro + Cryo)
 	if (element_1 == Element.HYDRO and element_2 == Element.CRYO) or (element_1 == Element.CRYO and element_2 == Element.HYDRO):
 		return {"name": "Frozen", "data": REACTION_DATA["Frozen"]}
 
-	# Swirl (Anemo + Pyro/Hydro/Electro/Cryo)
 	if element_1 == Element.ANEMO or element_2 == Element.ANEMO:
 		return {"name": "Swirl", "data": REACTION_DATA["Swirl"]}
 
