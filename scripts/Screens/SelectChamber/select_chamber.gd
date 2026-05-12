@@ -34,7 +34,7 @@ func _refresh_map() -> void:
 	var progress = GameData.unlocked_levels
 	for i in range(layers.size()):
 		layers[i].visible = (progress >= i + 1)
-		# We keep them enabled to show the error popup on click
+		
 		buttons[i].modulate = Color.WHITE if progress >= i + 1 else Color(0.5, 0.5, 0.5)
 
 func _on_map_1_pressed() -> void:

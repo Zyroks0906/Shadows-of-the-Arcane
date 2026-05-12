@@ -1,65 +1,67 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dgyhlosgw3650"]
 
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_1.png" id="1_npsj3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_2.png" id="2_10dds"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_3.png" id="3_ygnf2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_4.png" id="4_0hm3q"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_5.png" id="5_0fytt"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_6.png" id="6_ixjfx"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_7.png" id="7_0twhw"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_8.png" id="8_hj717"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_9.png" id="9_oo7ej"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_10.png" id="10_p7o66"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_11.png" id="11_k4q8j"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_12.png" id="12_3fvsh"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_13.png" id="13_y58yx"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_14.png" id="14_5hhkj"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_15.png" id="15_7o5yu"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/04_demon_take_hit/demon_take_hit_1.png" id="16_bfo00"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/04_demon_take_hit/demon_take_hit_2.png" id="17_282r8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/04_demon_take_hit/demon_take_hit_3.png" id="18_x8qwp"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/04_demon_take_hit/demon_take_hit_4.png" id="19_rdl42"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/04_demon_take_hit/demon_take_hit_5.png" id="20_t5qpj"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/01_demon_idle/demon_idle_1.png" id="21_wt1ie"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/01_demon_idle/demon_idle_2.png" id="22_wscm2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/01_demon_idle/demon_idle_3.png" id="23_yi5pn"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/01_demon_idle/demon_idle_4.png" id="24_dgiui"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/01_demon_idle/demon_idle_5.png" id="25_6p2l8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/01_demon_idle/demon_idle_6.png" id="26_kqti5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_1.png" id="27_77vrg"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_2.png" id="28_dyugl"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_3.png" id="29_uy7rm"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_4.png" id="30_07frq"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_5.png" id="31_3rqcq"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_6.png" id="32_naybv"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_7.png" id="33_w4808"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_8.png" id="34_0fthu"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_9.png" id="35_asq7t"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_10.png" id="36_1ua2u"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_11.png" id="37_yl3ac"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_12.png" id="38_gcrc3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_13.png" id="39_2g2r6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_14.png" id="40_vs8il"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_15.png" id="41_bnunu"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_16.png" id="42_8q4md"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_17.png" id="43_i3qpj"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_18.png" id="44_bta52"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_19.png" id="45_r3ys8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_20.png" id="46_ogqnm"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_21.png" id="47_tlg2w"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_22.png" id="48_ecvld"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_1.png" id="49_7cygp"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_2.png" id="50_mnjbk"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_3.png" id="51_j5eco"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_4.png" id="52_0ennn"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_5.png" id="53_ugxlp"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_6.png" id="54_b3r1n"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_7.png" id="55_nb2v1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_8.png" id="56_a65uk"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_9.png" id="57_km8c6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_10.png" id="58_yweqn"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_11.png" id="59_mdsuc"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_12.png" id="60_cfh04"]
+[ext_resource type="Texture2D" uid="uid://bya5sr6sufpr8" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_1.png" id="1_npsj3"]
+[ext_resource type="Script" uid="uid://dt607cu0qqnt7" path="res://scripts/entities/enemies/demon.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bn5wjaxdm48n" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_2.png" id="2_10dds"]
+[ext_resource type="PackedScene" path="res://scenes/entities/projectiles/fireball.tscn" id="2_ygnf2"]
+[ext_resource type="Texture2D" uid="uid://rybhlt8gi8e" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_3.png" id="3_ygnf2"]
+[ext_resource type="Texture2D" uid="uid://q8kep15a6a3i" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_4.png" id="4_0hm3q"]
+[ext_resource type="Texture2D" uid="uid://k5q2o8m7osvi" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_5.png" id="5_0fytt"]
+[ext_resource type="Texture2D" uid="uid://bhdtaefl8gd7v" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_6.png" id="6_ixjfx"]
+[ext_resource type="Texture2D" uid="uid://dbd1rxc1whxg1" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_7.png" id="7_0twhw"]
+[ext_resource type="Texture2D" uid="uid://dv6f5dmbf0mnq" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_8.png" id="8_hj717"]
+[ext_resource type="Texture2D" uid="uid://cqrilj4xueslc" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_9.png" id="9_oo7ej"]
+[ext_resource type="Texture2D" uid="uid://b6ds21i6vjh61" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_10.png" id="10_p7o66"]
+[ext_resource type="Texture2D" uid="uid://bcbqmin66gfds" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_11.png" id="11_k4q8j"]
+[ext_resource type="Texture2D" uid="uid://b4o7uu4jhj36c" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_12.png" id="12_3fvsh"]
+[ext_resource type="Texture2D" uid="uid://cr4uat2sh6k0g" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_13.png" id="13_y58yx"]
+[ext_resource type="Texture2D" uid="uid://cndluy5wqyfr0" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_14.png" id="14_5hhkj"]
+[ext_resource type="Texture2D" uid="uid://bpu56pmkwhigr" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/03_demon_cleave/demon_cleave_15.png" id="15_7o5yu"]
+[ext_resource type="Texture2D" uid="uid://bpmpj35wx1jum" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/04_demon_take_hit/demon_take_hit_1.png" id="16_bfo00"]
+[ext_resource type="Texture2D" uid="uid://8n88yakkpxdc" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/04_demon_take_hit/demon_take_hit_2.png" id="17_282r8"]
+[ext_resource type="Texture2D" uid="uid://0t3wctfbqxjf" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/04_demon_take_hit/demon_take_hit_3.png" id="18_x8qwp"]
+[ext_resource type="Texture2D" uid="uid://ucil1tiq6wdb" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/04_demon_take_hit/demon_take_hit_4.png" id="19_rdl42"]
+[ext_resource type="Texture2D" uid="uid://bl6kx37e8uafx" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/04_demon_take_hit/demon_take_hit_5.png" id="20_t5qpj"]
+[ext_resource type="Texture2D" uid="uid://qtdoku5koqwb" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/01_demon_idle/demon_idle_1.png" id="21_wt1ie"]
+[ext_resource type="Texture2D" uid="uid://c3d8wy7bqquqk" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/01_demon_idle/demon_idle_2.png" id="22_wscm2"]
+[ext_resource type="Texture2D" uid="uid://eoh3s6r6pahl" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/01_demon_idle/demon_idle_3.png" id="23_yi5pn"]
+[ext_resource type="Texture2D" uid="uid://6pr6r5tgeqqw" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/01_demon_idle/demon_idle_4.png" id="24_dgiui"]
+[ext_resource type="Texture2D" uid="uid://d0c5j2wachjjl" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/01_demon_idle/demon_idle_5.png" id="25_6p2l8"]
+[ext_resource type="Texture2D" uid="uid://cphq255hvi5u2" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/01_demon_idle/demon_idle_6.png" id="26_kqti5"]
+[ext_resource type="Texture2D" uid="uid://dq8tl2wxs1oyj" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_1.png" id="27_77vrg"]
+[ext_resource type="Texture2D" uid="uid://dxvw8o434v6yv" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_2.png" id="28_dyugl"]
+[ext_resource type="Texture2D" uid="uid://c8jyql33pv1f5" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_3.png" id="29_uy7rm"]
+[ext_resource type="Texture2D" uid="uid://gs4n0koso6co" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_4.png" id="30_07frq"]
+[ext_resource type="Texture2D" uid="uid://xx8m5l0dfmvr" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_5.png" id="31_3rqcq"]
+[ext_resource type="Texture2D" uid="uid://bxgitiflf787e" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_6.png" id="32_naybv"]
+[ext_resource type="Texture2D" uid="uid://bkq8eg4n2ibk2" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_7.png" id="33_w4808"]
+[ext_resource type="Texture2D" uid="uid://c7mqdxwhlvr5d" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_8.png" id="34_0fthu"]
+[ext_resource type="Texture2D" uid="uid://baen0oy0jl6ju" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_9.png" id="35_asq7t"]
+[ext_resource type="Texture2D" uid="uid://dueakkf4t414k" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_10.png" id="36_1ua2u"]
+[ext_resource type="Texture2D" uid="uid://dcp3138f335sa" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_11.png" id="37_yl3ac"]
+[ext_resource type="Texture2D" uid="uid://b88kxexto6ra1" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_12.png" id="38_gcrc3"]
+[ext_resource type="Texture2D" uid="uid://n4b8xl32n7t4" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_13.png" id="39_2g2r6"]
+[ext_resource type="Texture2D" uid="uid://olh1cagycsfu" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_14.png" id="40_vs8il"]
+[ext_resource type="Texture2D" uid="uid://ba1617tcoey20" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_15.png" id="41_bnunu"]
+[ext_resource type="Texture2D" uid="uid://bv04bn26qq2cw" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_16.png" id="42_8q4md"]
+[ext_resource type="Texture2D" uid="uid://bmxw2r7dyyux8" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_17.png" id="43_i3qpj"]
+[ext_resource type="Texture2D" uid="uid://dt2q8pismil3u" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_18.png" id="44_bta52"]
+[ext_resource type="Texture2D" uid="uid://b3eo4pngjx0x4" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_19.png" id="45_r3ys8"]
+[ext_resource type="Texture2D" uid="uid://0ph7y8np6nj0" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_20.png" id="46_ogqnm"]
+[ext_resource type="Texture2D" uid="uid://dtmay2lw6f4mn" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_21.png" id="47_tlg2w"]
+[ext_resource type="Texture2D" uid="uid://d1g1ltxhqkrq2" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/05_demon_death/demon_death_22.png" id="48_ecvld"]
+[ext_resource type="Texture2D" uid="uid://dayl7f5rxjnhr" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_1.png" id="49_7cygp"]
+[ext_resource type="Texture2D" uid="uid://srydkupohgux" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_2.png" id="50_mnjbk"]
+[ext_resource type="Texture2D" uid="uid://crmcxgbsf3vwd" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_3.png" id="51_j5eco"]
+[ext_resource type="Texture2D" uid="uid://k03rbm1t5cve" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_4.png" id="52_0ennn"]
+[ext_resource type="Texture2D" uid="uid://bbydstwtsh1bw" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_5.png" id="53_ugxlp"]
+[ext_resource type="Texture2D" uid="uid://d4lput51ar5f6" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_6.png" id="54_b3r1n"]
+[ext_resource type="Texture2D" uid="uid://dahy3768o858v" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_7.png" id="55_nb2v1"]
+[ext_resource type="Texture2D" uid="uid://xvr8xutone61" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_8.png" id="56_a65uk"]
+[ext_resource type="Texture2D" uid="uid://cq800n6i1p42o" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_9.png" id="57_km8c6"]
+[ext_resource type="Texture2D" uid="uid://fxrun8rv3std" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_10.png" id="58_yweqn"]
+[ext_resource type="Texture2D" uid="uid://bv8c65uvv5ufd" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_11.png" id="59_mdsuc"]
+[ext_resource type="Texture2D" uid="uid://bncii7rvcad6" path="res://assets/sprites/enemies/Bosses/Demon/individual sprites/02_demon_walk/demon_walk_12.png" id="60_cfh04"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_k8efv"]
 animations = [{
@@ -223,7 +225,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("48_ecvld")
 }],
-"loop": true,
+"loop": false,
 "name": &"new_animation",
 "speed": 12.0
 }, {
@@ -269,9 +271,27 @@ animations = [{
 "speed": 11.0
 }]
 
-[node name="Node2D" type="Node2D" unique_id=1147843513]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
+radius = 42.0
+height = 102.0
+
+[node name="Demon" type="CharacterBody2D" unique_id=1147843513]
+scale = Vector2(0.7, 0.7)
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("1_script")
+fireball_scene = ExtResource("2_ygnf2")
+speed = 60.0
+attack_range = 100.0
+attack_damage = 20
+max_health = 5000
+base_element = 1
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1216298740]
+scale = Vector2(-1, 1)
 sprite_frames = SubResource("SpriteFrames_k8efv")
 animation = &"new_animation"
-frame_progress = 0.75750846
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1625784179]
+position = Vector2(4, 39)
+shape = SubResource("CapsuleShape2D_1")

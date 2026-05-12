@@ -23,15 +23,15 @@ func _load_next_scene() -> void:
 		var status = ResourceLoader.load_threaded_get_status(SceneManager.target_scene, progress_array)
 		var actual_progress = progress_array[0] if progress_array.size() > 0 else 0.0
 		
-		# Suavizar el progreso (avanza máximo un 2% por frame para que se vea la animación)
+		
 		displayed_progress = lerp(displayed_progress, actual_progress, 0.1)
 		displayed_progress = move_toward(displayed_progress, actual_progress, 0.02)
 		
-		# Actualizar el frame de la animación basado en el progreso si fuera necesario, 
-		# o simplemente dejar que la animación fluya mientras el progreso sube.
+		
+		
 		
 		if status == ResourceLoader.THREAD_LOAD_LOADED and displayed_progress >= 0.99:
-			# Asegurarnos de que la animación ha tenido tiempo de lucirse
+			
 			await get_tree().create_timer(0.2).timeout
 			break
 		elif status == ResourceLoader.THREAD_LOAD_FAILED or status == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:

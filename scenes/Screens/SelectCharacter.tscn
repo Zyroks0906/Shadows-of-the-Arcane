@@ -1,17 +1,17 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://e65umwcv4cy6"]
 
-[ext_resource type="Texture2D" path="res://assets/InitialScreen/CharacterSelector/CharacterSelector.png" id="1_6ltoi"]
-[ext_resource type="Texture2D" path="res://assets/InitialScreen/CharacterSelector/Buttons_.png" id="2_imblf"]
-[ext_resource type="Script" path="res://scripts/Screens/SelectCharacter/selection_screen.gd" id="3_2gokd"]
-[ext_resource type="Texture2D" path="res://assets/InitialScreen/CharacterSelector/CharacterHover.png" id="4_6fsi2"]
-[ext_resource type="SpriteFrames" path="res://assets/sprites/sprite_frames/archer.tres" id="5_6ltoi"]
-[ext_resource type="SpriteFrames" path="res://assets/sprites/sprite_frames/knight.tres" id="6_6ltoi"]
-[ext_resource type="SpriteFrames" path="res://assets/sprites/sprite_frames/assassin.tres" id="7_er5yf"]
-[ext_resource type="SpriteFrames" path="res://assets/sprites/sprite_frames/necromancer.tres" id="8_ug6m4"]
-[ext_resource type="SpriteFrames" path="res://assets/sprites/sprite_frames/samurai.tres" id="9_ou5ow"]
-[ext_resource type="SpriteFrames" path="res://assets/sprites/sprite_frames/mage.tres" id="10_ub0sm"]
-[ext_resource type="SpriteFrames" path="res://assets/sprites/sprite_frames/cleric.tres" id="11_6ltoi"]
-[ext_resource type="SpriteFrames" path="res://assets/sprites/sprite_frames/gladiator.tres" id="12_30c4p"]
+[ext_resource type="Texture2D" uid="uid://ck24gsxkp2gh6" path="res://assets/InitialScreen/CharacterSelector/CharacterSelector.png" id="1_6ltoi"]
+[ext_resource type="Texture2D" uid="uid://cj2akpogsac52" path="res://assets/InitialScreen/CharacterSelector/Buttons_.png" id="2_imblf"]
+[ext_resource type="Script" uid="uid://cxt3wmvcikwsx" path="res://scripts/Screens/SelectCharacter/selection_screen.gd" id="3_2gokd"]
+[ext_resource type="Texture2D" uid="uid://cfrj4e1sx45fb" path="res://assets/InitialScreen/CharacterSelector/CharacterHover.png" id="4_6fsi2"]
+[ext_resource type="SpriteFrames" uid="uid://d41hbs0ot3mu" path="res://assets/sprites/sprite_frames/archer.tres" id="5_6ltoi"]
+[ext_resource type="SpriteFrames" uid="uid://c6vrjpnenjs1x" path="res://assets/sprites/sprite_frames/knight.tres" id="6_6ltoi"]
+[ext_resource type="SpriteFrames" uid="uid://mgiyp0dexcuc" path="res://assets/sprites/sprite_frames/assassin.tres" id="7_er5yf"]
+[ext_resource type="SpriteFrames" uid="uid://gbvheqtw2iqi" path="res://assets/sprites/sprite_frames/necromancer.tres" id="8_ug6m4"]
+[ext_resource type="SpriteFrames" uid="uid://bf3enbf2gexa" path="res://assets/sprites/sprite_frames/samurai.tres" id="9_ou5ow"]
+[ext_resource type="SpriteFrames" uid="uid://chusrjioahjtn" path="res://assets/sprites/sprite_frames/mage.tres" id="10_ub0sm"]
+[ext_resource type="SpriteFrames" uid="uid://iwrju2rykkiq" path="res://assets/sprites/sprite_frames/cleric.tres" id="11_6ltoi"]
+[ext_resource type="SpriteFrames" uid="uid://lrwugrt1aopw" path="res://assets/sprites/sprite_frames/gladiator.tres" id="12_30c4p"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q643g"]
 atlas = ExtResource("2_imblf")
@@ -200,7 +200,7 @@ texture_filter = 1
 position = Vector2(10.134705, 11.085999)
 scale = Vector2(5.5130167, 5.2511077)
 sprite_frames = ExtResource("6_6ltoi")
-animation = &"Idle"
+animation = &"Attack1"
 
 [node name="Selector3" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=1119183618]
 texture_filter = 1

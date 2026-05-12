@@ -172,18 +172,18 @@ animations = [{
 radius = 6.0
 height = 20.0
 
-[node name="Slime" type="CharacterBody2D"]
+[node name="Slime" type="CharacterBody2D" unique_id=365243219]
 collision_layer = 4
-collision_mask = 1
+collision_mask = 5
 script = ExtResource("1_script")
-character_name = "Slime"
 speed = 30.0
 attack_range = 20.0
 attack_delay = 0.4
+character_name = "Slime"
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1927768249]
 sprite_frames = SubResource("SpriteFrames_y8ejl")
-animation = &"idle"
+animation = &"attack"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=4476884]

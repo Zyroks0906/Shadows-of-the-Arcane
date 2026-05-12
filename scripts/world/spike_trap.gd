@@ -21,9 +21,9 @@ func _ready() -> void:
 	
 	if sprite:
 		sprite.frame_changed.connect(_on_sprite_frame_changed)
-		sprite.speed_scale = 4.0 # Velocidad extrema para el reto
+		sprite.speed_scale = 4.0 
 	
-	# Iniciar ciclo
+	
 	_start_deactive_phase()
 
 func _start_deactive_phase() -> void:
@@ -40,7 +40,7 @@ func _on_timer_timeout() -> void:
 		_start_deactive_phase()
 
 func _activate_trap() -> void:
-	# Retardo antes de que salgan los pinchos
+	
 	await get_tree().create_timer(activation_delay).timeout
 	
 	is_active = true
@@ -48,14 +48,14 @@ func _activate_trap() -> void:
 	if sprite:
 		sprite.play("default")
 	
-	# Comprobar inmediatamente si hay alguien encima
+	
 	for body in get_overlapping_bodies():
 		_check_damage(body)
 		
 	timer.start(active_duration)
 
 func _on_sprite_frame_changed() -> void:
-	# Si el frame cambia a uno letal, comprobar quién hay encima
+	
 	if is_active and sprite and (sprite.frame == 0 or sprite.frame == 1):
 		for body in get_overlapping_bodies():
 			_check_damage(body)
@@ -67,11 +67,11 @@ func _check_damage(body: Node) -> void:
 	if not is_active or has_hit_this_cycle or not (body is Player):
 		return
 	
-	# Comprobar si el jugador está vivo de forma más segura
+	
 	if body.get("current_health") <= 0 or body.get("is_alive") == false:
 		return
 		
-	# Solo hitear si el sprite está en los frames de "daño" (0 o 1)
+	
 	if sprite and (sprite.frame == 0 or sprite.frame == 1):
 		if body.has_method("receive_damage"):
 			has_hit_this_cycle = true

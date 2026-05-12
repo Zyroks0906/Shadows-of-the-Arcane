@@ -1,7 +1,7 @@
 extends Node
 
 
-enum Element { NONE, PYRO, HYDRO, ELECTRO, CRYO, ANEMO }
+enum Element { NONE, PYRO, HYDRO, ELECTRO, CRYO, ANEMO, GEO }
 
 const REACTION_DATA = {
 	"Vaporize": {"multiplier": 2.0, "color": Color.ORANGE_RED},
@@ -21,15 +21,27 @@ func get_element_name(element: Element) -> String:
 		Element.ELECTRO: return "Electro"
 		Element.CRYO: return "Cryo"
 		Element.ANEMO: return "Anemo"
+		Element.GEO: return "Geo"
 		_: return "None"
 
 func get_element_color(element: Element) -> Color:
 	match element:
-		Element.PYRO: return Color.RED
-		Element.HYDRO: return Color.BLUE
-		Element.ELECTRO: return Color.MEDIUM_PURPLE
-		Element.CRYO: return Color.CYAN
-		Element.ANEMO: return Color.PALE_GREEN
+		Element.PYRO: return Color("
+		Element.HYDRO: return Color("
+		Element.ELECTRO: return Color("
+		Element.CRYO: return Color("
+		Element.ANEMO: return Color("
+		Element.GEO: return Color("
+		_: return Color.WHITE
+
+func get_element_secondary_color(element: Element) -> Color:
+	match element:
+		Element.PYRO: return Color("
+		Element.HYDRO: return Color("
+		Element.ELECTRO: return Color("
+		Element.CRYO: return Color("
+		Element.ANEMO: return Color("
+		Element.GEO: return Color("
 		_: return Color.WHITE
 
 func get_reaction(element_1: Element, element_2: Element) -> Dictionary:

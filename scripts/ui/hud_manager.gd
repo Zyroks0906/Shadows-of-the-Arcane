@@ -29,12 +29,12 @@ func update_health(current: float, maximum: float) -> void:
 	
 	var ratio = clamp(float(current) / float(maximum), 0.0, 1.0)
 	
-	# La barra tiene 6 frames (0 a 5). 0 es lleno, 5 es vacío.
-	# Calculamos el frame de forma inversa y proporcional.
+	
+	
 	var total_frames = 6
 	var target_frame = int((1.0 - ratio) * (total_frames - 1))
 	
-	# Aseguramos que si tiene algo de vida, no se vea vacía (frame 5)
+	
 	if ratio > 0.01 and target_frame == 5:
 		target_frame = 4
 		

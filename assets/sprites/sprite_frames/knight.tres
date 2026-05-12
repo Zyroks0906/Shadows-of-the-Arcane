@@ -178,27 +178,27 @@ region = Rect2(672, 0, 96, 84)
 [resource]
 animations = [{
 "frames": [{
-"duration": 0.8,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_3auyh")
 }, {
-"duration": 0.8,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_d1rva")
 }, {
-"duration": 0.8,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_h63cd")
 }, {
-"duration": 0.8,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_xvb0y")
 }, {
-"duration": 0.8,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_etfv4")
 }, {
-"duration": 0.8,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_uqr20")
 }],
 "loop": false,
 "name": &"Attack1",
-"speed": 5.0
+"speed": 13.0
 }, {
 "frames": [{
 "duration": 1.0,

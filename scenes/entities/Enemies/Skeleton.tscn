@@ -1,7 +1,7 @@
-[gd_scene load_steps=39 format=3]
+[gd_scene format=3 uid="uid://5mei32fkpsm2"]
 
-[ext_resource type="Script" path="res://scripts/entities/enemy.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Rat_and_Skeleton/skeleton base outline v2-Sheet.png" id="2_skeleton"]
+[ext_resource type="Script" uid="uid://btgyguiosjds8" path="res://scripts/entities/enemy.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dcsb4tgf170qj" path="res://assets/sprites/enemies/Rat_and_Skeleton/skeleton base outline v2-Sheet.png" id="2_skeleton"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xikba"]
 atlas = ExtResource("2_skeleton")
@@ -275,20 +275,20 @@ animations = [{
 radius = 8.0
 height = 24.0
 
-[node name="Skeleton" type="CharacterBody2D"]
+[node name="Skeleton" type="CharacterBody2D" unique_id=1246946462]
 collision_layer = 4
-collision_mask = 1
+collision_mask = 5
 script = ExtResource("1_script")
-character_name = "Esqueleto"
 speed = 50.0
 attack_range = 35.0
 attack_delay = 0.6
+character_name = "Esqueleto"
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=487452820]
 sprite_frames = SubResource("SpriteFrames_gjs4x")
 animation = &"idle"
 autoplay = "idle"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1217759114]
 position = Vector2(0, 2)
 shape = SubResource("CapsuleShape2D_1")
