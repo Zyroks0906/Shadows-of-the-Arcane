@@ -19,9 +19,6 @@ func _ready() -> void:
 	super._ready()
 	add_to_group("enemies")
 	
-	collision_layer = 4
-	collision_mask = 1
-	
 	player = get_tree().get_first_node_in_group("player")
 	_setup_elemental_shader()
 
@@ -35,8 +32,10 @@ func _setup_elemental_shader() -> void:
 		animated_sprite.material = shader_material
 		
 		var color = ElementalSystem.get_element_color(base_element)
+		var secondary_color = ElementalSystem.get_element_secondary_color(base_element)
 		shader_material.set_shader_parameter("tint_color", color)
-		shader_material.set_shader_parameter("tint_intensity", 0.4 if base_element != ElementalSystem.Element.NONE else 0.0)
+		shader_material.set_shader_parameter("secondary_tint_color", secondary_color)
+		shader_material.set_shader_parameter("tint_intensity", 0.7 if base_element != ElementalSystem.Element.NONE else 0.0)
 
 func _physics_process(_delta: float) -> void:
 	if not is_alive or is_attacking:
@@ -85,16 +84,22 @@ func _perform_attack() -> void:
 	
 	_play_animation("attack")
 	
-	await get_tree().create_timer(attack_delay).timeout
+	var tree = get_tree()
+	if not tree: return
+	await tree.create_timer(attack_delay).timeout
 	
 	if is_alive and is_instance_valid(player):
 		_check_hit()
 		
-	await get_tree().create_timer(0.4).timeout
+	tree = get_tree()
+	if not tree: return
+	await tree.create_timer(0.4).timeout
 	is_attacking = false
 	_play_animation("idle")
 	
-	await get_tree().create_timer(attack_cooldown).timeout
+	tree = get_tree()
+	if not tree: return
+	await tree.create_timer(attack_cooldown).timeout
 	can_attack = true
 
 func _on_reaction_triggered(_reaction_name: String, _data: Dictionary) -> void:

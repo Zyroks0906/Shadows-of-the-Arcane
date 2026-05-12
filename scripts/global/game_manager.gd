@@ -8,8 +8,15 @@ signal silver_keys_changed(new_amount)
 signal golden_keys_changed(new_amount)
 signal health_potions_changed(new_amount)
 signal mana_potions_changed(new_amount)
+signal boss_defeated(boss_name)
 
 var selected_class: CharacterClass = CharacterClass.ARCHER
+var debug_mode: bool = false:
+	set(value):
+		debug_mode = value
+		for node in get_tree().get_nodes_in_group("base_character"):
+			if node.has_method("queue_redraw"):
+				node.queue_redraw()
 var total_coins: int = 0:
 	set(value):
 		total_coins = value
@@ -78,6 +85,11 @@ func reset_progress() -> void:
 	health_potions = 0
 	mana_potions = 0
 
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and event.keycode == KEY_F3:
+		debug_mode = !debug_mode
+		print("Debug Mode: ", debug_mode)
+
 func set_selected_class(c_class: CharacterClass) -> void:
 	selected_class = c_class
 
@@ -93,3 +105,6 @@ func get_selected_class_name() -> String:
 		CharacterClass.CLERIC: return "cleric"
 		CharacterClass.BARBARIAN: return "gladiator"
 	return "unknown"
+
+func notify_boss_defeat(boss_name: String) -> void:
+	boss_defeated.emit(boss_name)

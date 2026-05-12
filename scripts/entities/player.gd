@@ -94,7 +94,9 @@ func _perform_attack(anim_name: String) -> void:
 			
 	attack()
 	
-	await get_tree().create_timer(0.8).timeout
+	var tree = get_tree()
+	if not tree: return
+	await tree.create_timer(0.8).timeout
 	is_attacking = false
 
 func _update_animations() -> void:
@@ -165,7 +167,9 @@ func attack() -> void:
 	add_child(hitbox)
 	hitbox.position = last_direction.normalized() * 20
 	
-	await get_tree().physics_frame
+	var tree = get_tree()
+	if not tree: return
+	await tree.physics_frame
 	
 	if is_instance_valid(hitbox):
 		var bodies = hitbox.get_overlapping_bodies()
@@ -223,11 +227,13 @@ func die() -> void:
 	
 	if animated_sprite and animated_sprite.sprite_frames.has_animation("Death"):
 		animated_sprite.play("Death")
-		await get_tree().create_timer(1.5).timeout
+		var tree = get_tree()
+		if tree:
+			await tree.create_timer(1.5).timeout
 	
-	if SceneManager:
-		SceneManager.load_scene(get_tree().current_scene.scene_file_path)
-	else:
-		get_tree().reload_current_scene()
-
-
+	var tree = get_tree()
+	if tree:
+		if SceneManager:
+			SceneManager.load_scene(tree.current_scene.scene_file_path)
+		else:
+			tree.reload_current_scene()

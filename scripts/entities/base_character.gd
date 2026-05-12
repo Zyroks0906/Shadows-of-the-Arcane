@@ -34,9 +34,18 @@ func _ready() -> void:
 	max_mana = 50 + (level * 5)
 	
 	current_health = max_health
-	current_health = max_health
 	current_mana = max_mana
 	current_imbued_element = base_element
+	
+	add_to_group("base_character")
+	
+	
+	if self is Player:
+		collision_layer = 2   
+		collision_mask = 1    
+	elif self is Enemy:
+		collision_layer = 4   
+		collision_mask = 1 | 4 
 
 func receive_damage(amount: int) -> void:
 	current_health -= amount
@@ -115,3 +124,34 @@ func mostrar_texto_flotante(texto: String, color: Color) -> void:
 		ft.global_position = global_position + Vector2(0, -30)
 		if ft.has_method("set_text"):
 			ft.set_text(texto, color)
+
+func _process(_delta: float) -> void:
+	if GameManager.debug_mode:
+		queue_redraw()
+
+func _draw() -> void:
+	if not GameManager.debug_mode: return
+	
+	
+	for child in get_children():
+		if child is CollisionShape2D:
+			var shape = child.shape
+			if shape is CapsuleShape2D:
+				var h = shape.height / 2.0 - shape.radius
+				draw_arc(child.position + Vector2(0, -h), shape.radius, PI, TAU, 16, Color.GREEN, 1.0)
+				draw_arc(child.position + Vector2(0, h), shape.radius, 0, PI, 16, Color.GREEN, 1.0)
+				draw_line(child.position + Vector2(-shape.radius, -h), child.position + Vector2(-shape.radius, h), Color.GREEN, 1.0)
+				draw_line(child.position + Vector2(shape.radius, -h), child.position + Vector2(shape.radius, h), Color.GREEN, 1.0)
+			elif shape is RectangleShape2D:
+				draw_rect(Rect2(child.position - shape.size/2, shape.size), Color.GREEN, false, 1.0)
+			elif shape is CircleShape2D:
+				draw_arc(child.position, shape.radius, 0, TAU, 32, Color.GREEN, 1.0)
+				
+	
+	var interaction_area = get_node_or_null("InteractionArea")
+	if interaction_area:
+		for child in interaction_area.get_children():
+			if child is CollisionShape2D:
+				var shape = child.shape
+				if shape is CircleShape2D:
+					draw_arc(child.position + interaction_area.position, shape.radius, 0, TAU, 32, Color.RED, 0.5)
