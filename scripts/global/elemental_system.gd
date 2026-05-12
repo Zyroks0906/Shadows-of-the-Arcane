@@ -23,6 +23,15 @@ func get_element_name(element: Element) -> String:
 		Element.ANEMO: return "Anemo"
 		_: return "None"
 
+func get_element_color(element: Element) -> Color:
+	match element:
+		Element.PYRO: return Color.RED
+		Element.HYDRO: return Color.BLUE
+		Element.ELECTRO: return Color.MEDIUM_PURPLE
+		Element.CRYO: return Color.CYAN
+		Element.ANEMO: return Color.PALE_GREEN
+		_: return Color.WHITE
+
 func get_reaction(element_1: Element, element_2: Element) -> Dictionary:
 	if element_1 == Element.NONE or element_2 == Element.NONE:
 		return {"name": "None", "data": REACTION_DATA["None"]}
