@@ -1,9 +1,9 @@
-[gd_scene format=3 uid="uid://2o0e6aaak65a"]
+[gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://lhhjllc3tt2p" path="res://scripts/Screens/SelectChamber/select_chamber.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://c2yt21osdw5tg" path="res://assets/InitialScreen/MapSelector/Map1unlocked.png" id="1_thhcc"]
-[ext_resource type="Texture2D" uid="uid://b13x70282pxct" path="res://assets/InitialScreen/MapSelector/Map2unlocked.png" id="2_8cmh0"]
-[ext_resource type="Texture2D" uid="uid://htta1luv8hbd" path="res://assets/InitialScreen/MapSelector/Map3unlocked.png" id="3_5df50"]
+[ext_resource type="Script" path="res://scripts/Screens/SelectChamber/select_chamber.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/InitialScreen/MapSelector/Map1unlocked.png" id="1_thhcc"]
+[ext_resource type="Texture2D" path="res://assets/InitialScreen/MapSelector/Map2unlocked.png" id="2_8cmh0"]
+[ext_resource type="Texture2D" path="res://assets/InitialScreen/MapSelector/Map3unlocked.png" id="3_5df50"]
 
 [node name="Node2D" type="Node2D" unique_id=2086107114]
 script = ExtResource("1_script")

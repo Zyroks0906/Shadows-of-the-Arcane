@@ -1,10 +1,10 @@
-[gd_scene format=3 uid="uid://ee20jv053pif"]
+[gd_scene format=3 uid="uid://cdlooskqv1nt1"]
 
-[ext_resource type="Texture2D" uid="uid://c5vu0ofxej2ey" path="res://assets/tilesets/items and trap_animation/flasks/flasks_1_1.png" id="1_6pvgy"]
+[ext_resource type="Texture2D" uid="uid://6se5eacfu7ls" path="res://assets/tilesets/items and trap_animation/flasks/flasks_1_1.png" id="1_6pvgy"]
 [ext_resource type="Script" uid="uid://d12108axqgb1b" path="res://scripts/items/collectible.gd" id="1_plyio"]
-[ext_resource type="Texture2D" uid="uid://bse2rsy11g6er" path="res://assets/tilesets/items and trap_animation/flasks/flasks_1_2.png" id="2_plyio"]
-[ext_resource type="Texture2D" uid="uid://1ie0f4u6jd4f" path="res://assets/tilesets/items and trap_animation/flasks/flasks_1_3.png" id="3_4p5di"]
-[ext_resource type="Texture2D" uid="uid://chwnkserjgfhm" path="res://assets/tilesets/items and trap_animation/flasks/flasks_1_4.png" id="4_alalv"]
+[ext_resource type="Texture2D" uid="uid://dbta66ulgbfm7" path="res://assets/tilesets/items and trap_animation/flasks/flasks_1_2.png" id="2_plyio"]
+[ext_resource type="Texture2D" uid="uid://b7ta1gwmcrelq" path="res://assets/tilesets/items and trap_animation/flasks/flasks_1_3.png" id="3_4p5di"]
+[ext_resource type="Texture2D" uid="uid://csm723qvxefjl" path="res://assets/tilesets/items and trap_animation/flasks/flasks_1_4.png" id="4_alalv"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ycb7o"]
 animations = [{
@@ -27,7 +27,6 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_mhil8"]
-radius = 6.0827627
 
 [node name="HealthPotion" type="Node2D" unique_id=1675642979]
 

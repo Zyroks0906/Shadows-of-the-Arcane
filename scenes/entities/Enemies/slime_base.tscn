@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://vy5ifsjlp5v0"]
+[gd_scene format=3]
 
-[ext_resource type="Texture2D" uid="uid://c1m8qi3tyi40x" path="res://assets/sprites/enemies/Slime/slime-Sheet.png" id="2_slime"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Slime/slime-Sheet.png" id="2_slime"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_thrpo"]
 atlas = ExtResource("2_slime")

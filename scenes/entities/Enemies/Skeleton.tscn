@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://cdndvuyskgqo8"]
+[gd_scene format=3]
 
-[ext_resource type="Texture2D" uid="uid://cswisongv77nk" path="res://assets/sprites/enemies/Rat_and_Skeleton/skeleton base outline v2-Sheet.png" id="1_wl0y3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Rat_and_Skeleton/skeleton base outline v2-Sheet.png" id="1_wl0y3"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xikba"]
 atlas = ExtResource("1_wl0y3")

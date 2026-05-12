@@ -1,9 +1,9 @@
-[gd_resource type="SpriteFrames" format=3 uid="uid://bluyycy831jnv"]
+[gd_resource type="SpriteFrames" format=3 uid="uid://bf3enbf2gexa"]
 
-[ext_resource type="Texture2D" uid="uid://bexhpw461hciu" path="res://assets/sprites/player/Samurai 2D Pixel Art v1.2/Sprites/IDLE.png" id="1_6saw4"]
-[ext_resource type="Texture2D" uid="uid://sjkqonmdyeq5" path="res://assets/sprites/player/Samurai 2D Pixel Art v1.2/Sprites/ATTACK 1.png" id="1_ov5xx"]
-[ext_resource type="Texture2D" uid="uid://clf07bywxn75j" path="res://assets/sprites/player/Samurai 2D Pixel Art v1.2/Sprites/HURT.png" id="2_tc316"]
-[ext_resource type="Texture2D" uid="uid://dlkh12qiaqjgm" path="res://assets/sprites/player/Samurai 2D Pixel Art v1.2/Sprites/RUN.png" id="3_tc316"]
+[ext_resource type="Texture2D" uid="uid://behxv1atxvcgx" path="res://assets/sprites/player/Samurai 2D Pixel Art v1.2/Sprites/IDLE.png" id="1_6saw4"]
+[ext_resource type="Texture2D" uid="uid://cs1h5ovb6ovlg" path="res://assets/sprites/player/Samurai 2D Pixel Art v1.2/Sprites/ATTACK 1.png" id="1_ov5xx"]
+[ext_resource type="Texture2D" uid="uid://dqjyt8lv2g5wn" path="res://assets/sprites/player/Samurai 2D Pixel Art v1.2/Sprites/HURT.png" id="2_tc316"]
+[ext_resource type="Texture2D" uid="uid://h7e56qgm0qb2" path="res://assets/sprites/player/Samurai 2D Pixel Art v1.2/Sprites/RUN.png" id="3_tc316"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_n2pw1"]
 atlas = ExtResource("1_ov5xx")

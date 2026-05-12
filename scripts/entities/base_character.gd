@@ -12,8 +12,18 @@ class_name BaseCharacter
 
 var base_scale: Vector2 = Vector2(1.0, 1.0)
 
-var current_health: int
-var current_mana: int
+signal health_changed(current, max)
+signal mana_changed(current, max)
+
+var current_health: int:
+	set(value):
+		current_health = value
+		health_changed.emit(current_health, max_health)
+var current_mana: int:
+	set(value):
+		current_mana = value
+		mana_changed.emit(current_mana, max_mana)
+
 var is_alive: bool = true
 
 @export var base_element: ElementalSystem.Element = ElementalSystem.Element.NONE
@@ -21,9 +31,10 @@ var current_imbued_element: ElementalSystem.Element = ElementalSystem.Element.NO
 
 func _ready() -> void:
 	max_health = 100 + (level * 10)
-
-	current_health = max_health
 	max_mana = 50 + (level * 5)
+	
+	# Inicializar valores (esto disparará los setters y por tanto las señales)
+	current_health = max_health
 	current_mana = max_mana
 
 func receive_damage(amount: int) -> void:

@@ -1,10 +1,11 @@
-[gd_resource type="SpriteFrames" format=3 uid="uid://ddju57mfhk386"]
+[gd_resource type="SpriteFrames" format=3 uid="uid://gbvheqtw2iqi"]
 
-[ext_resource type="Texture2D" uid="uid://b1eo66ayx5ge5" path="res://assets/sprites/player/Necromancer/Sprites/Attack1.png" id="1_21pys"]
-[ext_resource type="Texture2D" uid="uid://dsreveyui23fr" path="res://assets/sprites/player/Necromancer/Sprites/Idle.png" id="1_pj4b0"]
-[ext_resource type="Texture2D" uid="uid://c1cyl3bs8buf0" path="res://assets/sprites/player/Necromancer/Sprites/Death.png" id="2_ndu3p"]
-[ext_resource type="Texture2D" uid="uid://dw0cmrpwdmppj" path="res://assets/sprites/player/Necromancer/Sprites/Take hit.png" id="3_ndu3p"]
-[ext_resource type="Texture2D" uid="uid://cdk0l1lw67558" path="res://assets/sprites/player/Necromancer/Sprites/Run.png" id="4_yr0l0"]
+[ext_resource type="Texture2D" uid="uid://b3moc55tng8cf" path="res://assets/sprites/player/Necromancer/Sprites/Attack1.png" id="1_21pys"]
+[ext_resource type="Texture2D" uid="uid://bg4nrxs1nh3v" path="res://assets/sprites/player/Necromancer/Sprites/Idle.png" id="1_pj4b0"]
+[ext_resource type="Texture2D" uid="uid://ibwjnb50ijcf" path="res://assets/sprites/player/Necromancer/Sprites/Death.png" id="2_ndu3p"]
+[ext_resource type="Texture2D" uid="uid://br268cq2blkpu" path="res://assets/sprites/player/Necromancer/Sprites/Attack2.png" id="2_yr0l0"]
+[ext_resource type="Texture2D" uid="uid://orbr0cby5w5r" path="res://assets/sprites/player/Necromancer/Sprites/Take hit.png" id="3_ndu3p"]
+[ext_resource type="Texture2D" uid="uid://d1xr5gtw7mnlj" path="res://assets/sprites/player/Necromancer/Sprites/Run.png" id="4_yr0l0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5w3xh"]
 atlas = ExtResource("1_21pys")
@@ -36,6 +37,38 @@ region = Rect2(1500, 0, 250, 250)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c330n"]
 atlas = ExtResource("1_21pys")
+region = Rect2(1750, 0, 250, 250)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ip7bu"]
+atlas = ExtResource("2_yr0l0")
+region = Rect2(0, 0, 250, 250)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_47amq"]
+atlas = ExtResource("2_yr0l0")
+region = Rect2(250, 0, 250, 250)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tjex6"]
+atlas = ExtResource("2_yr0l0")
+region = Rect2(500, 0, 250, 250)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_okvxv"]
+atlas = ExtResource("2_yr0l0")
+region = Rect2(750, 0, 250, 250)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lskes"]
+atlas = ExtResource("2_yr0l0")
+region = Rect2(1000, 0, 250, 250)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0yafs"]
+atlas = ExtResource("2_yr0l0")
+region = Rect2(1250, 0, 250, 250)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hjfme"]
+atlas = ExtResource("2_yr0l0")
+region = Rect2(1500, 0, 250, 250)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sx845"]
+atlas = ExtResource("2_yr0l0")
 region = Rect2(1750, 0, 250, 250)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xh5fd"]
@@ -170,7 +203,36 @@ animations = [{
 "texture": SubResource("AtlasTexture_c330n")
 }],
 "loop": false,
-"name": &"Attack",
+"name": &"Attack1",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ip7bu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_47amq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tjex6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_okvxv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lskes")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0yafs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hjfme")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sx845")
+}],
+"loop": true,
+"name": &"Attack2",
 "speed": 5.0
 }, {
 "frames": [{
@@ -269,5 +331,5 @@ animations = [{
 }],
 "loop": true,
 "name": &"Walk",
-"speed": 5.0
+"speed": 7.0
 }]

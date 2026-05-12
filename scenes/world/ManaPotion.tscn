@@ -1,10 +1,10 @@
-[gd_scene format=3 uid="uid://bxkh44daws6wx"]
+[gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://d12108axqgb1b" path="res://scripts/items/collectible.gd" id="1_4ulml"]
-[ext_resource type="Texture2D" uid="uid://bqhf8w32bulxp" path="res://assets/tilesets/items and trap_animation/flasks/flasks_2_1.png" id="1_ekld7"]
-[ext_resource type="Texture2D" uid="uid://bajysfe8ragqd" path="res://assets/tilesets/items and trap_animation/flasks/flasks_2_2.png" id="2_4ulml"]
-[ext_resource type="Texture2D" uid="uid://d2843pru6gp8d" path="res://assets/tilesets/items and trap_animation/flasks/flasks_2_3.png" id="3_ui8pe"]
-[ext_resource type="Texture2D" uid="uid://buhx0ma6b3nuy" path="res://assets/tilesets/items and trap_animation/flasks/flasks_2_4.png" id="4_reo8t"]
+[ext_resource type="Script" path="res://scripts/items/collectible.gd" id="1_4ulml"]
+[ext_resource type="Texture2D" path="res://assets/tilesets/items and trap_animation/flasks/flasks_2_1.png" id="1_ekld7"]
+[ext_resource type="Texture2D" path="res://assets/tilesets/items and trap_animation/flasks/flasks_2_2.png" id="2_4ulml"]
+[ext_resource type="Texture2D" path="res://assets/tilesets/items and trap_animation/flasks/flasks_2_3.png" id="3_ui8pe"]
+[ext_resource type="Texture2D" path="res://assets/tilesets/items and trap_animation/flasks/flasks_2_4.png" id="4_reo8t"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_pois2"]
 animations = [{
@@ -27,7 +27,7 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_y38we"]
-radius = 5.3851647
+radius = 12.0
 
 [node name="ManaPotion" type="Node2D" unique_id=232375374]
 

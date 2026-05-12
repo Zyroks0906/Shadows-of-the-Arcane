@@ -7,8 +7,6 @@ var _base_scale: Vector2
 
 static var selected_character: Area2D = null
 
-@onready var popup: AcceptDialog = _create_character_popup()
-
 func _ready() -> void:
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
@@ -75,9 +73,9 @@ func _update_game_manager_selection() -> void:
 			match child.name:
 				"Archer": GameManager.set_selected_class(GameManager.CharacterClass.ARCHER)
 				"Knight": GameManager.set_selected_class(GameManager.CharacterClass.KNIGHT)
-				"Warrior": GameManager.set_selected_class(GameManager.CharacterClass.WARRIOR)
+				"Assassin": GameManager.set_selected_class(GameManager.CharacterClass.ASSASSIN)
 				"Necromancer": GameManager.set_selected_class(GameManager.CharacterClass.NECROMANCER)
-				"Samurai": GameManager.set_selected_class(GameManager.CharacterClass.ASSASSIN)
+				"Samurai": GameManager.set_selected_class(GameManager.CharacterClass.SAMURAI)
 				"Mage": GameManager.set_selected_class(GameManager.CharacterClass.MAGE)
 				"Cleric": GameManager.set_selected_class(GameManager.CharacterClass.CLERIC)
 				"Gladiator": GameManager.set_selected_class(GameManager.CharacterClass.BARBARIAN)

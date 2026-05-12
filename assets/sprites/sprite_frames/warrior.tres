@@ -1,10 +1,10 @@
-[gd_resource type="SpriteFrames" format=3 uid="uid://cprmy0elee620"]
+[gd_resource type="SpriteFrames" format=3]
 
-[ext_resource type="Texture2D" uid="uid://1e5l52hbory1" path="res://assets/sprites/player/Medieval Warrior Pack 3/Sprites/Idle.png" id="1_ssyct"]
-[ext_resource type="Texture2D" uid="uid://kpid2jlr1lq0" path="res://assets/sprites/player/Medieval Warrior Pack 3/Sprites/Attack1.png" id="1_uwxtm"]
-[ext_resource type="Texture2D" uid="uid://b36oitr77sl0b" path="res://assets/sprites/player/Medieval Warrior Pack 3/Sprites/Death.png" id="2_lf0t6"]
-[ext_resource type="Texture2D" uid="uid://btub7l7fe0mej" path="res://assets/sprites/player/Medieval Warrior Pack 3/Sprites/Get Hit.png" id="3_lf0t6"]
-[ext_resource type="Texture2D" uid="uid://deayjteh7tgkj" path="res://assets/sprites/player/Medieval Warrior Pack 3/Sprites/Run.png" id="4_27alf"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/Medieval Warrior Pack 3/Sprites/Idle.png" id="1_ssyct"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/Medieval Warrior Pack 3/Sprites/Attack1.png" id="1_uwxtm"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/Medieval Warrior Pack 3/Sprites/Death.png" id="2_lf0t6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/Medieval Warrior Pack 3/Sprites/Get Hit.png" id="3_lf0t6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/Medieval Warrior Pack 3/Sprites/Run.png" id="4_27alf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1fnyq"]
 atlas = ExtResource("1_uwxtm")

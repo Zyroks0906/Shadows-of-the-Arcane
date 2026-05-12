@@ -1,13 +1,13 @@
-[gd_scene format=3 uid="uid://dfls3myqmviw6"]
+[gd_scene format=3]
 
-[ext_resource type="Texture2D" uid="uid://bx2guuwxoes0s" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-Attack1.png" id="1_bcmfs"]
-[ext_resource type="Texture2D" uid="uid://cxhnr6cteoqvw" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-Attack2.png" id="2_npu12"]
-[ext_resource type="Texture2D" uid="uid://c6dy0m1m053rs" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-Die.png" id="3_2tuet"]
-[ext_resource type="Texture2D" uid="uid://bu624shawjp2m" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-Hurt.png" id="4_n1hpl"]
-[ext_resource type="Texture2D" uid="uid://o4g1acthwx21" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-IdleFly.png" id="5_pr3j6"]
-[ext_resource type="Texture2D" uid="uid://bquiehjfhok8j" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-Run.png" id="6_ohwu2"]
-[ext_resource type="Texture2D" uid="uid://081hmtbqgfou" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-Sleep.png" id="7_m2l4h"]
-[ext_resource type="Texture2D" uid="uid://dped2llp5a5wd" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-WakeUp.png" id="8_e6lsx"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-Attack1.png" id="1_bcmfs"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-Attack2.png" id="2_npu12"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-Die.png" id="3_2tuet"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-Hurt.png" id="4_n1hpl"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-IdleFly.png" id="5_pr3j6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-Run.png" id="6_ohwu2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-Sleep.png" id="7_m2l4h"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-WakeUp.png" id="8_e6lsx"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_46a37"]
 atlas = ExtResource("1_bcmfs")

@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" format=3 uid="uid://8jtrpalgsk7i"]
+[gd_resource type="SpriteFrames" format=3 uid="uid://iwrju2rykkiq"]
 
 [ext_resource type="Texture2D" uid="uid://cuqggh3mm2k1y" path="res://assets/sprites/player/Priest/cultist_priest_idle_1.png" id="1_x2e3f"]
 [ext_resource type="Texture2D" uid="uid://dbgvsstgteh3q" path="res://assets/sprites/player/Priest/cultist_priest_attack_1.png" id="1_yap3w"]
