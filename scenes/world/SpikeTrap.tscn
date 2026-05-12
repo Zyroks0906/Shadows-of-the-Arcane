@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://cs10fd8mhxund"]
+
+[ext_resource type="Script" uid="uid://d0p4dwndcwe77" path="res://scripts/world/spike_trap.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bj1ftyjw77su7" path="res://assets/tilesets/spike_1.png" id="2_7kfby"]
+[ext_resource type="Texture2D" uid="uid://7e882fclyltj" path="res://assets/tilesets/spike_2.png" id="3_xkb0q"]
+[ext_resource type="Texture2D" uid="uid://fac2t6li74pt" path="res://assets/tilesets/spike_3.png" id="4_bjn7b"]
+[ext_resource type="Texture2D" uid="uid://bmf2i8sg67ctj" path="res://assets/tilesets/spike_4.png" id="5_whk6g"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_peaks"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_7kfby")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_xkb0q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_bjn7b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_whk6g")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_trap"]
+size = Vector2(14, 14)
+
+[node name="SpikeTrap" type="Area2D" unique_id=1577974528]
+script = ExtResource("1_script")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1262780060]
+sprite_frames = SubResource("SpriteFrames_peaks")
+autoplay = "default"
+frame = 3
+frame_progress = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1129411330]
+shape = SubResource("RectangleShape2D_trap")

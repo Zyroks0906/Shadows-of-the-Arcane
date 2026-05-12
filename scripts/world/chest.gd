@@ -1,7 +1,7 @@
 extends Node2D
 class_name Chest
 
-@export var require_interaction: bool = false
+@export var require_interaction: bool = true
 @export var key_amount: int = 0
 @export var coins_amount: int = 0
 @export var hidden_item: Node2D
@@ -26,6 +26,9 @@ func _prepare_hidden_item() -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if not require_interaction:
 		open_chest(body)
+
+func interact(body: Node2D) -> void:
+	open_chest(body)
 
 func open_chest(body: Node2D) -> void:
 	if is_opened or not (body is Player):
