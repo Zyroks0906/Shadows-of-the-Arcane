@@ -70,6 +70,14 @@ func use_mana_potion() -> bool:
 		return true
 	return false
 
+func reset_progress() -> void:
+	total_coins = 0
+	total_keys = 0
+	silver_keys = 0
+	golden_keys = 0
+	health_potions = 0
+	mana_potions = 0
+
 func set_selected_class(c_class: CharacterClass) -> void:
 	selected_class = c_class
 

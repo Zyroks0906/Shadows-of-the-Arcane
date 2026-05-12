@@ -1,9 +1,9 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://mgiyp0dexcuc"]
 
-[ext_resource type="Texture2D" uid="uid://dohp72p2hagvv" path="res://assets/sprites/player/Assassin/Sprites/ATTACK 1/attack1_right.png" id="1_3rs7n"]
-[ext_resource type="Texture2D" uid="uid://dhu8ktl1cllka" path="res://assets/sprites/player/Assassin/Sprites/IDLE/idle_down.png" id="1_idle"]
-[ext_resource type="Texture2D" uid="uid://c3lajk18mpts0" path="res://assets/sprites/player/Assassin/Sprites/ATTACK 2/attack2_right.png" id="2_624l1"]
-[ext_resource type="Texture2D" uid="uid://c26vummabemge" path="res://assets/sprites/player/Assassin/Sprites/RUN/run_right.png" id="4_oahbu"]
+[ext_resource type="Texture2D" uid="uid://cfdkgpvtdajx4" path="res://assets/sprites/player/Assassin/Sprites/ATTACK 1/attack1_right.png" id="1_3rs7n"]
+[ext_resource type="Texture2D" uid="uid://lu3c3qp3nnwn" path="res://assets/sprites/player/Assassin/Sprites/IDLE/idle_down.png" id="1_idle"]
+[ext_resource type="Texture2D" uid="uid://ikfqpjs0ui3f" path="res://assets/sprites/player/Assassin/Sprites/ATTACK 2/attack2_right.png" id="2_624l1"]
+[ext_resource type="Texture2D" uid="uid://dmqris65lryh8" path="res://assets/sprites/player/Assassin/Sprites/RUN/run_right.png" id="4_oahbu"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7rort"]
 atlas = ExtResource("1_3rs7n")

@@ -33,12 +33,14 @@ func _ready() -> void:
 	max_health = 100 + (level * 10)
 	max_mana = 50 + (level * 5)
 	
-	# Inicializar valores (esto disparará los setters y por tanto las señales)
+	current_health = max_health
 	current_health = max_health
 	current_mana = max_mana
+	current_imbued_element = base_element
 
 func receive_damage(amount: int) -> void:
 	current_health -= amount
+	print(character_name, ": Salud actualizada -> ", current_health, "/", max_health)
 	if current_health <= 0:
 		current_health = 0
 		die()
@@ -58,3 +60,58 @@ func use_mana(amount: int) -> bool:
 
 func recover_mana(amount: int) -> void:
 	current_mana = clampi(current_mana + amount, 0, max_mana)
+
+func take_elemental_hit(damage: int, element: ElementalSystem.Element) -> void:
+	var final_damage = damage
+	var reaction_name = ""
+	
+	if element != ElementalSystem.Element.NONE:
+		if current_imbued_element != ElementalSystem.Element.NONE:
+			var reaction_info = ElementalSystem.get_reaction(current_imbued_element, element)
+			reaction_name = reaction_info["name"]
+			if reaction_name != "None":
+				var multiplier = reaction_info["data"].get("multiplier", 1.5)
+				final_damage = int(damage * multiplier)
+				_on_reaction_triggered(reaction_name, reaction_info["data"])
+				mostrar_texto_flotante(reaction_name, reaction_info["data"]["color"])
+				limpiar_elemento()
+			else:
+				if current_imbued_element == element:
+					_on_element_refreshed()
+		else:
+			current_imbued_element = element
+			_on_element_applied()
+	
+	receive_damage(final_damage)
+	
+	if reaction_name != "" and reaction_name != "None":
+		print("[REACCIÓN: ", reaction_name, "] Daño total: ", final_damage, " (Base: ", damage, ")")
+
+func aplicar_elemento(nuevo_elemento: ElementalSystem.Element) -> void:
+	take_elemental_hit(0, nuevo_elemento)
+	take_elemental_hit(0, nuevo_elemento)
+
+func procesar_reaccion(_segundo_elemento: ElementalSystem.Element) -> void:
+	pass
+	pass
+
+func _on_element_applied() -> void:
+	pass
+
+func _on_reaction_triggered(_name: String, _data: Dictionary) -> void:
+	pass
+
+func _on_element_refreshed() -> void:
+	pass
+
+func limpiar_elemento() -> void:
+	current_imbued_element = ElementalSystem.Element.NONE
+
+func mostrar_texto_flotante(texto: String, color: Color) -> void:
+	var ft_scene = load("res://scenes/ui/floating_text.tscn")
+	if ft_scene:
+		var ft: Node2D = ft_scene.instantiate()
+		get_parent().add_child(ft)
+		ft.global_position = global_position + Vector2(0, -30)
+		if ft.has_method("set_text"):
+			ft.set_text(texto, color)

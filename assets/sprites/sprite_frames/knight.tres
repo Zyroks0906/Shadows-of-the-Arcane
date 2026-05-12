@@ -1,11 +1,11 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://c6vrjpnenjs1x"]
 
-[ext_resource type="Texture2D" uid="uid://5m3ptya7hrh8" path="res://assets/sprites/player/Knight 2D Pixel Art/Sprites/with_outline/ATTACK 1.png" id="1_h7ijq"]
-[ext_resource type="Texture2D" uid="uid://3lmxd4apv1gp" path="res://assets/sprites/player/Knight 2D Pixel Art/Sprites/with_outline/ATTACK 2.png" id="2_a32gg"]
-[ext_resource type="Texture2D" uid="uid://cgpop6jpy8wrs" path="res://assets/sprites/player/Knight 2D Pixel Art/Sprites/with_outline/DEATH.png" id="2_fm6xl"]
-[ext_resource type="Texture2D" uid="uid://ddlq20pp4hiy4" path="res://assets/sprites/player/Knight 2D Pixel Art/Sprites/with_outline/HURT.png" id="3_fm6xl"]
-[ext_resource type="Texture2D" uid="uid://cta4mvtyw1vss" path="res://assets/sprites/player/Knight 2D Pixel Art/Sprites/with_outline/IDLE.png" id="4_3auyh"]
-[ext_resource type="Texture2D" uid="uid://blydhy6mem5q7" path="res://assets/sprites/player/Knight 2D Pixel Art/Sprites/with_outline/WALK.png" id="4_a32gg"]
+[ext_resource type="Texture2D" uid="uid://bfau220ib6ig0" path="res://assets/sprites/player/Knight 2D Pixel Art/Sprites/with_outline/ATTACK 1.png" id="1_h7ijq"]
+[ext_resource type="Texture2D" uid="uid://c66ygmnyjwe6v" path="res://assets/sprites/player/Knight 2D Pixel Art/Sprites/with_outline/ATTACK 2.png" id="2_a32gg"]
+[ext_resource type="Texture2D" uid="uid://dybx8ojg3m2w7" path="res://assets/sprites/player/Knight 2D Pixel Art/Sprites/with_outline/DEATH.png" id="2_fm6xl"]
+[ext_resource type="Texture2D" uid="uid://bb3yj7oboacop" path="res://assets/sprites/player/Knight 2D Pixel Art/Sprites/with_outline/HURT.png" id="3_fm6xl"]
+[ext_resource type="Texture2D" uid="uid://1rgc8j5otjvs" path="res://assets/sprites/player/Knight 2D Pixel Art/Sprites/with_outline/IDLE.png" id="4_3auyh"]
+[ext_resource type="Texture2D" uid="uid://d3qfki05ys6hv" path="res://assets/sprites/player/Knight 2D Pixel Art/Sprites/with_outline/WALK.png" id="4_a32gg"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3auyh"]
 atlas = ExtResource("1_h7ijq")

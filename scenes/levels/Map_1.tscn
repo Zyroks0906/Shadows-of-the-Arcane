@@ -1,58 +1,61 @@
 [gd_scene format=4 uid="uid://dfvk7pdf51n00"]
 
-[ext_resource type="Texture2D" uid="uid://gncqffjotbch" path="res://assets/tilesets/mainlevbuild.png" id="1_ngr63"]
-[ext_resource type="Texture2D" uid="uid://b420av3yadlp8" path="res://assets/tilesets/character and tileset/Dungeon_Tileset.png" id="2_s6mhf"]
-[ext_resource type="Texture2D" uid="uid://ctdyg131yys4f" path="res://assets/tilesets/Farm Game Dungeon Cellar Tileset/Tilesets/FG_Cellar.png" id="3_1nyyj"]
-[ext_resource type="Texture2D" uid="uid://bg33oiw1l0the" path="res://assets/tilesets/items and trap_animation/arrow/arrow_2.png" id="4_by2vd"]
-[ext_resource type="Texture2D" uid="uid://cqxlspbt4e5in" path="res://assets/tilesets/items and trap_animation/arrow/arrow_3.png" id="5_t3atn"]
-[ext_resource type="Texture2D" uid="uid://bwetfoqy86igq" path="res://assets/tilesets/items and trap_animation/arrow/arrow_4.png" id="6_akh1h"]
-[ext_resource type="Texture2D" uid="uid://cx3bxgakl0teo" path="res://assets/tilesets/items and trap_animation/arrow/arrow_1.png" id="7_gkro6"]
-[ext_resource type="Texture2D" uid="uid://ds0q7am7nbdrf" path="res://assets/tilesets/items and trap_animation/torch/side_torch_1.png" id="20_kin0c"]
-[ext_resource type="Texture2D" uid="uid://crqw8cd4st7u7" path="res://assets/tilesets/items and trap_animation/torch/side_torch_2.png" id="21_aiixn"]
-[ext_resource type="Texture2D" uid="uid://d3r7dxd6cf6yc" path="res://assets/tilesets/items and trap_animation/torch/side_torch_3.png" id="22_7j7ta"]
-[ext_resource type="Texture2D" uid="uid://ce88wt1a0jsrf" path="res://assets/tilesets/items and trap_animation/torch/side_torch_4.png" id="23_shlsu"]
-[ext_resource type="Texture2D" uid="uid://x0m51mp3caal" path="res://assets/tilesets/items and trap_animation/torch/torch_1.png" id="28_58uhv"]
-[ext_resource type="Texture2D" uid="uid://ctpp85cmbqfci" path="res://assets/tilesets/items and trap_animation/torch/torch_2.png" id="29_ywjpr"]
-[ext_resource type="Texture2D" uid="uid://cmevpsg5lmhw4" path="res://assets/tilesets/items and trap_animation/torch/torch_3.png" id="30_xckv6"]
-[ext_resource type="Texture2D" uid="uid://cf1ipe2u6bx8p" path="res://assets/tilesets/items and trap_animation/torch/torch_4.png" id="31_rx3jx"]
+[ext_resource type="Texture2D" uid="uid://cit1lmmet7jdo" path="res://assets/tilesets/mainlevbuild.png" id="1_ngr63"]
+[ext_resource type="Texture2D" uid="uid://cb838evjqxipg" path="res://assets/tilesets/character and tileset/Dungeon_Tileset.png" id="2_s6mhf"]
+[ext_resource type="Texture2D" uid="uid://bre42lvv2t4sl" path="res://assets/tilesets/Farm Game Dungeon Cellar Tileset/Tilesets/FG_Cellar.png" id="3_1nyyj"]
+[ext_resource type="Texture2D" uid="uid://3p6u4l3rpht2" path="res://assets/tilesets/items and trap_animation/arrow/arrow_2.png" id="4_by2vd"]
+[ext_resource type="Texture2D" uid="uid://kq1t0fbj70cc" path="res://assets/tilesets/items and trap_animation/arrow/arrow_3.png" id="5_t3atn"]
+[ext_resource type="Texture2D" uid="uid://dpk54nb7bogil" path="res://assets/tilesets/items and trap_animation/arrow/arrow_4.png" id="6_akh1h"]
+[ext_resource type="Texture2D" uid="uid://b287hqr2fj3x" path="res://assets/tilesets/items and trap_animation/arrow/arrow_1.png" id="7_gkro6"]
+[ext_resource type="Texture2D" uid="uid://bw0iiwaoj7u03" path="res://assets/tilesets/items and trap_animation/torch/side_torch_1.png" id="20_kin0c"]
+[ext_resource type="Texture2D" uid="uid://dw4p2ke6ma6s6" path="res://assets/tilesets/items and trap_animation/torch/side_torch_2.png" id="21_aiixn"]
+[ext_resource type="Texture2D" uid="uid://cy8d12yldie2g" path="res://assets/tilesets/items and trap_animation/torch/side_torch_3.png" id="22_7j7ta"]
+[ext_resource type="Texture2D" uid="uid://b72s1u4lrfrk7" path="res://assets/tilesets/items and trap_animation/torch/side_torch_4.png" id="23_shlsu"]
+[ext_resource type="Texture2D" uid="uid://cvhf455e210xm" path="res://assets/tilesets/items and trap_animation/torch/torch_1.png" id="28_58uhv"]
+[ext_resource type="Texture2D" uid="uid://bfp7wqtth8jk8" path="res://assets/tilesets/items and trap_animation/torch/torch_2.png" id="29_ywjpr"]
+[ext_resource type="Texture2D" uid="uid://cs3ypuameqctr" path="res://assets/tilesets/items and trap_animation/torch/torch_3.png" id="30_xckv6"]
+[ext_resource type="Texture2D" uid="uid://duxef7vq28vta" path="res://assets/tilesets/items and trap_animation/torch/torch_4.png" id="31_rx3jx"]
 [ext_resource type="PackedScene" path="res://assets/sprites/sprite_frames/Chest.tscn" id="32_x0tn0"]
 [ext_resource type="Script" uid="uid://cmcqty8lq8lc3" path="res://scripts/world/chest.gd" id="33_x0tn0"]
-[ext_resource type="Texture2D" uid="uid://c0wl6nb1rp22x" path="res://assets/tilesets/torch_1.png" id="34_65xq1"]
+[ext_resource type="Texture2D" uid="uid://jbahtopkul0w" path="res://assets/tilesets/torch_1.png" id="34_65xq1"]
 [ext_resource type="PackedScene" path="res://scenes/world/ManaPotion.tscn" id="34_ajou1"]
-[ext_resource type="PackedScene" path="res://scenes/world/HealthPotion.tscn" id="35_1bwfi"]
-[ext_resource type="Texture2D" uid="uid://ci5wgtllnoga6" path="res://assets/tilesets/torch_2.png" id="35_62304"]
-[ext_resource type="Texture2D" uid="uid://bm155tlxdqij0" path="res://assets/tilesets/torch_3.png" id="36_emg3n"]
+[ext_resource type="PackedScene" uid="uid://cdlooskqv1nt1" path="res://scenes/world/HealthPotion.tscn" id="35_1bwfi"]
+[ext_resource type="Texture2D" uid="uid://bfh15shgcpth3" path="res://assets/tilesets/torch_2.png" id="35_62304"]
+[ext_resource type="Texture2D" uid="uid://cqxosra5vcmdn" path="res://assets/tilesets/torch_3.png" id="36_emg3n"]
 [ext_resource type="PackedScene" path="res://scenes/world/SilverKey.tscn" id="37_f7155"]
-[ext_resource type="Texture2D" uid="uid://bb1iqnswa3cwy" path="res://assets/tilesets/torch_4.png" id="37_kngks"]
+[ext_resource type="Texture2D" uid="uid://prpeydv6lm80" path="res://assets/tilesets/torch_4.png" id="37_kngks"]
 [ext_resource type="PackedScene" path="res://assets/sprites/sprite_frames/GoldenKey.tscn" id="51_gcvcy"]
 [ext_resource type="PackedScene" path="res://assets/sprites/sprite_frames/Coin.tscn" id="52_owxll"]
-[ext_resource type="Texture2D" uid="uid://ynwd3klj57j4" path="res://assets/tilesets/items and trap_animation/flag/flag_1.png" id="54_7j7ta"]
+[ext_resource type="Texture2D" uid="uid://4ojdoa704n34" path="res://assets/tilesets/items and trap_animation/flag/flag_1.png" id="54_7j7ta"]
 [ext_resource type="PackedScene" uid="uid://cs10fd8mhxund" path="res://scenes/world/SpikeTrap.tscn" id="54_mhr8s"]
-[ext_resource type="Texture2D" uid="uid://dkpf41fmf4i6k" path="res://assets/tilesets/items and trap_animation/flag/flag_2.png" id="55_shlsu"]
-[ext_resource type="Texture2D" uid="uid://cplxjlx5grsdr" path="res://assets/tilesets/items and trap_animation/flag/flag_3.png" id="56_a55ak"]
-[ext_resource type="Texture2D" uid="uid://ckpvoloklj8nh" path="res://assets/tilesets/items and trap_animation/flag/flag_4.png" id="57_4bde1"]
+[ext_resource type="PackedScene" uid="uid://c5v3q2i5pp27w" path="res://scenes/world/Stairs.tscn" id="54_qc3ib"]
+[ext_resource type="Script" uid="uid://8gp6x0lrhbax" path="res://scripts/world/enemy_spawner.gd" id="55_c4k6i"]
+[ext_resource type="Texture2D" uid="uid://cybw2p72fnoi" path="res://assets/tilesets/items and trap_animation/flag/flag_2.png" id="55_shlsu"]
+[ext_resource type="PackedScene" uid="uid://csirbrx7irsjo" path="res://scenes/entities/Enemies/slime_base.tscn" id="56_3rt2t"]
+[ext_resource type="Texture2D" uid="uid://dxnfi64gkc0aw" path="res://assets/tilesets/items and trap_animation/flag/flag_3.png" id="56_a55ak"]
+[ext_resource type="Texture2D" uid="uid://b00bqpf3wtst7" path="res://assets/tilesets/items and trap_animation/flag/flag_4.png" id="57_4bde1"]
 [ext_resource type="Script" uid="uid://dsnor4r0kdi4j" path="res://scripts/levels/player_spawner.gd" id="58_jpgod"]
 [ext_resource type="PackedScene" uid="uid://crg5dyhm5wt7c" path="res://scenes/world/double_doors.tscn" id="59_1qg34"]
 [ext_resource type="PackedScene" uid="uid://c6imhes4f7vmh" path="res://scenes/world/door.tscn" id="60_gcff6"]
 [ext_resource type="PackedScene" uid="uid://c84sng1npy6ho" path="res://scenes/ui/hud.tscn" id="60_hud"]
-[ext_resource type="Texture2D" uid="uid://dcv1yb342epnm" path="res://assets/tilesets/candleB_01.png" id="70_g7y4m"]
-[ext_resource type="Texture2D" uid="uid://df7ri4d44ssfh" path="res://assets/tilesets/candleB_02.png" id="71_a0qog"]
-[ext_resource type="Texture2D" uid="uid://2thxv54a6uef" path="res://assets/tilesets/candleB_03.png" id="72_ifnw3"]
-[ext_resource type="Texture2D" uid="uid://bj6hnyrg4yi6m" path="res://assets/tilesets/candleB_04.png" id="73_mtwj5"]
-[ext_resource type="Texture2D" uid="uid://ctl1hdf4ow4dy" path="res://assets/tilesets/candleA_01.png" id="74_oc8gn"]
-[ext_resource type="Texture2D" uid="uid://biucm5e1j8wbl" path="res://assets/tilesets/candleA_02.png" id="75_g53qm"]
-[ext_resource type="Texture2D" uid="uid://dyyouhx72uqfq" path="res://assets/tilesets/candleA_03.png" id="76_cyial"]
-[ext_resource type="Texture2D" uid="uid://r6t8cswhhdku" path="res://assets/tilesets/candleA_04.png" id="77_q1rhu"]
-[ext_resource type="Texture2D" uid="uid://bg4dyuhpld667" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_1.png" id="80_iipn5"]
-[ext_resource type="Texture2D" uid="uid://cl4jprfr3ov17" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_2.png" id="81_jtfls"]
-[ext_resource type="Texture2D" uid="uid://dwygn1uphwqtm" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_3.png" id="82_r50bh"]
-[ext_resource type="Texture2D" uid="uid://bbdovxcl4sp6w" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_4.png" id="83_7ptvj"]
-[ext_resource type="Texture2D" uid="uid://5mevo15bgg5p" path="res://assets/tilesets/decorative.png" id="84_ha0t5"]
-[ext_resource type="Texture2D" uid="uid://cdiuxno5vk0wp" path="res://assets/tilesets/Farm Game Dungeon Cellar Tileset/Tilesets/FG_Cellar_Doors.png" id="85_yrcjl"]
-[ext_resource type="Texture2D" uid="uid://dbc3nyfjb3iad" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_open_1.png" id="90_qshex"]
-[ext_resource type="Texture2D" uid="uid://dlp347grm1lnl" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_open_2.png" id="91_nwi8y"]
-[ext_resource type="Texture2D" uid="uid://b7puv16tnhr6w" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_open_3.png" id="92_53qsk"]
-[ext_resource type="Texture2D" uid="uid://d3ehbp7ttklyg" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_open_4.png" id="93_lyy6p"]
+[ext_resource type="Texture2D" uid="uid://dq1f6m60tc001" path="res://assets/tilesets/candleB_01.png" id="70_g7y4m"]
+[ext_resource type="Texture2D" uid="uid://d0q8kjt4ryw76" path="res://assets/tilesets/candleB_02.png" id="71_a0qog"]
+[ext_resource type="Texture2D" uid="uid://cs3bp36to7if0" path="res://assets/tilesets/candleB_03.png" id="72_ifnw3"]
+[ext_resource type="Texture2D" uid="uid://dmmom5c41x80n" path="res://assets/tilesets/candleB_04.png" id="73_mtwj5"]
+[ext_resource type="Texture2D" uid="uid://dc80d1oaoba3v" path="res://assets/tilesets/candleA_01.png" id="74_oc8gn"]
+[ext_resource type="Texture2D" uid="uid://bwed1m3sh02n8" path="res://assets/tilesets/candleA_02.png" id="75_g53qm"]
+[ext_resource type="Texture2D" uid="uid://bdfce8rkmqx88" path="res://assets/tilesets/candleA_03.png" id="76_cyial"]
+[ext_resource type="Texture2D" uid="uid://frmrlnocs1iq" path="res://assets/tilesets/candleA_04.png" id="77_q1rhu"]
+[ext_resource type="Texture2D" uid="uid://dfnj4dhynx5rw" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_1.png" id="80_iipn5"]
+[ext_resource type="Texture2D" uid="uid://dmt0j2f6vv1pm" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_2.png" id="81_jtfls"]
+[ext_resource type="Texture2D" uid="uid://boaltvc2n5x86" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_3.png" id="82_r50bh"]
+[ext_resource type="Texture2D" uid="uid://tqeejh46k8m8" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_4.png" id="83_7ptvj"]
+[ext_resource type="Texture2D" uid="uid://dhct2s15lp000" path="res://assets/tilesets/decorative.png" id="84_ha0t5"]
+[ext_resource type="Texture2D" uid="uid://bqeo68f8iuqh8" path="res://assets/tilesets/Farm Game Dungeon Cellar Tileset/Tilesets/FG_Cellar_Doors.png" id="85_yrcjl"]
+[ext_resource type="Texture2D" uid="uid://bkf4goraevdj1" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_open_1.png" id="90_qshex"]
+[ext_resource type="Texture2D" uid="uid://dsj6afshy566x" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_open_2.png" id="91_nwi8y"]
+[ext_resource type="Texture2D" uid="uid://cy1es524wxc8x" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_open_3.png" id="92_53qsk"]
+[ext_resource type="Texture2D" uid="uid://qcoxvskpnmaa" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_open_4.png" id="93_lyy6p"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r50bh"]
 texture = ExtResource("2_s6mhf")
@@ -4175,3 +4178,43 @@ position = Vector2(918, 189)
 position = Vector2(822, 189)
 
 [node name="HUD" parent="." unique_id=1666428414 instance=ExtResource("60_hud")]
+
+[node name="Stairs" type="Node2D" parent="." unique_id=244057245]
+
+[node name="Stair" parent="Stairs" unique_id=1040605347 node_paths=PackedStringArray("target_marker") instance=ExtResource("54_qc3ib")]
+position = Vector2(1062, 220)
+target_marker = NodePath("../../Teleports/Teleport")
+
+[node name="Stair2" parent="Stairs" unique_id=1583459380 node_paths=PackedStringArray("target_marker") instance=ExtResource("54_qc3ib")]
+position = Vector2(1079, 220)
+target_marker = NodePath("../../Teleports/Teleport")
+
+[node name="Stair3" parent="Stairs" unique_id=1326453146 node_paths=PackedStringArray("target_marker") instance=ExtResource("54_qc3ib")]
+position = Vector2(1094, 189)
+target_marker = NodePath("../../Teleports/Teleport2")
+
+[node name="Stair4" parent="Stairs" unique_id=1487691067 node_paths=PackedStringArray("target_marker") instance=ExtResource("54_qc3ib")]
+visible = false
+position = Vector2(731.00006, 355.00003)
+scale = Vector2(2.377449, 2.4719234)
+target_marker = NodePath("../../Teleports/Teleport3")
+
+[node name="Teleports" type="Node2D" parent="." unique_id=1999716217]
+
+[node name="Teleport" type="Marker2D" parent="Teleports" unique_id=1782033907]
+position = Vector2(1094, 167)
+
+[node name="Teleport2" type="Marker2D" parent="Teleports" unique_id=598925665]
+position = Vector2(1071, 246)
+
+[node name="Teleport3" type="Marker2D" parent="Teleports" unique_id=158351110]
+position = Vector2(572, 387)
+scale = Vector2(2.377449, 2.4719234)
+
+[node name="EnemySpawners" type="Node2D" parent="." unique_id=1164968561]
+
+[node name="Slime" type="Marker2D" parent="EnemySpawners" unique_id=2026311176]
+position = Vector2(938, 139)
+script = ExtResource("55_c4k6i")
+enemy_scene = ExtResource("56_3rt2t")
+element = 1

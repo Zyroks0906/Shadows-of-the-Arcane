@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://c5v3q2i5pp27w"]
+
+[ext_resource type="Texture2D" uid="uid://cb838evjqxipg" path="res://assets/tilesets/character and tileset/Dungeon_Tileset.png" id="1_jp46r"]
+[ext_resource type="Script" uid="uid://b268pnqpxfsr2" path="res://scripts/world/teleport.gd" id="2_n4s4w"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n4s4w"]
+size = Vector2(20, 21)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mkwrd"]
+size = Vector2(16, 17)
+
+[node name="Stair" type="StaticBody2D" unique_id=1040605347]
+script = ExtResource("2_n4s4w")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=308648474]
+texture = ExtResource("1_jp46r")
+region_enabled = true
+region_rect = Rect2(144.6031, 47.530197, 14.65065, 17.734985)
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1068059945]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1685716978]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_n4s4w")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1342403177]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_mkwrd")

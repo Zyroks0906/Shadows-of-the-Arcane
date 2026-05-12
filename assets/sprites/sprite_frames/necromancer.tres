@@ -1,11 +1,11 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://gbvheqtw2iqi"]
 
-[ext_resource type="Texture2D" uid="uid://b3moc55tng8cf" path="res://assets/sprites/player/Necromancer/Sprites/Attack1.png" id="1_21pys"]
-[ext_resource type="Texture2D" uid="uid://bg4nrxs1nh3v" path="res://assets/sprites/player/Necromancer/Sprites/Idle.png" id="1_pj4b0"]
-[ext_resource type="Texture2D" uid="uid://ibwjnb50ijcf" path="res://assets/sprites/player/Necromancer/Sprites/Death.png" id="2_ndu3p"]
-[ext_resource type="Texture2D" uid="uid://br268cq2blkpu" path="res://assets/sprites/player/Necromancer/Sprites/Attack2.png" id="2_yr0l0"]
-[ext_resource type="Texture2D" uid="uid://orbr0cby5w5r" path="res://assets/sprites/player/Necromancer/Sprites/Take hit.png" id="3_ndu3p"]
-[ext_resource type="Texture2D" uid="uid://d1xr5gtw7mnlj" path="res://assets/sprites/player/Necromancer/Sprites/Run.png" id="4_yr0l0"]
+[ext_resource type="Texture2D" uid="uid://b1eo66ayx5ge5" path="res://assets/sprites/player/Necromancer/Sprites/Attack1.png" id="1_21pys"]
+[ext_resource type="Texture2D" uid="uid://dsreveyui23fr" path="res://assets/sprites/player/Necromancer/Sprites/Idle.png" id="1_pj4b0"]
+[ext_resource type="Texture2D" uid="uid://c1cyl3bs8buf0" path="res://assets/sprites/player/Necromancer/Sprites/Death.png" id="2_ndu3p"]
+[ext_resource type="Texture2D" uid="uid://dleu7sro10pn2" path="res://assets/sprites/player/Necromancer/Sprites/Attack2.png" id="2_yr0l0"]
+[ext_resource type="Texture2D" uid="uid://dw0cmrpwdmppj" path="res://assets/sprites/player/Necromancer/Sprites/Take hit.png" id="3_ndu3p"]
+[ext_resource type="Texture2D" uid="uid://cdk0l1lw67558" path="res://assets/sprites/player/Necromancer/Sprites/Run.png" id="4_yr0l0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5w3xh"]
 atlas = ExtResource("1_21pys")

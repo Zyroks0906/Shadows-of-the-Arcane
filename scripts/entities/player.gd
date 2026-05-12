@@ -116,12 +116,16 @@ func _update_animations() -> void:
 		return
 
 	if Input.is_action_just_pressed("use_health_potion"):
-		if GameManager.use_health_potion():
-			receive_damage(-20)
+		if current_health < max_health:
+			if GameManager.use_health_potion():
+				recover_health(20)
+		return
 
 	if Input.is_action_just_pressed("use_mana_potion"):
-		if GameManager.use_mana_potion():
-			pass
+		if current_mana < max_mana:
+			if GameManager.use_mana_potion():
+				recover_mana(20)
+		return
 
 	if velocity.length() > 0:
 		play_animation("Walk")
@@ -152,6 +156,7 @@ func attack() -> void:
 	if not is_inside_tree(): return
 	
 	var hitbox = Area2D.new()
+	hitbox.collision_mask = 4
 	var collision = CollisionShape2D.new()
 	var shape = RectangleShape2D.new()
 	shape.size = Vector2(30, 30)
@@ -183,43 +188,22 @@ func play_animation(anim_name: String) -> void:
 		if animated_sprite.sprite_frames.has_animation(final_anim):
 			animated_sprite.play(final_anim)
 
-func aplicar_elemento(nuevo_elemento: ElementalSystem.Element) -> void:
-	if nuevo_elemento == ElementalSystem.Element.NONE:
-		return
-	
-	if current_imbued_element == ElementalSystem.Element.NONE:
-		current_imbued_element = nuevo_elemento
-		actualizar_icono_elemento()
-		element_timer.start(3.0)
-	else:
-		procesar_reaccion(nuevo_elemento)
+func _on_element_applied() -> void:
+	actualizar_icono_elemento()
+	element_timer.start(3.0)
 
-func procesar_reaccion(segundo_elemento: ElementalSystem.Element) -> void:
-	var reaction_info: Dictionary = ElementalSystem.get_reaction(current_imbued_element, segundo_elemento)
-	var reaction_name: String = reaction_info["name"]
-	var data: Dictionary = reaction_info["data"]
-	
-	if reaction_name != "None":
-		mostrar_texto_flotante(reaction_name, data["color"])
-		limpiar_elemento()
-	else:
-		if current_imbued_element == segundo_elemento:
-			element_timer.start(3.0)
+func _on_reaction_triggered(_name: String, data: Dictionary) -> void:
+	pass
 
-func mostrar_texto_flotante(texto: String, color: Color) -> void:
-	if FLOATING_TEXT_SCENE:
-		var ft: Node2D = FLOATING_TEXT_SCENE.instantiate()
-		get_parent().add_child(ft)
-		ft.global_position = global_position + Vector2(0, -50)
-		if ft.has_method("set_text"):
-			ft.set_text(texto, color)
+func _on_element_refreshed() -> void:
+	element_timer.start(3.0)
 
 func actualizar_icono_elemento() -> void:
 	if element_icon:
 		element_icon.visible = true
 
 func limpiar_elemento() -> void:
-	current_imbued_element = ElementalSystem.Element.NONE
+	super.limpiar_elemento()
 	if element_icon:
 		element_icon.visible = false
 	if element_timer:
@@ -231,6 +215,8 @@ func _on_element_timer_timeout() -> void:
 func die() -> void:
 	if not is_alive: return
 	is_alive = false
+	
+	GameManager.reset_progress()
 	
 	set_collision_layer_value(1, false)
 	set_collision_mask_value(1, false)
@@ -244,6 +230,4 @@ func die() -> void:
 	else:
 		get_tree().reload_current_scene()
 
-func take_elemental_hit(damage: int, element: ElementalSystem.Element) -> void:
-	receive_damage(damage)
-	aplicar_elemento(element)
+
