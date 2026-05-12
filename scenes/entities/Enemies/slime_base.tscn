@@ -1,6 +1,7 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://csirbrx7irsjo"]
 
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Slime/slime-Sheet.png" id="2_slime"]
+[ext_resource type="Script" uid="uid://btgyguiosjds8" path="res://scripts/entities/enemy.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://c8v04skyqs3j5" path="res://assets/sprites/enemies/Slime/slime-Sheet.png" id="2_slime"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_thrpo"]
 atlas = ExtResource("2_slime")
@@ -113,9 +114,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_n86hd")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -133,7 +134,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_4s0tm")
 }],
-"loop": true,
+"loop": false,
 "name": &"death",
 "speed": 5.0
 }, {
@@ -167,8 +168,24 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Node2D" type="Node2D" unique_id=1645176855]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
+radius = 6.0
+height = 20.0
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1040215752]
+[node name="Slime" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1_script")
+character_name = "Slime"
+speed = 30.0
+attack_range = 20.0
+attack_delay = 0.4
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1927768249]
 sprite_frames = SubResource("SpriteFrames_y8ejl")
-animation = &"attack"
+animation = &"idle"
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=4476884]
+position = Vector2(1, 5)
+shape = SubResource("CapsuleShape2D_1")
