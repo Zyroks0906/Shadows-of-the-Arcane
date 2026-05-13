@@ -77,7 +77,7 @@ func recover_mana(amount: int) -> void:
 func take_elemental_hit(damage: int, element: ElementalSystem.Element) -> void:
 	var final_damage = damage
 	var reaction_name = ""
-	
+
 	if element != ElementalSystem.Element.NONE:
 		if current_imbued_element != ElementalSystem.Element.NONE:
 			var reaction_info = ElementalSystem.get_reaction(current_imbued_element, element)
@@ -94,9 +94,9 @@ func take_elemental_hit(damage: int, element: ElementalSystem.Element) -> void:
 		else:
 			current_imbued_element = element
 			_on_element_applied()
-	
+
 	receive_damage(final_damage)
-	
+
 	if reaction_name != "" and reaction_name != "None":
 		print("[REACCIÓN: ", reaction_name, "] Daño total: ", final_damage, " (Base: ", damage, ")")
 
@@ -150,7 +150,7 @@ func _process(_delta: float) -> void:
 
 func _draw() -> void:
 	if not GameManager.debug_mode: return
-	
+
 	for child in get_children():
 		if child is CollisionShape2D:
 			var shape = child.shape
@@ -164,7 +164,7 @@ func _draw() -> void:
 				draw_rect(Rect2(child.position - shape.size/2, shape.size), Color.GREEN, false, 1.0)
 			elif shape is CircleShape2D:
 				draw_arc(child.position, shape.radius, 0, TAU, 32, Color.GREEN, 1.0)
-	
+
 	var interaction_area = get_node_or_null("InteractionArea")
 	if interaction_area:
 		for child in interaction_area.get_children():

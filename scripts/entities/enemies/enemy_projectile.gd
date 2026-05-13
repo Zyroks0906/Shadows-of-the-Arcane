@@ -18,7 +18,7 @@ func _physics_process(delta: float) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("enemies"):
 		return
-	
+
 	if body is Player or body.has_method("take_elemental_hit"):
 		body.take_elemental_hit(damage, element)
 		queue_free()
