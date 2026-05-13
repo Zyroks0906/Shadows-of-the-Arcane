@@ -227,9 +227,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_t67lr")
 }],
-"loop": true,
+"loop": false,
 "name": &"Attack2",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,

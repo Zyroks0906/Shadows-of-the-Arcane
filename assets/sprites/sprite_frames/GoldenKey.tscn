@@ -37,7 +37,7 @@ autoplay = "default"
 
 [node name="Area2D" type="Area2D" parent="." unique_id=684326738]
 script = ExtResource("1_3y30o")
-type = 1
+type = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=790787149]
 shape = SubResource("CircleShape2D_4gdqi")
