@@ -10,5 +10,5 @@ func _init() -> void:
 	intelligence = 10
 	resistance = 7
 	wisdom = 12
-	speed = 130.0
+	speed = 80.0
 	base_scale = Vector2(0.4, 0.4)

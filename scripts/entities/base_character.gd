@@ -1,14 +1,17 @@
 extends CharacterBody2D
 class_name BaseCharacter
 
+enum AnimPriority { FREE = 0, ACTION = 1, LOCKED = 2 }
+var _anim_priority: AnimPriority = AnimPriority.FREE
+
 @export var character_name: String = "Character"
 @export var level: int = 1
 @export var max_health: int = 100
 @export var max_mana: int = 50
 @export var strength: int = 10
 @export var intelligence: int = 10
-@export var resistance: int = 8
-@export var wisdom: int = 8
+@export var resistance: int = 10
+@export var wisdom: int = 10
 
 var base_scale: Vector2 = Vector2(1.0, 1.0)
 
@@ -30,33 +33,34 @@ var is_alive: bool = true
 var current_imbued_element: ElementalSystem.Element = ElementalSystem.Element.NONE
 
 func _ready() -> void:
-	max_health = 100 + (level * 10)
-	max_mana = 50 + (level * 5)
-	
 	current_health = max_health
 	current_mana = max_mana
 	current_imbued_element = base_element
-	
 	add_to_group("base_character")
-	
-	
-	if self is Player:
-		collision_layer = 2   
-		collision_mask = 1    
-	elif self is Enemy:
-		collision_layer = 4   
-		collision_mask = 1 | 4 
+	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
+
+var _step_timer: float = 0.0
 
 func receive_damage(amount: int) -> void:
-	current_health -= amount
-	print(character_name, ": Salud actualizada -> ", current_health, "/", max_health)
+	var final_amount = clampi(amount - resistance, 1, amount)
+	current_health = clampi(current_health - final_amount, 0, max_health)
+	print(character_name, ": Recibe ", final_amount, " de daño. Salud -> ", current_health, "/", max_health)
 	if current_health <= 0:
-		current_health = 0
 		die()
 
+func _physics_process(delta: float) -> void:
+	if is_alive and velocity.length() > 20:
+		_step_timer += delta
+		if _step_timer >= 0.35:
+			_step_timer = 0.0
+			var am = get_node_or_null("/root/AudioManager")
+			if am: am.play_sfx("res://assets/audio/sfx/Movement/gravel_1.wav", -15.0, randf_range(0.8, 1.2))
+
 func die() -> void:
+	if not is_alive: return
 	is_alive = false
-	queue_free()
+	var am = get_node_or_null("/root/AudioManager")
+	if am: am.play_sfx("res://assets/audio/sfx/Combat/squelching_3.wav", 8.0)
 
 func recover_health(amount: int) -> void:
 	current_health = clampi(current_health + amount, 0, max_health)
@@ -102,7 +106,6 @@ func aplicar_elemento(nuevo_elemento: ElementalSystem.Element) -> void:
 
 func procesar_reaccion(_segundo_elemento: ElementalSystem.Element) -> void:
 	pass
-	pass
 
 func _on_element_applied() -> void:
 	pass
@@ -125,13 +128,28 @@ func mostrar_texto_flotante(texto: String, color: Color) -> void:
 		if ft.has_method("set_text"):
 			ft.set_text(texto, color)
 
+func _anim_play(sprite: AnimatedSprite2D, anim: String, priority: AnimPriority = AnimPriority.FREE) -> bool:
+	if priority < _anim_priority:
+		return false
+	if not sprite or not sprite.sprite_frames:
+		return false
+	if not sprite.sprite_frames.has_animation(anim):
+		return false
+	_anim_priority = priority
+	if sprite.animation != anim or priority >= AnimPriority.ACTION:
+		sprite.play(anim)
+	return true
+
+func _anim_release(priority: AnimPriority = AnimPriority.ACTION) -> void:
+	if _anim_priority <= priority:
+		_anim_priority = AnimPriority.FREE
+
 func _process(_delta: float) -> void:
 	if GameManager.debug_mode:
 		queue_redraw()
 
 func _draw() -> void:
 	if not GameManager.debug_mode: return
-	
 	
 	for child in get_children():
 		if child is CollisionShape2D:
@@ -146,7 +164,6 @@ func _draw() -> void:
 				draw_rect(Rect2(child.position - shape.size/2, shape.size), Color.GREEN, false, 1.0)
 			elif shape is CircleShape2D:
 				draw_arc(child.position, shape.radius, 0, TAU, 32, Color.GREEN, 1.0)
-				
 	
 	var interaction_area = get_node_or_null("InteractionArea")
 	if interaction_area:

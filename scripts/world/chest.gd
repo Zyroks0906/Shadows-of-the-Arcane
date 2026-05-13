@@ -35,12 +35,19 @@ func open_chest(body: Node2D) -> void:
 		return
 		
 	is_opened = true
-	GameManager.add_keys(key_amount)
-	GameManager.add_coins(coins_amount)
+	var am = get_node_or_null("/root/AudioManager")
+	if am: am.play_sfx("res://assets/audio/sfx/Environment/creaky_door_short.wav", 5.0)
 	
 	if sprite:
 		sprite.play("default")
+		await sprite.animation_finished
 		
+	if am and (key_amount > 0 or coins_amount > 0):
+		am.play_sfx("res://assets/audio/sfx/Items/coin_collect.wav")
+		
+	GameManager.add_keys(key_amount)
+	GameManager.add_coins(coins_amount)
+	
 	if hidden_item:
 		hidden_item.visible = true
 		_set_item_collision(hidden_item, true)

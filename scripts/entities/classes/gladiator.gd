@@ -10,6 +10,6 @@ func _init() -> void:
 	intelligence = 4
 	resistance = 12
 	wisdom = 5
-	speed = 130.0
+	speed = 80.0
 	base_scale = Vector2(0.15, 0.15)
 	sprite_offset = Vector2(0, -25)

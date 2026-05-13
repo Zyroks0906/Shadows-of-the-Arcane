@@ -2,6 +2,80 @@
 
 [ext_resource type="Script" uid="uid://btgyguiosjds8" path="res://scripts/entities/enemy.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://c8v04skyqs3j5" path="res://assets/sprites/enemies/Slime/slime-Sheet.png" id="2_slime"]
+[ext_resource type="PackedScene" path="res://scenes/vfx/aura_electro.tscn" id="3_qoy5v"]
+[ext_resource type="Texture2D" uid="uid://cl2tsexc4tame" path="res://assets/VFX/Lightning/VFX5/Frames/lightning_skill5_frame1.png" id="4_obw3e"]
+[ext_resource type="Texture2D" uid="uid://b1b5hqbompw5f" path="res://assets/VFX/Lightning/VFX5/Frames/lightning_skill5_frame2.png" id="5_nkbfo"]
+[ext_resource type="Texture2D" uid="uid://be0x2xqksa7d2" path="res://assets/VFX/Lightning/VFX5/Frames/lightning_skill5_frame3.png" id="6_6w0c1"]
+[ext_resource type="Texture2D" uid="uid://cfdjh3x5pfe8h" path="res://assets/VFX/Lightning/VFX5/Frames/lightning_skill5_frame4.png" id="7_0s4gx"]
+[ext_resource type="PackedScene" path="res://scenes/vfx/aura_cryo.tscn" id="8_2uuqq"]
+[ext_resource type="Texture2D" uid="uid://ckog7eo3p0qd6" path="res://assets/VFX/Elemental_Spikes/Ice Spike From Ground Tier 1/Ice Spike From Ground Tier 1_Frames/Ice Spike From Ground Tier 1_01.png" id="9_bmmky"]
+[ext_resource type="Texture2D" uid="uid://dveli24p60pic" path="res://assets/VFX/Elemental_Spikes/Ice Spike From Ground Tier 1/Ice Spike From Ground Tier 1_Frames/Ice Spike From Ground Tier 1_02.png" id="10_h8hlf"]
+[ext_resource type="Texture2D" uid="uid://b1vi1vgact5is" path="res://assets/VFX/Elemental_Spikes/Ice Spike From Ground Tier 1/Ice Spike From Ground Tier 1_Frames/Ice Spike From Ground Tier 1_03.png" id="11_8qvve"]
+[ext_resource type="Texture2D" uid="uid://5h3p73y02guk" path="res://assets/VFX/Elemental_Spikes/Ice Spike From Ground Tier 1/Ice Spike From Ground Tier 1_Frames/Ice Spike From Ground Tier 1_04.png" id="12_7knyv"]
+[ext_resource type="Texture2D" uid="uid://dcb64vibgi15o" path="res://assets/VFX/Elemental_Spikes/Ice Spike From Ground Tier 1/Ice Spike From Ground Tier 1_Frames/Ice Spike From Ground Tier 1_05.png" id="13_ri662"]
+[ext_resource type="Texture2D" uid="uid://e4o8utj1b1se" path="res://assets/VFX/Elemental_Spikes/Ice Spike From Ground Tier 1/Ice Spike From Ground Tier 1_Frames/Ice Spike From Ground Tier 1_06.png" id="14_i8e6h"]
+[ext_resource type="Texture2D" uid="uid://bwexlrasnfrov" path="res://assets/VFX/Elemental_Spikes/Ice Spike From Ground Tier 1/Ice Spike From Ground Tier 1_Frames/Ice Spike From Ground Tier 1_07.png" id="15_8sjfe"]
+[ext_resource type="Texture2D" uid="uid://dque1j48niqju" path="res://assets/VFX/Elemental_Spikes/Ice Spike From Ground Tier 1/Ice Spike From Ground Tier 1_Frames/Ice Spike From Ground Tier 1_08.png" id="16_s4sxt"]
+[ext_resource type="Texture2D" uid="uid://dw2ifa5kfhatb" path="res://assets/VFX/Elemental_Spikes/Ice Spike From Ground Tier 1/Ice Spike From Ground Tier 1_Frames/Ice Spike From Ground Tier 1_09.png" id="17_o4o3g"]
+[ext_resource type="Texture2D" uid="uid://cr8xsy2e2encd" path="res://assets/VFX/Elemental_Spikes/Ice Spike From Ground Tier 1/Ice Spike From Ground Tier 1_Frames/Ice Spike From Ground Tier 1_10.png" id="18_c5sst"]
+[ext_resource type="Texture2D" uid="uid://dn3omvmtiy8np" path="res://assets/VFX/Elemental_Spikes/Ice Spike From Ground Tier 1/Ice Spike From Ground Tier 1_Frames/Ice Spike From Ground Tier 1_11.png" id="19_6oyj6"]
+[ext_resource type="Texture2D" uid="uid://brosyfidedam2" path="res://assets/VFX/Elemental_Spikes/Ice Spike From Ground Tier 1/Ice Spike From Ground Tier 1_Frames/Ice Spike From Ground Tier 1_12.png" id="20_gr4ag"]
+[ext_resource type="Texture2D" uid="uid://dvf44s8qcwl76" path="res://assets/VFX/Elemental_Spikes/Ice Spike From Ground Tier 1/Ice Spike From Ground Tier 1_Frames/Ice Spike From Ground Tier 1_13.png" id="21_dgl5f"]
+[ext_resource type="Texture2D" uid="uid://b4kq114nhkjug" path="res://assets/VFX/Elemental_Spikes/Ice Spike From Ground Tier 1/Ice Spike From Ground Tier 1_Frames/Ice Spike From Ground Tier 1_14.png" id="22_8phyj"]
+[ext_resource type="Texture2D" uid="uid://ckrt2dwlrab0o" path="res://assets/VFX/Elemental_Spikes/Ice Spike From Ground Tier 1/Ice Spike From Ground Tier 1_Frames/Ice Spike From Ground Tier 1_15.png" id="23_8glua"]
+[ext_resource type="Texture2D" uid="uid://d1f77ieebpwjq" path="res://assets/VFX/Elemental_Spikes/Ice Spike From Ground Tier 1/Ice Spike From Ground Tier 1_Frames/Ice Spike From Ground Tier 1_16.png" id="24_mcn74"]
+[ext_resource type="PackedScene" path="res://scenes/vfx/aura_pyro.tscn" id="25_uyegr"]
+[ext_resource type="Texture2D" uid="uid://to0xhxdycnpc" path="res://assets/VFX/Elemental_Spikes/Fire Spike From Ground Tier 1/Fire Spikes From Ground Tier 1_Frames/Fire Spikes From Ground Tier 1_01.png" id="26_ir5cn"]
+[ext_resource type="Texture2D" uid="uid://cymatpog0s57m" path="res://assets/VFX/Elemental_Spikes/Fire Spike From Ground Tier 1/Fire Spikes From Ground Tier 1_Frames/Fire Spikes From Ground Tier 1_02.png" id="27_qlo3w"]
+[ext_resource type="Texture2D" uid="uid://c6hmarjga8rwg" path="res://assets/VFX/Elemental_Spikes/Fire Spike From Ground Tier 1/Fire Spikes From Ground Tier 1_Frames/Fire Spikes From Ground Tier 1_03.png" id="28_m0won"]
+[ext_resource type="Texture2D" uid="uid://boe6tesj3pj8n" path="res://assets/VFX/Elemental_Spikes/Fire Spike From Ground Tier 1/Fire Spikes From Ground Tier 1_Frames/Fire Spikes From Ground Tier 1_04.png" id="29_cju1t"]
+[ext_resource type="Texture2D" uid="uid://dklnh5srk4vgx" path="res://assets/VFX/Elemental_Spikes/Fire Spike From Ground Tier 1/Fire Spikes From Ground Tier 1_Frames/Fire Spikes From Ground Tier 1_05.png" id="30_08vk2"]
+[ext_resource type="Texture2D" uid="uid://b01tb62pa5gmg" path="res://assets/VFX/Elemental_Spikes/Fire Spike From Ground Tier 1/Fire Spikes From Ground Tier 1_Frames/Fire Spikes From Ground Tier 1_06.png" id="31_2vqvl"]
+[ext_resource type="Texture2D" uid="uid://bsu15fnpnd7h0" path="res://assets/VFX/Elemental_Spikes/Fire Spike From Ground Tier 1/Fire Spikes From Ground Tier 1_Frames/Fire Spikes From Ground Tier 1_07.png" id="32_tdo13"]
+[ext_resource type="Texture2D" uid="uid://b3cs7tqx0j1kw" path="res://assets/VFX/Elemental_Spikes/Fire Spike From Ground Tier 1/Fire Spikes From Ground Tier 1_Frames/Fire Spikes From Ground Tier 1_08.png" id="33_daj8e"]
+[ext_resource type="Texture2D" uid="uid://ccwr3ohygqg3g" path="res://assets/VFX/Elemental_Spikes/Fire Spike From Ground Tier 1/Fire Spikes From Ground Tier 1_Frames/Fire Spikes From Ground Tier 1_09.png" id="34_7amyu"]
+[ext_resource type="Texture2D" uid="uid://oherw52q5m7d" path="res://assets/VFX/Elemental_Spikes/Fire Spike From Ground Tier 1/Fire Spikes From Ground Tier 1_Frames/Fire Spikes From Ground Tier 1_10.png" id="35_ruqyo"]
+[ext_resource type="Texture2D" uid="uid://boeagipdr488q" path="res://assets/VFX/Elemental_Spikes/Fire Spike From Ground Tier 1/Fire Spikes From Ground Tier 1_Frames/Fire Spikes From Ground Tier 1_11.png" id="36_mj1dl"]
+[ext_resource type="Texture2D" uid="uid://byem2yeyhg0fy" path="res://assets/VFX/Elemental_Spikes/Fire Spike From Ground Tier 1/Fire Spikes From Ground Tier 1_Frames/Fire Spikes From Ground Tier 1_12.png" id="37_4bw5a"]
+[ext_resource type="Texture2D" uid="uid://c3fp8fv1wsrie" path="res://assets/VFX/Elemental_Spikes/Fire Spike From Ground Tier 1/Fire Spikes From Ground Tier 1_Frames/Fire Spikes From Ground Tier 1_13.png" id="38_ql3w6"]
+[ext_resource type="Texture2D" uid="uid://bqd4qg6ec8kof" path="res://assets/VFX/Elemental_Spikes/Fire Spike From Ground Tier 1/Fire Spikes From Ground Tier 1_Frames/Fire Spikes From Ground Tier 1_14.png" id="39_utvvg"]
+[ext_resource type="Texture2D" uid="uid://bcuysjao0sfj3" path="res://assets/VFX/Elemental_Spikes/Fire Spike From Ground Tier 1/Fire Spikes From Ground Tier 1_Frames/Fire Spikes From Ground Tier 1_15.png" id="40_wjvr1"]
+[ext_resource type="Texture2D" uid="uid://bxm1iv3lppj34" path="res://assets/VFX/Elemental_Spikes/Fire Spike From Ground Tier 1/Fire Spikes From Ground Tier 1_Frames/Fire Spikes From Ground Tier 1_16.png" id="41_rq3t6"]
+[ext_resource type="PackedScene" path="res://scenes/vfx/aura_anemo.tscn" id="42_8lsy0"]
+[ext_resource type="Texture2D" uid="uid://df3thrvf3secy" path="res://assets/VFX/Elemental_Spikes/Wind Spike From Ground Tier 1/Wind Spike From Ground Tier 1_Frames/Wind Spike From Ground Tier 1_01.png" id="43_6i3fh"]
+[ext_resource type="Texture2D" uid="uid://cevt44aegsij0" path="res://assets/VFX/Elemental_Spikes/Wind Spike From Ground Tier 1/Wind Spike From Ground Tier 1_Frames/Wind Spike From Ground Tier 1_02.png" id="44_mq4k1"]
+[ext_resource type="Texture2D" uid="uid://babkjxbs8i4iu" path="res://assets/VFX/Elemental_Spikes/Wind Spike From Ground Tier 1/Wind Spike From Ground Tier 1_Frames/Wind Spike From Ground Tier 1_03.png" id="45_vvj5t"]
+[ext_resource type="Texture2D" uid="uid://bblcvwj2to8xc" path="res://assets/VFX/Elemental_Spikes/Wind Spike From Ground Tier 1/Wind Spike From Ground Tier 1_Frames/Wind Spike From Ground Tier 1_04.png" id="46_l5wnf"]
+[ext_resource type="Texture2D" uid="uid://islqpcckl3as" path="res://assets/VFX/Elemental_Spikes/Wind Spike From Ground Tier 1/Wind Spike From Ground Tier 1_Frames/Wind Spike From Ground Tier 1_05.png" id="47_1j0s5"]
+[ext_resource type="Texture2D" uid="uid://dakcsewwq47c8" path="res://assets/VFX/Elemental_Spikes/Wind Spike From Ground Tier 1/Wind Spike From Ground Tier 1_Frames/Wind Spike From Ground Tier 1_06.png" id="48_ha3wd"]
+[ext_resource type="Texture2D" uid="uid://3qm1sb6v74nb" path="res://assets/VFX/Elemental_Spikes/Wind Spike From Ground Tier 1/Wind Spike From Ground Tier 1_Frames/Wind Spike From Ground Tier 1_07.png" id="49_jrbuw"]
+[ext_resource type="Texture2D" uid="uid://bjhit8xl7vnnl" path="res://assets/VFX/Elemental_Spikes/Wind Spike From Ground Tier 1/Wind Spike From Ground Tier 1_Frames/Wind Spike From Ground Tier 1_08.png" id="50_4wgoh"]
+[ext_resource type="Texture2D" uid="uid://del673h3gc708" path="res://assets/VFX/Elemental_Spikes/Wind Spike From Ground Tier 1/Wind Spike From Ground Tier 1_Frames/Wind Spike From Ground Tier 1_09.png" id="51_s6uj1"]
+[ext_resource type="Texture2D" uid="uid://hnltdor2wyho" path="res://assets/VFX/Elemental_Spikes/Wind Spike From Ground Tier 1/Wind Spike From Ground Tier 1_Frames/Wind Spike From Ground Tier 1_10.png" id="52_ae13i"]
+[ext_resource type="Texture2D" uid="uid://wgc83jj8eci1" path="res://assets/VFX/Elemental_Spikes/Wind Spike From Ground Tier 1/Wind Spike From Ground Tier 1_Frames/Wind Spike From Ground Tier 1_11.png" id="53_fm536"]
+[ext_resource type="Texture2D" uid="uid://bpkri0flbgker" path="res://assets/VFX/Elemental_Spikes/Wind Spike From Ground Tier 1/Wind Spike From Ground Tier 1_Frames/Wind Spike From Ground Tier 1_12.png" id="54_tfiw8"]
+[ext_resource type="Texture2D" uid="uid://dtx7lr5c4pmb2" path="res://assets/VFX/Elemental_Spikes/Wind Spike From Ground Tier 1/Wind Spike From Ground Tier 1_Frames/Wind Spike From Ground Tier 1_13.png" id="55_lh4mp"]
+[ext_resource type="Texture2D" uid="uid://qgbl411vp08n" path="res://assets/VFX/Elemental_Spikes/Wind Spike From Ground Tier 1/Wind Spike From Ground Tier 1_Frames/Wind Spike From Ground Tier 1_14.png" id="56_qw8gj"]
+[ext_resource type="Texture2D" uid="uid://j4mbcvwyt0xt" path="res://assets/VFX/Elemental_Spikes/Wind Spike From Ground Tier 1/Wind Spike From Ground Tier 1_Frames/Wind Spike From Ground Tier 1_15.png" id="57_u1u1c"]
+[ext_resource type="Texture2D" uid="uid://y242v6xpol77" path="res://assets/VFX/Elemental_Spikes/Wind Spike From Ground Tier 1/Wind Spike From Ground Tier 1_Frames/Wind Spike From Ground Tier 1_16.png" id="58_na2u3"]
+[ext_resource type="PackedScene" path="res://scenes/vfx/aura_hydro.tscn" id="59_qulom"]
+[ext_resource type="Texture2D" uid="uid://b2cgjj2f3c750" path="res://assets/VFX/Elemental_Spikes/Water Spike From Ground Tier 1/Water Spike From Ground Tier 1_Frames/Water Spike From Ground Tier 1_01.png" id="60_u8emf"]
+[ext_resource type="Texture2D" uid="uid://b155asj8cd4ht" path="res://assets/VFX/Elemental_Spikes/Water Spike From Ground Tier 1/Water Spike From Ground Tier 1_Frames/Water Spike From Ground Tier 1_02.png" id="61_r37tn"]
+[ext_resource type="Texture2D" uid="uid://dksaxmjd2npn3" path="res://assets/VFX/Elemental_Spikes/Water Spike From Ground Tier 1/Water Spike From Ground Tier 1_Frames/Water Spike From Ground Tier 1_03.png" id="62_sxob8"]
+[ext_resource type="Texture2D" uid="uid://bl23mc5akrwiy" path="res://assets/VFX/Elemental_Spikes/Water Spike From Ground Tier 1/Water Spike From Ground Tier 1_Frames/Water Spike From Ground Tier 1_04.png" id="63_ayjur"]
+[ext_resource type="Texture2D" uid="uid://rqbat5rwj8fl" path="res://assets/VFX/Elemental_Spikes/Water Spike From Ground Tier 1/Water Spike From Ground Tier 1_Frames/Water Spike From Ground Tier 1_05.png" id="64_rj431"]
+[ext_resource type="Texture2D" uid="uid://diuchy5rq21rh" path="res://assets/VFX/Elemental_Spikes/Water Spike From Ground Tier 1/Water Spike From Ground Tier 1_Frames/Water Spike From Ground Tier 1_06.png" id="65_xtucn"]
+[ext_resource type="Texture2D" uid="uid://bu4sujiogpvd4" path="res://assets/VFX/Elemental_Spikes/Water Spike From Ground Tier 1/Water Spike From Ground Tier 1_Frames/Water Spike From Ground Tier 1_07.png" id="66_30seh"]
+[ext_resource type="Texture2D" uid="uid://ctmgl85o03aev" path="res://assets/VFX/Elemental_Spikes/Water Spike From Ground Tier 1/Water Spike From Ground Tier 1_Frames/Water Spike From Ground Tier 1_08.png" id="67_60bfa"]
+[ext_resource type="Texture2D" uid="uid://cc526rsftx8fl" path="res://assets/VFX/Elemental_Spikes/Water Spike From Ground Tier 1/Water Spike From Ground Tier 1_Frames/Water Spike From Ground Tier 1_09.png" id="68_5svip"]
+[ext_resource type="Texture2D" uid="uid://drmxepinv5bhv" path="res://assets/VFX/Elemental_Spikes/Water Spike From Ground Tier 1/Water Spike From Ground Tier 1_Frames/Water Spike From Ground Tier 1_10.png" id="69_b1f6y"]
+[ext_resource type="Texture2D" uid="uid://pcq0mwx756uh" path="res://assets/VFX/Elemental_Spikes/Water Spike From Ground Tier 1/Water Spike From Ground Tier 1_Frames/Water Spike From Ground Tier 1_11.png" id="70_a7y0k"]
+[ext_resource type="Texture2D" uid="uid://d0p64rs5df1j1" path="res://assets/VFX/Elemental_Spikes/Water Spike From Ground Tier 1/Water Spike From Ground Tier 1_Frames/Water Spike From Ground Tier 1_12.png" id="71_57jev"]
+[ext_resource type="Texture2D" uid="uid://dq8spc2dxix2d" path="res://assets/VFX/Elemental_Spikes/Water Spike From Ground Tier 1/Water Spike From Ground Tier 1_Frames/Water Spike From Ground Tier 1_13.png" id="72_a004w"]
+[ext_resource type="Texture2D" uid="uid://cywgb4alcgxpv" path="res://assets/VFX/Elemental_Spikes/Water Spike From Ground Tier 1/Water Spike From Ground Tier 1_Frames/Water Spike From Ground Tier 1_14.png" id="73_0v1fv"]
+[ext_resource type="Texture2D" uid="uid://dlcm6o825iai3" path="res://assets/VFX/Elemental_Spikes/Water Spike From Ground Tier 1/Water Spike From Ground Tier 1_Frames/Water Spike From Ground Tier 1_15.png" id="74_4mbxj"]
+[ext_resource type="Texture2D" uid="uid://djuxbjf4fa5en" path="res://assets/VFX/Elemental_Spikes/Water Spike From Ground Tier 1/Water Spike From Ground Tier 1_Frames/Water Spike From Ground Tier 1_16.png" id="75_wi2qx"]
+[ext_resource type="PackedScene" uid="uid://don1i7grglvlg" path="res://scenes/vfx/vfx_blood_hit.tscn" id="76_obw3e"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_thrpo"]
 atlas = ExtResource("2_slime")
@@ -169,8 +243,255 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
-radius = 6.0
-height = 20.0
+radius = 6.9596686
+height = 21.999956
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_o5rsl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_obw3e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_nkbfo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_6w0c1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_0s4gx")
+}],
+"loop": false,
+"name": &"default",
+"speed": 8.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2qmjr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_bmmky")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_h8hlf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_8qvve")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_7knyv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_ri662")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_i8e6h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_8sjfe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_s4sxt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_o4o3g")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_c5sst")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_6oyj6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_gr4ag")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_dgl5f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_8phyj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_8glua")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_mcn74")
+}],
+"loop": false,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1h0hv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("26_ir5cn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_qlo3w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_m0won")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_cju1t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_08vk2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_2vqvl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_tdo13")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_daj8e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_7amyu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_ruqyo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_mj1dl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_4bw5a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_ql3w6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_utvvg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_wjvr1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_rq3t6")
+}],
+"loop": false,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vwmcp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("43_6i3fh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_mq4k1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("45_vvj5t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_l5wnf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("47_1j0s5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("48_ha3wd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("49_jrbuw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("50_4wgoh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("51_s6uj1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("52_ae13i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("53_fm536")
+}, {
+"duration": 1.0,
+"texture": ExtResource("54_tfiw8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("55_lh4mp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("56_qw8gj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("57_u1u1c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("58_na2u3")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_j1ss5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("60_u8emf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("61_r37tn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("62_sxob8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("63_ayjur")
+}, {
+"duration": 1.0,
+"texture": ExtResource("64_rj431")
+}, {
+"duration": 1.0,
+"texture": ExtResource("65_xtucn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("66_30seh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("67_60bfa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("68_5svip")
+}, {
+"duration": 1.0,
+"texture": ExtResource("69_b1f6y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("70_a7y0k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("71_57jev")
+}, {
+"duration": 1.0,
+"texture": ExtResource("72_a004w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("73_0v1fv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("74_4mbxj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("75_wi2qx")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nkbfo"]
+size = Vector2(21, 15)
 
 [node name="Slime" type="CharacterBody2D" unique_id=365243219]
 collision_layer = 4
@@ -187,5 +508,55 @@ animation = &"attack"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=4476884]
-position = Vector2(1, 5)
+position = Vector2(1, 6.0000005)
+rotation = 1.5591842
 shape = SubResource("CapsuleShape2D_1")
+
+[node name="AuraElectro" parent="." unique_id=141739402 instance=ExtResource("3_qoy5v")]
+position = Vector2(1, 5)
+scale = Vector2(0.18828127, 0.153125)
+sprite_frames = SubResource("SpriteFrames_o5rsl")
+frame = 3
+frame_progress = 1.0
+metadata/vfx_aura = true
+
+[node name="AuraCryo" parent="." unique_id=679962123 instance=ExtResource("8_2uuqq")]
+position = Vector2(0, -10)
+scale = Vector2(0.115, 0.15383388)
+sprite_frames = SubResource("SpriteFrames_2qmjr")
+frame = 15
+frame_progress = 1.0
+metadata/vfx_aura = true
+
+[node name="AuraPyro" parent="." unique_id=848214182 instance=ExtResource("25_uyegr")]
+position = Vector2(0, -12.000001)
+scale = Vector2(0.14778158, 0.16609807)
+sprite_frames = SubResource("SpriteFrames_1h0hv")
+frame = 15
+frame_progress = 1.0
+metadata/vfx_aura = true
+
+[node name="AuraAnemo" parent="." unique_id=2106858760 instance=ExtResource("42_8lsy0")]
+position = Vector2(0, -7)
+scale = Vector2(0.12134147, 0.14066987)
+sprite_frames = SubResource("SpriteFrames_vwmcp")
+frame_progress = 0.9397951
+metadata/vfx_aura = true
+
+[node name="AuraHydro" parent="." unique_id=1198149864 instance=ExtResource("59_qulom")]
+position = Vector2(1, -8.999998)
+scale = Vector2(0.1247678, 0.1593824)
+sprite_frames = SubResource("SpriteFrames_j1ss5")
+frame_progress = 0.05965744
+metadata/vfx_aura = true
+
+[node name="BloodHit" parent="." unique_id=797805883 instance=ExtResource("76_obw3e")]
+position = Vector2(-5, 5)
+scale = Vector2(0.46480978, 0.6786546)
+frame_progress = 0.25383162
+
+[node name="HitArea" type="Area2D" parent="." unique_id=305389101]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitArea" unique_id=143316031]
+position = Vector2(0.5, 4.5)
+shape = SubResource("RectangleShape2D_nkbfo")

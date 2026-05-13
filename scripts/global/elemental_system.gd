@@ -1,6 +1,5 @@
 extends Node
 
-
 enum Element { NONE, PYRO, HYDRO, ELECTRO, CRYO, ANEMO, GEO }
 
 const REACTION_DATA = {
@@ -26,22 +25,22 @@ func get_element_name(element: Element) -> String:
 
 func get_element_color(element: Element) -> Color:
 	match element:
-		Element.PYRO: return Color("
-		Element.HYDRO: return Color("
-		Element.ELECTRO: return Color("
-		Element.CRYO: return Color("
-		Element.ANEMO: return Color("
-		Element.GEO: return Color("
+		Element.PYRO: return Color("#ff4500")
+		Element.HYDRO: return Color("#1e90ff")
+		Element.ELECTRO: return Color("#b956ff")
+		Element.CRYO: return Color("#00ffff")
+		Element.ANEMO: return Color("#4ef0a8")
+		Element.GEO: return Color("#ffb81c")
 		_: return Color.WHITE
 
 func get_element_secondary_color(element: Element) -> Color:
 	match element:
-		Element.PYRO: return Color("
-		Element.HYDRO: return Color("
-		Element.ELECTRO: return Color("
-		Element.CRYO: return Color("
-		Element.ANEMO: return Color("
-		Element.GEO: return Color("
+		Element.PYRO: return Color("#ff8c00")
+		Element.HYDRO: return Color("#00bfff")
+		Element.ELECTRO: return Color("#9370db")
+		Element.CRYO: return Color("#afeeee")
+		Element.ANEMO: return Color("#98fb98")
+		Element.GEO: return Color("#d2b48c")
 		_: return Color.WHITE
 
 func get_reaction(element_1: Element, element_2: Element) -> Dictionary:
@@ -51,7 +50,6 @@ func get_reaction(element_1: Element, element_2: Element) -> Dictionary:
 	if element_1 == element_2:
 		return {"name": "None", "data": REACTION_DATA["None"]}
 
-	
 	if (element_1 == Element.PYRO and element_2 == Element.HYDRO) or (element_1 == Element.HYDRO and element_2 == Element.PYRO):
 		var mult = 2.0 if element_1 == Element.HYDRO else 1.5
 		var data = REACTION_DATA["Vaporize"].duplicate()

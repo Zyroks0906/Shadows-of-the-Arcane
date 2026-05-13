@@ -1,6 +1,6 @@
 extends StaticBody2D
 
-@export var boss_to_track: String = "Demon"
+@export var boss_to_track: String = "Golem"
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var collision: CollisionShape2D = $CollisionShape2D
 

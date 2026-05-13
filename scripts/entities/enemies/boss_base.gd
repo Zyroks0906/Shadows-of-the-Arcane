@@ -99,7 +99,6 @@ func _perform_basic_attack() -> void:
 	can_attack = true
 
 func _perform_special_attack() -> void:
-	
 	special_timer = special_attack_cooldown
 	boss_state = BossState.CHASE
 
@@ -109,7 +108,6 @@ func take_damage(amount: int) -> void:
 		_on_hit()
 
 func _on_hit() -> void:
-	
 	pass
 
 func die() -> void:

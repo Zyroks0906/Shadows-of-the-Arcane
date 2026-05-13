@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://dv0qmqsrq1w5o"]
+[gd_scene format=3 uid="uid://bvw666vf5s08m"]
 
 [ext_resource type="Texture2D" uid="uid://bnor2qyxkclqk" path="res://assets/sprites/enemies/Bosses/Golem/PNG sheet/Character_sheet.png" id="1_55a6t"]
 [ext_resource type="Script" uid="uid://dnnm0ogoluowj" path="res://scripts/entities/enemies/golem.gd" id="1_script"]
@@ -804,8 +804,12 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
-size = Vector2(49, 50)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c25cm"]
+size = Vector2(259.85974, 23.458847)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c25cm"]
+radius = 24.0
+height = 54.0
 
 [node name="Golem" type="CharacterBody2D" unique_id=868604396]
 collision_layer = 4
@@ -825,9 +829,17 @@ sprite_frames = SubResource("SpriteFrames_8kmgn")
 animation = &"proyectil"
 
 [node name="laser" type="AnimatedSprite2D" parent="." unique_id=595958368]
-position = Vector2(100, -30)
+position = Vector2(41.000004, -18)
+scale = Vector2(0.39251944, 0.29720226)
 sprite_frames = SubResource("SpriteFrames_ymise")
+frame = 10
+frame_progress = 0.32734227
+
+[node name="Area2D" type="Area2D" parent="laser" unique_id=271742172]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="laser/Area2D" unique_id=1995278141]
+position = Vector2(20.38115, 1.7294235)
+shape = SubResource("RectangleShape2D_c25cm")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=716014424]
-position = Vector2(-1.5, -4)
-shape = SubResource("RectangleShape2D_1")
+shape = SubResource("CapsuleShape2D_c25cm")

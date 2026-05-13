@@ -78,7 +78,7 @@ func use_mana_potion() -> bool:
 	return false
 
 func reset_progress() -> void:
-	total_coins = 0
+	# Total coins now accumulate between runs as requested
 	total_keys = 0
 	silver_keys = 0
 	golden_keys = 0
