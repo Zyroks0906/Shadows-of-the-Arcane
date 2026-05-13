@@ -8,7 +8,7 @@ func _setup_vignette() -> void:
 	var vignette = ColorRect.new()
 	vignette.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	
+
 	var mat = ShaderMaterial.new()
 	mat.shader = Shader.new()
 	mat.shader.code = """

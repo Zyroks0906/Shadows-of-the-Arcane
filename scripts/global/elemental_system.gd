@@ -25,28 +25,28 @@ func get_element_name(element: Element) -> String:
 
 func get_element_color(element: Element) -> Color:
 	match element:
-		Element.PYRO: return Color("#ff4500")
-		Element.HYDRO: return Color("#1e90ff")
-		Element.ELECTRO: return Color("#b956ff")
-		Element.CRYO: return Color("#00ffff")
-		Element.ANEMO: return Color("#4ef0a8")
-		Element.GEO: return Color("#ffb81c")
+		Element.PYRO: return Color("
+		Element.HYDRO: return Color("
+		Element.ELECTRO: return Color("
+		Element.CRYO: return Color("
+		Element.ANEMO: return Color("
+		Element.GEO: return Color("
 		_: return Color.WHITE
 
 func get_element_secondary_color(element: Element) -> Color:
 	match element:
-		Element.PYRO: return Color("#ff8c00")
-		Element.HYDRO: return Color("#00bfff")
-		Element.ELECTRO: return Color("#9370db")
-		Element.CRYO: return Color("#afeeee")
-		Element.ANEMO: return Color("#98fb98")
-		Element.GEO: return Color("#d2b48c")
+		Element.PYRO: return Color("
+		Element.HYDRO: return Color("
+		Element.ELECTRO: return Color("
+		Element.CRYO: return Color("
+		Element.ANEMO: return Color("
+		Element.GEO: return Color("
 		_: return Color.WHITE
 
 func get_reaction(element_1: Element, element_2: Element) -> Dictionary:
 	if element_1 == Element.NONE or element_2 == Element.NONE:
 		return {"name": "None", "data": REACTION_DATA["None"]}
-	
+
 	if element_1 == element_2:
 		return {"name": "None", "data": REACTION_DATA["None"]}
 
@@ -55,7 +55,7 @@ func get_reaction(element_1: Element, element_2: Element) -> Dictionary:
 		var data = REACTION_DATA["Vaporize"].duplicate()
 		data["multiplier"] = mult
 		return {"name": "Vaporize", "data": data}
-		
+
 	if (element_1 == Element.PYRO and element_2 == Element.CRYO) or (element_1 == Element.CRYO and element_2 == Element.PYRO):
 		var mult = 2.0 if element_1 == Element.PYRO else 1.5
 		var data = REACTION_DATA["Melt"].duplicate()

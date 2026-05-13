@@ -9,15 +9,15 @@ func _ready() -> void:
 		p.bus = "SFX"
 		add_child(p)
 		_pool.append(p)
-		
+
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 func play_sfx(path: String, volume_db: float = 0.0, pitch_scale: float = 1.0) -> void:
 	if not ResourceLoader.exists(path): return
-	
+
 	var stream = load(path)
 	if not stream: return
-	
+
 	for p in _pool:
 		if not p.playing:
 			p.stream = stream
@@ -25,7 +25,7 @@ func play_sfx(path: String, volume_db: float = 0.0, pitch_scale: float = 1.0) ->
 			p.pitch_scale = pitch_scale
 			p.play()
 			return
-	
+
 	var oldest = _pool[0]
 	oldest.stream = stream
 	oldest.volume_db = volume_db

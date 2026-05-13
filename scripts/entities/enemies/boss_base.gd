@@ -17,13 +17,13 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if not is_alive: return
-	
+
 	if not player:
 		player = get_tree().get_first_node_in_group("player")
 		return
 
 	special_timer -= delta
-	
+
 	match boss_state:
 		BossState.IDLE:
 			_state_idle(delta)
@@ -49,7 +49,7 @@ func _state_idle(_delta: float) -> void:
 func _state_chase(_delta: float) -> void:
 	var distance = global_position.distance_to(player.global_position)
 	var direction = (player.global_position - global_position).normalized()
-	
+
 	if distance <= attack_range:
 		velocity = Vector2.ZERO
 		if can_attack:
@@ -59,7 +59,7 @@ func _state_chase(_delta: float) -> void:
 	else:
 		velocity = direction * speed
 		_update_animations(direction)
-		
+
 	if distance > detection_range * 1.5:
 		boss_state = BossState.IDLE
 
@@ -81,18 +81,18 @@ func _perform_basic_attack() -> void:
 	is_attacking = true
 	can_attack = false
 	_play_animation("attack1")
-	
+
 	var tree = get_tree()
 	if not tree: return
 	await tree.create_timer(attack_delay).timeout
 	if is_alive: _check_hit()
-	
+
 	tree = get_tree()
 	if not tree: return
 	await tree.create_timer(attack_recovery_delay).timeout
 	is_attacking = false
 	boss_state = BossState.CHASE
-	
+
 	tree = get_tree()
 	if not tree: return
 	await tree.create_timer(attack_cooldown).timeout
@@ -115,11 +115,11 @@ func die() -> void:
 	is_alive = false
 	boss_state = BossState.DEATH
 	velocity = Vector2.ZERO
-	
+
 	GameManager.notify_boss_defeat(name)
-	
+
 	if animated_sprite.sprite_frames.has_animation("death"):
 		animated_sprite.play("death")
 		await animated_sprite.animation_finished
-	
+
 	queue_free()

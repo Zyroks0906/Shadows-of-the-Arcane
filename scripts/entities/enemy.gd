@@ -138,7 +138,7 @@ func _play_hurt_anim() -> void:
 func _spawn_blood_hit_vfx() -> void:
 	var am = get_node_or_null("/root/AudioManager")
 	if am: am.play_sfx("res://assets/audio/sfx/Combat/squelching_4.wav", 5.0, randf_range(0.8, 1.2))
-	
+
 	var blood_hit := get_node_or_null("BloodHit") as AnimatedSprite2D
 	if blood_hit and blood_hit.sprite_frames:
 		if player and is_instance_valid(player):
@@ -211,7 +211,7 @@ func _perform_attack() -> void:
 	is_attacking = true
 	can_attack = false
 	_anim_play(animated_sprite, "attack", AnimPriority.ACTION)
-	
+
 	var am = get_node_or_null("/root/AudioManager")
 	if am: am.play_sfx("res://assets/audio/sfx/Combat/swipe.wav", -2.0, randf_range(0.7, 0.9))
 
@@ -223,7 +223,7 @@ func _perform_attack() -> void:
 
 	await get_tree().create_timer(0.4).timeout
 	if not is_alive: return
-	
+
 	_anim_release(AnimPriority.ACTION)
 	is_attacking = false
 	_anim_play(animated_sprite, "idle", AnimPriority.FREE)
@@ -252,12 +252,12 @@ func die() -> void:
 		return
 	is_alive = false
 	velocity = Vector2.ZERO
-	
+
 	var am = get_node_or_null("/root/AudioManager")
 	if am: am.play_sfx("res://assets/audio/sfx/Combat/squelching_2.wav", 5.0, 0.8)
 
 	if _anim_play(animated_sprite, "death", AnimPriority.LOCKED):
 		await animated_sprite.animation_finished
-	
+
 	await get_tree().create_timer(1.0).timeout
 	queue_free()

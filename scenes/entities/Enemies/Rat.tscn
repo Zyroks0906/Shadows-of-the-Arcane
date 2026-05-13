@@ -1,6 +1,7 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bsjun8k8ubxmq"]
 
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Rat_and_Skeleton/rat base outline v2-Sheet.png" id="1_6fw2x"]
+[ext_resource type="Texture2D" uid="uid://beme76rayyhp4" path="res://assets/sprites/enemies/Rat_and_Skeleton/rat base outline v2-Sheet.png" id="1_6fw2x"]
+[ext_resource type="Script" uid="uid://dk4sjsn1e43v6" path="res://scripts/entities/enemies/rat.gd" id="1_script"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g4dxq"]
 atlas = ExtResource("1_6fw2x")
@@ -208,9 +209,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_cgp1t")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -231,9 +232,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_c8k20")
 }],
-"loop": true,
+"loop": false,
 "name": &"death",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -265,9 +266,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_rh85s")
 }],
-"loop": true,
+"loop": false,
 "name": &"hurt",
-"speed": 2.0
+"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -302,7 +303,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -345,12 +346,23 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk",
-"speed": 5.0
+"speed": 10.0
 }]
 
-[node name="Node2D" type="Node2D" unique_id=273142600]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g4dxq"]
+radius = 11.0
+height = 26.0
+
+[node name="Rat" type="CharacterBody2D" unique_id=273142600]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("1_script")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1901500808]
 sprite_frames = SubResource("SpriteFrames_tpo0b")
-animation = &"walk"
-frame_progress = 0.7133256
+animation = &"idle"
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1217759114]
+position = Vector2(-1, 4)
+shape = SubResource("CapsuleShape2D_g4dxq")

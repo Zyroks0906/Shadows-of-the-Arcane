@@ -27,7 +27,7 @@ func _process(_delta: float) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if triggered and once:
 		return
-		
+
 	if body is Player:
 		if door_to_close:
 			door_to_close.close()

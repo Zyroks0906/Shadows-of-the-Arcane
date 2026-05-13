@@ -13,7 +13,7 @@ func _ready() -> void:
 	timer.autostart = false
 	timer.timeout.connect(_on_timer_timeout)
 	add_child(timer)
-	
+
 	if initial_delay > 0:
 		await get_tree().create_timer(initial_delay).timeout
 	timer.start()
@@ -27,6 +27,4 @@ func _fire_arrow() -> void:
 	var arrow = arrow_scene.instantiate()
 	get_parent().add_child(arrow)
 	arrow.global_position = spawn_point.global_position
-	# Usa el eje local X negado: el sprite mira a la izquierda por defecto,
-	# girar la trampa 90° la hara disparar hacia abajo, -90° hacia arriba, etc.
 	arrow.direction = -global_transform.x.normalized()
