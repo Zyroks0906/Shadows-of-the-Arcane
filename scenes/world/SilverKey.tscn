@@ -1,0 +1,43 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/tilesets/items and trap_animation/keys/keys_2_1.png" id="1_jrkp4"]
+[ext_resource type="Script" path="res://scripts/items/collectible.gd" id="1_swdvx"]
+[ext_resource type="Texture2D" path="res://assets/tilesets/items and trap_animation/keys/keys_2_2.png" id="2_swdvx"]
+[ext_resource type="Texture2D" path="res://assets/tilesets/items and trap_animation/keys/keys_2_3.png" id="3_e1am5"]
+[ext_resource type="Texture2D" path="res://assets/tilesets/items and trap_animation/keys/keys_2_4.png" id="4_ptdtr"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_oiixa"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_jrkp4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_swdvx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_e1am5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_ptdtr")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_glwe2"]
+radius = 12.0
+
+[node name="SilverKey" type="Node2D" unique_id=2120773244]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1088249845]
+sprite_frames = SubResource("SpriteFrames_oiixa")
+autoplay = "default"
+
+[node name="Area2D" type="Area2D" parent="." unique_id=387813557]
+script = ExtResource("1_swdvx")
+type = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1882437715]
+shape = SubResource("CircleShape2D_glwe2")

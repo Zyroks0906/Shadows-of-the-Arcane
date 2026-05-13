@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Spikes From Ground Tier 3 - Implementation Example</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { display: flex; height: 100vh; background: #0f1115; color: #e2e8f0; font-family: 'Consolas', 'Monaco', monospace; overflow: hidden; }
+        #left { width: 50%; padding: 28px; overflow-y: auto; border-right: 1px solid #1e2530; background: #0a0c10; }
+        #right { width: 50%; position: relative; background: #111; cursor: crosshair; }
+        #game-canvas { display: block; width: 100%; height: 100%; }
+        h1 { font-size: 14px; font-weight: 700; color: #7dd3fc; margin-bottom: 6px; letter-spacing: 0.05em; text-transform: uppercase; }
+        .badge { display: inline-block; background: #1e3a5f; color: #7dd3fc; font-size: 10px; padding: 2px 8px; border-radius: 4px; margin-bottom: 18px; }
+        .section { margin-bottom: 24px; position: relative; }
+        pre { background: #0d1117; border: 1px solid #1e2530; border-radius: 8px; padding: 16px; font-size: 12px; line-height: 1.7; overflow-x: auto; white-space: pre; }
+        .copy-btn { position: absolute; top: 8px; right: 8px; background: #1e3a5f; color: #7dd3fc; border: none; padding: 4px 10px; border-radius: 4px; font-size: 10px; cursor: pointer; font-family: inherit; z-index: 1; }
+        .copy-btn:hover { background: #2d5a8f; }
+        .kw { color: #ff79c6; } .fn { color: #50fa7b; } .str { color: #f1fa8c; } .cm { color: #6272a4; font-style: italic; } .num { color: #bd93f9; }
+        .hint { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); color: #94a3b8; font-size: 12px; font-family: sans-serif; background: rgba(0,0,0,0.6); padding: 6px 14px; border-radius: 20px; pointer-events: none; }
+        .bg-toggle { position: absolute; top: 12px; right: 12px; display: flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.55); padding: 6px 10px; border-radius: 8px; font-size: 11px; font-family: sans-serif; color: #94a3b8; z-index: 2; }
+        .bg-toggle button { background: #1e2530; color: #94a3b8; border: 1px solid #2d3748; padding: 3px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; font-family: inherit; }
+        .bg-toggle button:hover { color: #e2e8f0; }
+        .bg-toggle button.active { background: #3b82f6; color: #fff; border-color: #3b82f6; }
+        #right.checker-bg { background: #fff !important; background-image: linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%) !important; background-size: 24px 24px !important; background-position: 0 0, 0 12px, 12px -12px, -12px 0px !important; }
+        .slider-row { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; padding: 10px 14px; background: #131720; border: 1px solid #1e2530; border-radius: 8px; }
+        .slider-row label { font-size: 11px; color: #94a3b8; white-space: nowrap; }
+        .slider-row input[type="range"] { flex: 1; accent-color: #3b82f6; }
+        .slider-row .val { font-size: 12px; font-weight: 700; color: #7dd3fc; min-width: 50px; text-align: right; }
+    </style>
+</head>
+<body>
+    <div id="left">
+        <h1>Fire Spikes From Ground Tier 3</h1>
+        <div class="badge">VFX Spritesheet &mdash; horizontal strip &mdash; 16 frames</div>
+
+        <div class="slider-row">
+            <label>Speed</label>
+            <input type="range" id="fps-slider" min="1" max="120" value="45">
+            <div class="val"><span id="fps-val">45</span> FPS</div>
+        </div>
+
+        <div class="section">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre id="code1"><span class="cm">// 1. Load the spritesheet (horizontal strip)</span>
+<span class="kw">const</span> fxImage = <span class="kw">new</span> <span class="fn">Image</span>();
+fxImage.src = <span class="str">'./Fire Spikes From Ground Tier 3_Sheet.png'</span>;
+
+<span class="cm">// 2. Spritesheet config</span>
+<span class="kw">const</span> TOTAL_FRAMES = <span class="num">16</span>;
+<span class="kw">const</span> SIZE         = <span class="num">256</span>;
+<span class="kw">let</span>   FPS          = <span class="num" id="js-fps-num">45</span>;
+<span class="kw">let</span>   FRAME_W, FRAME_H;
+
+fxImage.<span class="fn">onload</span> = () => {
+    FRAME_W = fxImage.width  / TOTAL_FRAMES;
+    FRAME_H = fxImage.height;
+};</pre>
+        </div>
+
+        <div class="section">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre id="code2"><span class="cm">// 3. Effect class (renders at 256x256)</span>
+<span class="kw">class</span> <span class="fn">VFX</span> {
+    <span class="fn">constructor</span>(x, y) {
+        <span class="kw">this</span>.x = x; <span class="kw">this</span>.y = y;
+        <span class="kw">this</span>.frame = <span class="num">0</span>;
+        <span class="kw">this</span>.done  = <span class="kw">false</span>;
+        <span class="kw">this</span>.last  = <span class="num">0</span>;
+    }
+    <span class="fn">update</span>(now) {
+        <span class="kw">if</span> (now - <span class="kw">this</span>.last > <span class="num">1000</span> / FPS) {
+            <span class="kw">this</span>.frame++;
+            <span class="kw">this</span>.last = now;
+            <span class="kw">if</span> (<span class="kw">this</span>.frame >= TOTAL_FRAMES)
+                <span class="kw">this</span>.done = <span class="kw">true</span>;
+        }
+    }
+    <span class="fn">draw</span>(ctx) {
+        <span class="kw">if</span> (<span class="kw">this</span>.done) <span class="kw">return</span>;
+        ctx.<span class="fn">save</span>();
+        ctx.globalCompositeOperation = <span class="str">'lighter'</span>;
+        ctx.<span class="fn">drawImage</span>(fxImage,
+            <span class="kw">this</span>.frame * FRAME_W, <span class="num">0</span>, FRAME_W, FRAME_H,
+            <span class="kw">this</span>.x - SIZE/<span class="num">2</span>, <span class="kw">this</span>.y - SIZE/<span class="num">2</span>,
+            SIZE, SIZE);
+        ctx.<span class="fn">restore</span>();
+    }
+}
+
+<span class="cm">// 4. Game loop</span>
+<span class="kw">const</span> effects = [];
+<span class="kw">function</span> <span class="fn">loop</span>(now) {
+    ctx.<span class="fn">clearRect</span>(<span class="num">0</span>,<span class="num">0</span>,canvas.width,canvas.height);
+    <span class="kw">for</span> (<span class="kw">let</span> i = effects.length-<span class="num">1</span>; i>=<span class="num">0</span>; i--)
+        <span class="kw">if</span> (effects[i].done) effects.<span class="fn">splice</span>(i,<span class="num">1</span>);
+    effects.<span class="fn">forEach</span>(e => { e.<span class="fn">update</span>(now); e.<span class="fn">draw</span>(ctx); });
+    <span class="fn">requestAnimationFrame</span>(loop);
+}
+<span class="fn">requestAnimationFrame</span>(loop);
+
+<span class="cm">// 5. Spawn on click</span>
+canvas.<span class="fn">addEventListener</span>(<span class="str">'mousedown'</span>, e => {
+    <span class="kw">const</span> r = canvas.<span class="fn">getBoundingClientRect</span>();
+    <span class="kw">const</span> x = (e.clientX - r.left) * (canvas.width / r.width);
+    <span class="kw">const</span> y = (e.clientY - r.top) * (canvas.height / r.height);
+    effects.<span class="fn">push</span>(<span class="kw">new</span> <span class="fn">VFX</span>(x, y));
+});</pre>
+        </div>
+
+        <div class="section">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre id="code3"><span class="cm">/* Pure CSS Solution (horizontal strip) */</span>
+
+<span class="kw">.vfx-sprite</span> {
+    <span class="fn">width</span>: <span class="num">256px</span>;
+    <span class="fn">height</span>: <span class="num">256px</span>;
+    <span class="fn">background-image</span>: <span class="fn">url</span>(<span class="str">'./Fire Spikes From Ground Tier 3_Sheet.png'</span>);
+    <span class="fn">background-size</span>: <span class="num">1600%</span> <span class="num">100%</span>;
+    <span class="fn">animation</span>: <span class="str">vfx-play</span> <span class="num" id="css-dur-num">0.36s</span> <span class="fn">steps</span>(<span class="num">1</span>) <span class="str">infinite</span>;
+}
+
+<span class="kw">@keyframes</span> <span class="str">vfx-play</span> {
+    0.00% { background-position: 0.00% 0%; }
+    6.25% { background-position: 6.67% 0%; }
+    12.50% { background-position: 13.33% 0%; }
+    18.75% { background-position: 20.00% 0%; }
+    25.00% { background-position: 26.67% 0%; }
+    31.25% { background-position: 33.33% 0%; }
+    37.50% { background-position: 40.00% 0%; }
+    43.75% { background-position: 46.67% 0%; }
+    50.00% { background-position: 53.33% 0%; }
+    56.25% { background-position: 60.00% 0%; }
+    62.50% { background-position: 66.67% 0%; }
+    68.75% { background-position: 73.33% 0%; }
+    75.00% { background-position: 80.00% 0%; }
+    81.25% { background-position: 86.67% 0%; }
+    87.50% { background-position: 93.33% 0%; }
+    93.75% { background-position: 100.00% 0%; }
+}
+
+<span class="cm">/* One-shot variant (plays once then hides) */</span>
+<span class="kw">.vfx-sprite.once</span> {
+    <span class="fn">animation</span>: <span class="str">vfx-play</span> <span class="num" id="css-dur-num2">0.36s</span> <span class="fn">steps</span>(<span class="num">1</span>) <span class="str">forwards</span>;
+}
+
+<span class="cm">&lt;!-- HTML usage --&gt;</span>
+<span class="kw">&lt;div</span> <span class="fn">class</span>=<span class="str">"vfx-sprite"</span><span class="kw">&gt;&lt;/div&gt;</span></pre>
+        </div>
+
+        <div class="section" style="text-align:center; padding: 20px 0;">
+            <div style="display:inline-block; font-size:10px; color:#6272a4; margin-bottom:8px;">CSS Demo (live)</div><br>
+            <div id="css-demo" style="display:inline-block; width:256px; height:256px;"></div>
+        </div>
+    </div>
+
+    <div id="right">
+        <canvas id="game-canvas"></canvas>
+        <div class="bg-toggle">
+            <span>BG:</span>
+            <button data-bg="#111" class="active">Dark</button>
+            <button data-bg="#000">Black</button>
+            <button data-bg="#fff">White</button>
+            <button data-bg="checker">Checker</button>
+        </div>
+        <div class="hint">Click anywhere to spawn effect</div>
+    </div>
+
+    <style>
+        @keyframes cssvfx {
+    0.00% { background-position: 0.00% 0%; }
+    6.25% { background-position: 6.67% 0%; }
+    12.50% { background-position: 13.33% 0%; }
+    18.75% { background-position: 20.00% 0%; }
+    25.00% { background-position: 26.67% 0%; }
+    31.25% { background-position: 33.33% 0%; }
+    37.50% { background-position: 40.00% 0%; }
+    43.75% { background-position: 46.67% 0%; }
+    50.00% { background-position: 53.33% 0%; }
+    56.25% { background-position: 60.00% 0%; }
+    62.50% { background-position: 66.67% 0%; }
+    68.75% { background-position: 73.33% 0%; }
+    75.00% { background-position: 80.00% 0%; }
+    81.25% { background-position: 86.67% 0%; }
+    87.50% { background-position: 93.33% 0%; }
+    93.75% { background-position: 100.00% 0%; }
+        }
+        #css-demo {
+            background-image: url('./Fire Spikes From Ground Tier 3_Sheet.png');
+            background-size: 1600% 100%;
+            animation: cssvfx 0.36s steps(1) infinite;
+        }
+    </style>
+
+    <script>
+        function copyCode(btn) {
+            const pre = btn.parentElement.querySelector('pre');
+            const text = pre.innerText;
+            navigator.clipboard.writeText(text).then(() => { btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy', 1500); });
+        }
+
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const SIZE = 256;
+
+        function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const fxImage = new Image();
+        fxImage.src = './Fire Spikes From Ground Tier 3_Sheet.png';
+
+        const TOTAL_FRAMES = 16;
+        let FPS = 45;
+        let FRAME_W = 0, FRAME_H = 0;
+        fxImage.onload = () => { FRAME_W = fxImage.width / TOTAL_FRAMES; FRAME_H = fxImage.height; };
+
+        const effects = [];
+
+        class VFX {
+            constructor(x, y) { this.x=x; this.y=y; this.frame=0; this.done=false; this.last=0; }
+            update(now) { if(now-this.last>1000/FPS){this.frame++;this.last=now;if(this.frame>=TOTAL_FRAMES)this.done=true;} }
+            draw(ctx) {
+                if(this.done||!FRAME_W) return;
+                ctx.save(); ctx.globalCompositeOperation='lighter';
+                ctx.drawImage(fxImage, this.frame*FRAME_W, 0, FRAME_W, FRAME_H, this.x-SIZE/2, this.y-SIZE/2, SIZE, SIZE);
+                ctx.restore();
+            }
+        }
+
+        function loop(now) {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            for(let i=effects.length-1;i>=0;i--) if(effects[i].done) effects.splice(i,1);
+            effects.forEach(e=>{e.update(now);e.draw(ctx);});
+            requestAnimationFrame(loop);
+        }
+        requestAnimationFrame(loop);
+
+        canvas.addEventListener('mousedown', e => {
+            const r = canvas.getBoundingClientRect();
+            const x = (e.clientX - r.left) * (canvas.width / r.width);
+            const y = (e.clientY - r.top) * (canvas.height / r.height);
+            effects.push(new VFX(x, y));
+        });
+
+        // Speed slider: updates live JS FPS, CSS demo animation-duration, and code block text
+        const fpsSlider = document.getElementById('fps-slider');
+        const fpsValEl  = document.getElementById('fps-val');
+        const jsFpsNum  = document.getElementById('js-fps-num');
+        const cssDurNum = document.getElementById('css-dur-num');
+        const cssDurNum2= document.getElementById('css-dur-num2');
+        const cssDemo   = document.getElementById('css-demo');
+
+        // BG toggle for the test canvas
+        document.querySelectorAll('.bg-toggle button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.bg-toggle button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const right = document.getElementById('right');
+                const v = btn.dataset.bg;
+                right.classList.remove('checker-bg');
+                if (v === 'checker') {
+                    right.classList.add('checker-bg');
+                    right.style.background = '';
+                } else {
+                    right.style.background = v;
+                }
+            });
+        });
+
+        fpsSlider.addEventListener('input', () => {
+            const v = parseInt(fpsSlider.value);
+            FPS = v;
+            fpsValEl.textContent = v;
+
+            // Update JS code block FPS value
+            if (jsFpsNum) jsFpsNum.textContent = v;
+
+            // Update CSS code block duration values
+            const newDur = (TOTAL_FRAMES / v).toFixed(2) + 's';
+            if (cssDurNum)  cssDurNum.textContent  = newDur;
+            if (cssDurNum2) cssDurNum2.textContent = newDur;
+
+            // Update live CSS demo animation
+            cssDemo.style.animationDuration = (TOTAL_FRAMES / v).toFixed(2) + 's';
+        });
+    </script>
+</body>
+</html>

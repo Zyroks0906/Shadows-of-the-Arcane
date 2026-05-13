@@ -1,0 +1,361 @@
+[gd_scene format=3 uid="uid://e65umwcv4cy6"]
+
+[ext_resource type="Texture2D" uid="uid://ck24gsxkp2gh6" path="res://assets/InitialScreen/CharacterSelector/CharacterSelector.png" id="1_6ltoi"]
+[ext_resource type="Texture2D" uid="uid://cj2akpogsac52" path="res://assets/InitialScreen/CharacterSelector/Buttons_.png" id="2_imblf"]
+[ext_resource type="Script" uid="uid://cxt3wmvcikwsx" path="res://scripts/Screens/SelectCharacter/selection_screen.gd" id="3_2gokd"]
+[ext_resource type="Texture2D" uid="uid://cfrj4e1sx45fb" path="res://assets/InitialScreen/CharacterSelector/CharacterHover.png" id="4_6fsi2"]
+[ext_resource type="SpriteFrames" uid="uid://d41hbs0ot3mu" path="res://assets/sprites/sprite_frames/archer.tres" id="5_6ltoi"]
+[ext_resource type="SpriteFrames" uid="uid://c6vrjpnenjs1x" path="res://assets/sprites/sprite_frames/knight.tres" id="6_6ltoi"]
+[ext_resource type="SpriteFrames" uid="uid://mgiyp0dexcuc" path="res://assets/sprites/sprite_frames/assassin.tres" id="7_er5yf"]
+[ext_resource type="SpriteFrames" uid="uid://gbvheqtw2iqi" path="res://assets/sprites/sprite_frames/necromancer.tres" id="8_ug6m4"]
+[ext_resource type="SpriteFrames" uid="uid://bf3enbf2gexa" path="res://assets/sprites/sprite_frames/samurai.tres" id="9_ou5ow"]
+[ext_resource type="SpriteFrames" uid="uid://chusrjioahjtn" path="res://assets/sprites/sprite_frames/mage.tres" id="10_ub0sm"]
+[ext_resource type="SpriteFrames" uid="uid://iwrju2rykkiq" path="res://assets/sprites/sprite_frames/cleric.tres" id="11_6ltoi"]
+[ext_resource type="SpriteFrames" uid="uid://lrwugrt1aopw" path="res://assets/sprites/sprite_frames/gladiator.tres" id="12_30c4p"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q643g"]
+atlas = ExtResource("2_imblf")
+region = Rect2(132, 142, 333, 129)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_imblf"]
+atlas = ExtResource("2_imblf")
+region = Rect2(552, 144, 363, 124)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g7j2q"]
+atlas = ExtResource("2_imblf")
+region = Rect2(107, 271, 402, 118)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vh0kj"]
+atlas = ExtResource("2_imblf")
+region = Rect2(509, 271, 402, 118)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wdjsu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q643g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_imblf")
+}],
+"loop": true,
+"name": &"Confirm",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g7j2q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vh0kj")
+}],
+"loop": true,
+"name": &"SelectChamber",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kis8n"]
+size = Vector2(282, 91)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2gokd"]
+atlas = ExtResource("2_imblf")
+region = Rect2(552, 268, 363, 124)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_g14jj"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g7j2q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2gokd")
+}],
+"loop": true,
+"name": &"SelectChamber",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_m47wo"]
+size = Vector2(293.68073, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gw5fx"]
+atlas = ExtResource("4_6fsi2")
+region = Rect2(701, 0, 606, 660)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_63hbh"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gw5fx")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_m47wo"]
+radius = 152.55444
+height = 531.75525
+
+[node name="SelectCharacter" type="Node2D" unique_id=333750099]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=155514472]
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer" unique_id=1770982537]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = -2.0
+offset_right = 1.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("1_6ltoi")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/TextureRect" unique_id=1670754036]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Confirm" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer" unique_id=162133103]
+texture_filter = 1
+position = Vector2(795.75, 536.75)
+scale = Vector2(1.0135136, 0.9728682)
+sprite_frames = SubResource("SpriteFrames_wdjsu")
+animation = &"Confirm"
+frame_progress = 0.9813268
+
+[node name="Area2D" type="Area2D" parent="CanvasLayer/TextureRect/HBoxContainer/Confirm" unique_id=955540078]
+texture_filter = 1
+script = ExtResource("3_2gokd")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/TextureRect/HBoxContainer/Confirm/Area2D" unique_id=1186235676]
+texture_filter = 1
+position = Vector2(-7, 3)
+shape = SubResource("RectangleShape2D_kis8n")
+
+[node name="SelectChamber" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer" unique_id=365121145]
+texture_filter = 1
+position = Vector2(314.88947, 537.5)
+scale = Vector2(1.0591516, 1.0403225)
+sprite_frames = SubResource("SpriteFrames_g14jj")
+animation = &"SelectChamber"
+
+[node name="Area2D" type="Area2D" parent="CanvasLayer/TextureRect/HBoxContainer/SelectChamber" unique_id=350167957]
+texture_filter = 1
+script = ExtResource("3_2gokd")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/TextureRect/HBoxContainer/SelectChamber/Area2D" unique_id=1423652558]
+texture_filter = 1
+position = Vector2(-8.840332, -2)
+shape = SubResource("RectangleShape2D_m47wo")
+
+[node name="Containers" type="Node2D" parent="CanvasLayer/TextureRect/HBoxContainer" unique_id=768372855]
+
+[node name="Selector1" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=985697242]
+texture_filter = 1
+position = Vector2(142.74646, 319.6416)
+scale = Vector2(0.35397208, 0.37987387)
+sprite_frames = SubResource("SpriteFrames_63hbh")
+frame_progress = 0.6919918
+
+[node name="Area2D" type="Area2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector1" unique_id=1227147928]
+texture_filter = 1
+script = ExtResource("3_2gokd")
+
+[node name="Collision_1" type="CollisionShape2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector1/Area2D" unique_id=980326209]
+texture_filter = 1
+shape = SubResource("CapsuleShape2D_m47wo")
+
+[node name="Archer" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector1" unique_id=1185820816]
+texture_filter = 1
+position = Vector2(6.3664246, 14.105713)
+scale = Vector2(5.48419, 5.4870186)
+sprite_frames = ExtResource("5_6ltoi")
+animation = &"Idle"
+
+[node name="Selector2" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=2122649197]
+texture_filter = 1
+position = Vector2(268.36646, 320.78387)
+scale = Vector2(0.3585265, 0.38030526)
+sprite_frames = SubResource("SpriteFrames_63hbh")
+frame_progress = 0.84675294
+
+[node name="Area2D" type="Area2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector2" unique_id=376019002]
+texture_filter = 1
+script = ExtResource("3_2gokd")
+
+[node name="Collision_2" type="CollisionShape2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector2/Area2D" unique_id=1976812579]
+texture_filter = 1
+shape = SubResource("CapsuleShape2D_m47wo")
+
+[node name="Knight" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector2" unique_id=1315430549]
+texture_filter = 1
+position = Vector2(10.134705, 11.085999)
+scale = Vector2(5.5130167, 5.2511077)
+sprite_frames = ExtResource("6_6ltoi")
+animation = &"Idle"
+frame_progress = 0.5662481
+
+[node name="Selector3" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=1119183618]
+texture_filter = 1
+position = Vector2(394.59344, 318.6416)
+scale = Vector2(0.35397208, 0.37987387)
+sprite_frames = SubResource("SpriteFrames_63hbh")
+frame_progress = 0.98156124
+
+[node name="Area2D" type="Area2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector3" unique_id=1574522275]
+texture_filter = 1
+script = ExtResource("3_2gokd")
+
+[node name="Collision_3" type="CollisionShape2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector3/Area2D" unique_id=1291834406]
+texture_filter = 1
+shape = SubResource("CapsuleShape2D_m47wo")
+
+[node name="Assassin" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector3" unique_id=1754099889]
+texture_filter = 1
+position = Vector2(8.211365, 15.421875)
+scale = Vector2(6.738996, 5.8901134)
+sprite_frames = ExtResource("7_er5yf")
+animation = &"Idle"
+
+[node name="Selector4" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=727198631]
+texture_filter = 1
+position = Vector2(519.24255, 320.64417)
+scale = Vector2(0.35563532, 0.37683573)
+sprite_frames = SubResource("SpriteFrames_63hbh")
+frame_progress = 0.84675294
+
+[node name="Area2D" type="Area2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector4" unique_id=1039499179]
+texture_filter = 1
+script = ExtResource("3_2gokd")
+
+[node name="Collision_4" type="CollisionShape2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector4/Area2D" unique_id=490489012]
+texture_filter = 1
+shape = SubResource("CapsuleShape2D_m47wo")
+
+[node name="Necromancer" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector4" unique_id=1233487732]
+texture_filter = 1
+position = Vector2(19.00116, -52.12925)
+scale = Vector2(3.8627472, 4.5067596)
+sprite_frames = ExtResource("8_ug6m4")
+animation = &"Idle"
+frame_progress = 0.6853439
+
+[node name="Selector5" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=490392541]
+texture_filter = 1
+position = Vector2(644, 319)
+scale = Vector2(0.35397208, 0.37987387)
+sprite_frames = SubResource("SpriteFrames_63hbh")
+frame_progress = 0.84675294
+
+[node name="Area2D" type="Area2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector5" unique_id=292374589]
+texture_filter = 1
+script = ExtResource("3_2gokd")
+
+[node name="Collision_5" type="CollisionShape2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector5/Area2D" unique_id=913293784]
+texture_filter = 1
+shape = SubResource("CapsuleShape2D_m47wo")
+
+[node name="Samurai" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector5" unique_id=186521903]
+texture_filter = 1
+position = Vector2(5.6502686, -92.135864)
+scale = Vector2(7.528033, 6.521148)
+sprite_frames = ExtResource("9_ou5ow")
+animation = &"Idle"
+
+[node name="Selector6" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=1604637529]
+texture_filter = 1
+position = Vector2(769.9997, 320)
+scale = Vector2(0.35397208, 0.37987387)
+sprite_frames = SubResource("SpriteFrames_63hbh")
+frame_progress = 0.84675294
+
+[node name="Area2D" type="Area2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector6" unique_id=1151251133]
+texture_filter = 1
+script = ExtResource("3_2gokd")
+
+[node name="Collision_6" type="CollisionShape2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector6/Area2D" unique_id=438256434]
+texture_filter = 1
+shape = SubResource("CapsuleShape2D_m47wo")
+
+[node name="Mage" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector6" unique_id=2004309547]
+texture_filter = 1
+position = Vector2(36.726807, 5.2648926)
+scale = Vector2(2.8250816, 2.6324527)
+sprite_frames = ExtResource("10_ub0sm")
+animation = &"Idle"
+frame_progress = 0.61178946
+
+[node name="Selector7" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=1378853029]
+texture_filter = 1
+position = Vector2(893.99994, 320)
+scale = Vector2(0.35397208, 0.37987387)
+sprite_frames = SubResource("SpriteFrames_63hbh")
+frame_progress = 0.84675294
+
+[node name="Area2D" type="Area2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector7" unique_id=1073074112]
+texture_filter = 1
+script = ExtResource("3_2gokd")
+
+[node name="Collision_7" type="CollisionShape2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector7/Area2D" unique_id=913241993]
+texture_filter = 1
+shape = SubResource("CapsuleShape2D_m47wo")
+
+[node name="Cleric" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector7" unique_id=1020560731]
+texture_filter = 1
+position = Vector2(14.125977, 5.2648926)
+scale = Vector2(1.610737, 1.4704711)
+sprite_frames = ExtResource("11_6ltoi")
+animation = &"Idle"
+
+[node name="Selector8" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=368788343]
+texture_filter = 1
+position = Vector2(1019.99835, 320)
+scale = Vector2(0.35397208, 0.37987387)
+sprite_frames = SubResource("SpriteFrames_63hbh")
+frame_progress = 0.84675294
+
+[node name="Area2D" type="Area2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector8" unique_id=67499623]
+texture_filter = 1
+script = ExtResource("3_2gokd")
+
+[node name="Collision_8" type="CollisionShape2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector8/Area2D" unique_id=971469119]
+texture_filter = 1
+shape = SubResource("CapsuleShape2D_m47wo")
+
+[node name="Gladiator" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector8" unique_id=851210787]
+texture_filter = 1
+position = Vector2(-11.295654, -44.75171)
+scale = Vector2(3.2002878, 2.8998113)
+sprite_frames = ExtResource("12_30c4p")
+animation = &"Idle"
+
+[node name="Selector9" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=2123480221]
+visible = false
+texture_filter = 1
+position = Vector2(583, 47.000008)
+scale = Vector2(0.1, 0.1)
+sprite_frames = SubResource("SpriteFrames_63hbh")
+frame_progress = 0.84675294
+
+[node name="Area2D" type="Area2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector9" unique_id=1749134719]
+texture_filter = 1
+script = ExtResource("3_2gokd")
+
+[node name="Collision_9" type="CollisionShape2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector9/Area2D" unique_id=1588579453]
+texture_filter = 1
+shape = SubResource("CapsuleShape2D_m47wo")
+
+[node name="Gladiator" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector9" unique_id=639692500]
+texture_filter = 1
+position = Vector2(-11.295654, -44.75171)
+scale = Vector2(3.2002878, 2.8998113)
+sprite_frames = ExtResource("12_30c4p")
+animation = &"Idle"

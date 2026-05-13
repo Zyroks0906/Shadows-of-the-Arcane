@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://c6imhes4f7vmh"]
+
+[ext_resource type="Script" uid="uid://4xepqwuq7ffo" path="res://scripts/world/door.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://b420av3yadlp8" path="res://assets/tilesets/character and tileset/Dungeon_Tileset.png" id="2_kkvvt"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eej0e"]
+atlas = ExtResource("2_kkvvt")
+region = Rect2(112, 48, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_default"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eej0e")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kkvvt"]
+size = Vector2(20, 22)
+
+[node name="Door" type="StaticBody2D" unique_id=767320047]
+script = ExtResource("1_script")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=810263439]
+sprite_frames = SubResource("SpriteFrames_default")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1658648037]
+shape = SubResource("RectangleShape2D_1")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1962606309]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=710371778]
+shape = SubResource("RectangleShape2D_kkvvt")

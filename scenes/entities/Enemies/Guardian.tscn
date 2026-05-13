@@ -1,0 +1,249 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/1_atk/1_atk_1.png" id="1_3s67f"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/1_atk/1_atk_2.png" id="2_bbqob"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/1_atk/1_atk_3.png" id="3_3jack"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/1_atk/1_atk_4.png" id="4_7ga02"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/1_atk/1_atk_5.png" id="5_axnc0"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/1_atk/1_atk_6.png" id="6_8mpl3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/1_atk/1_atk_7.png" id="7_g7gw3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/1_atk/1_atk_8.png" id="8_6xp0q"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/1_atk/1_atk_9.png" id="9_uvik7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/1_atk/1_atk_10.png" id="10_nxgrr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/1_atk/1_atk_11.png" id="11_j4erh"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/1_atk/1_atk_12.png" id="12_8ye1u"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/1_atk/1_atk_13.png" id="13_oihul"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/1_atk/1_atk_14.png" id="14_gody4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/death/death_1.png" id="15_tm5sm"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/death/death_2.png" id="16_8fyjw"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/death/death_3.png" id="17_14w41"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/death/death_4.png" id="18_sb3fl"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/death/death_5.png" id="19_732nl"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/death/death_6.png" id="20_mun02"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/death/death_7.png" id="21_ohe5e"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/death/death_8.png" id="22_wx0oq"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/death/death_9.png" id="23_6bkg4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/death/death_10.png" id="24_k87bb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/death/death_11.png" id="25_bifpr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/death/death_12.png" id="26_32lt5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/death/death_13.png" id="27_q77ib"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/death/death_14.png" id="28_ew7l3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/death/death_15.png" id="29_g8db5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/death/death_16.png" id="30_umtpq"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/take_hit/take_hit_1.png" id="31_by4rd"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/take_hit/take_hit_2.png" id="32_mgymh"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/take_hit/take_hit_3.png" id="33_4bwnd"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/take_hit/take_hit_4.png" id="34_7fwxs"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/take_hit/take_hit_5.png" id="35_a1jya"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/take_hit/take_hit_6.png" id="36_e5fyw"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/take_hit/take_hit_7.png" id="37_tkgbq"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/idle/idle_1.png" id="38_xb7lc"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/idle/idle_2.png" id="39_rea15"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/idle/idle_3.png" id="40_cchkv"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/idle/idle_4.png" id="41_mqinb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/idle/idle_5.png" id="42_4ydqh"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/idle/idle_6.png" id="43_j1nnw"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/walk/walk_1.png" id="44_dja53"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/walk/walk_2.png" id="45_wh1b4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/walk/walk_3.png" id="46_nu1gt"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/walk/walk_4.png" id="47_6lcj5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/walk/walk_5.png" id="48_s1das"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/walk/walk_6.png" id="49_met0e"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/walk/walk_7.png" id="50_baaqy"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/walk/walk_8.png" id="51_x138g"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/walk/walk_9.png" id="52_dg7wx"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/walk/walk_10.png" id="53_uwl30"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_71vio"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_3s67f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_bbqob")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_3jack")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_7ga02")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_axnc0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_8mpl3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_g7gw3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_6xp0q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_uvik7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_nxgrr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_j4erh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_8ye1u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_oihul")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_gody4")
+}],
+"loop": true,
+"name": &"attack1",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("15_tm5sm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_8fyjw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_14w41")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_sb3fl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_732nl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_mun02")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_ohe5e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_wx0oq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_6bkg4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_k87bb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_bifpr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_32lt5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_q77ib")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_ew7l3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_g8db5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_umtpq")
+}],
+"loop": true,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("31_by4rd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_mgymh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_4bwnd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_7fwxs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_a1jya")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_e5fyw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_tkgbq")
+}],
+"loop": true,
+"name": &"hurt",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("38_xb7lc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_rea15")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_cchkv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_mqinb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_4ydqh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_j1nnw")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("44_dja53")
+}, {
+"duration": 1.0,
+"texture": ExtResource("45_wh1b4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_nu1gt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("47_6lcj5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("48_s1das")
+}, {
+"duration": 1.0,
+"texture": ExtResource("49_met0e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("50_baaqy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("51_x138g")
+}, {
+"duration": 1.0,
+"texture": ExtResource("52_dg7wx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("53_uwl30")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[node name="Node2D" type="Node2D" unique_id=1230123947]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1776655453]
+sprite_frames = SubResource("SpriteFrames_71vio")
+animation = &"walk"
+frame_progress = 0.8059535

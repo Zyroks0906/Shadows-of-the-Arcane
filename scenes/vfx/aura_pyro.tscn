@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://vfx_aura_pyro_1"]
+
+[ext_resource type="Script" path="res://scripts/vfx/elemental_aura.gd" id="1_script"]
+
+[node name="AuraPyro" type="AnimatedSprite2D"]
+position = Vector2(0, 10)
+scale = Vector2(0.2, 0.2)
+modulate = Color(1, 1, 1, 0.85)
+z_index = 0
+script = ExtResource("1_script")
+element_name = "PYRO"
+anim_fps = 10.0

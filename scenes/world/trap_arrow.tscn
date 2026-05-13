@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://n7gokdrvv8es"]
+
+[ext_resource type="Script" path="res://scripts/world/trap_arrow.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://chqmoqif2r18m" path="res://assets/tilesets/items and trap_animation/arrow/Just_arrow.png" id="2_texture"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_arrow"]
+size = Vector2(16, 4)
+
+[node name="TrapArrow" type="Area2D" unique_id=1526396517]
+collision_layer = 0
+collision_mask = 3
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1648862440]
+position = Vector2(0.3264463, 1.4269418e-08)
+rotation = 1.5707964
+scale = Vector2(1, 1.4216566)
+texture = ExtResource("2_texture")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=240541184]
+shape = SubResource("RectangleShape2D_arrow")
