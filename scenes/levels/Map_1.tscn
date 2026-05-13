@@ -25,13 +25,13 @@
 [ext_resource type="Texture2D" uid="uid://4ojdoa704n34" path="res://assets/tilesets/items and trap_animation/flag/flag_1.png" id="54_7j7ta"]
 [ext_resource type="PackedScene" uid="uid://cs10fd8mhxund" path="res://scenes/world/SpikeTrap.tscn" id="54_mhr8s"]
 [ext_resource type="PackedScene" uid="uid://c5v3q2i5pp27w" path="res://scenes/world/Stairs.tscn" id="54_qc3ib"]
-[ext_resource type="PackedScene" uid="uid://bvw666vf5s08m" path="res://scenes/entities/Enemies/Golem.tscn" id="55_7bdiu"]
+[ext_resource type="PackedScene" uid="uid://dv0qmqsrq1w5o" path="res://scenes/entities/Enemies/Golem.tscn" id="55_7bdiu"]
 [ext_resource type="Script" uid="uid://8gp6x0lrhbax" path="res://scripts/world/enemy_spawner.gd" id="55_c4k6i"]
 [ext_resource type="Texture2D" uid="uid://cybw2p72fnoi" path="res://assets/tilesets/items and trap_animation/flag/flag_2.png" id="55_shlsu"]
 [ext_resource type="PackedScene" uid="uid://dgyhlosgw3650" path="res://scenes/entities/Enemies/Demon.tscn" id="56_1qg34"]
 [ext_resource type="PackedScene" uid="uid://csirbrx7irsjo" path="res://scenes/entities/Enemies/slime_base.tscn" id="56_3rt2t"]
 [ext_resource type="Texture2D" uid="uid://dxnfi64gkc0aw" path="res://assets/tilesets/items and trap_animation/flag/flag_3.png" id="56_a55ak"]
-[ext_resource type="PackedScene" uid="uid://bcc03cppa2dbu" path="res://scenes/world/arrow_trap.tscn" id="56_c4k6i"]
+[ext_resource type="PackedScene" path="res://scenes/world/arrow_trap.tscn" id="56_c4k6i"]
 [ext_resource type="PackedScene" uid="uid://5mei32fkpsm2" path="res://scenes/entities/Enemies/Skeleton.tscn" id="57_3rt2t"]
 [ext_resource type="Texture2D" uid="uid://b00bqpf3wtst7" path="res://assets/tilesets/items and trap_animation/flag/flag_4.png" id="57_4bde1"]
 [ext_resource type="Script" uid="uid://dsnor4r0kdi4j" path="res://scripts/levels/player_spawner.gd" id="58_jpgod"]
@@ -56,6 +56,8 @@
 [ext_resource type="Texture2D" uid="uid://dsj6afshy566x" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_open_2.png" id="91_nwi8y"]
 [ext_resource type="Texture2D" uid="uid://cy1es524wxc8x" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_open_3.png" id="92_53qsk"]
 [ext_resource type="Texture2D" uid="uid://qcoxvskpnmaa" path="res://assets/tilesets/items and trap_animation/mini_chest/mini_chest_open_4.png" id="93_lyy6p"]
+[ext_resource type="PackedScene" uid="uid://bsjun8k8ubxmq" path="res://scenes/entities/Enemies/Rat.tscn" id="100_rat"]
+[ext_resource type="PackedScene" uid="uid://bx7umq3w1gbsn" path="res://scenes/entities/Enemies/Bat.tscn" id="101_bat"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r50bh"]
 texture = ExtResource("2_s6mhf")
@@ -4179,28 +4181,68 @@ scale = Vector2(2.377449, 2.4719234)
 position = Vector2(-9, 0)
 
 [node name="Slime" type="Marker2D" parent="EnemySpawners" unique_id=2026311176]
-position = Vector2(949, 114)
+position = Vector2(800, 114)
 script = ExtResource("55_c4k6i")
 enemy_scene = ExtResource("56_3rt2t")
 element = 5
 
 [node name="Skeleton" type="Marker2D" parent="EnemySpawners" unique_id=1969388525]
-position = Vector2(970, 114)
+position = Vector2(956, 116)
 script = ExtResource("55_c4k6i")
 enemy_scene = ExtResource("57_3rt2t")
+
+[node name="RandomSpawner" type="Marker2D" parent="EnemySpawners" unique_id=123456789]
+position = Vector2(877, 130)
+script = ExtResource("55_c4k6i")
+random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t")])
+
+[node name="RandomSpawner2" type="Marker2D" parent="EnemySpawners" unique_id=1838924890]
+position = Vector2(1006, 358)
+script = ExtResource("55_c4k6i")
+random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t")])
+
+[node name="RandomSpawner3" type="Marker2D" parent="EnemySpawners" unique_id=386238016]
+position = Vector2(1106, 352)
+script = ExtResource("55_c4k6i")
+random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t")])
+
+[node name="RandomSpawner4" type="Marker2D" parent="EnemySpawners" unique_id=74382947]
+position = Vector2(1055, 393)
+script = ExtResource("55_c4k6i")
+random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t")])
+
+[node name="RandomSpawner5" type="Marker2D" parent="EnemySpawners" unique_id=1541880828]
+position = Vector2(1035, 261)
+script = ExtResource("55_c4k6i")
+random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t")])
+
+[node name="RandomSpawner6" type="Marker2D" parent="EnemySpawners" unique_id=2143259126]
+position = Vector2(1125, 264)
+script = ExtResource("55_c4k6i")
+random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t")])
+
+[node name="RandomSpawner7" type="Marker2D" parent="EnemySpawners" unique_id=914175914]
+position = Vector2(360, 304)
+script = ExtResource("55_c4k6i")
+random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t")])
+
+[node name="RandomSpawner8" type="Marker2D" parent="EnemySpawners" unique_id=1079885874]
+position = Vector2(540, 302)
+script = ExtResource("55_c4k6i")
+random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t")])
 
 [node name="ArrowTraps" type="Node2D" parent="." unique_id=908686213]
 
 [node name="ArrowTrap" parent="ArrowTraps" unique_id=857946466 instance=ExtResource("56_c4k6i")]
 position = Vector2(802, 235)
-rotation = -1.5707964
+rotation = 3.1415927
 
 [node name="ArrowTrap4" parent="ArrowTraps" unique_id=1630288412 instance=ExtResource("56_c4k6i")]
 position = Vector2(802, 252)
-rotation = -1.5707964
+rotation = 3.1415927
 
 [node name="ArrowTrap2" parent="ArrowTraps" unique_id=1961213245 instance=ExtResource("56_c4k6i")]
 position = Vector2(842, 268)
 
-[node name="ArrowTrap" parent="." unique_id=246293352 instance=ExtResource("56_c4k6i")]
+[node name="ArrowTrap3" parent="ArrowTraps" unique_id=246293352 instance=ExtResource("56_c4k6i")]
 position = Vector2(842, 286)
