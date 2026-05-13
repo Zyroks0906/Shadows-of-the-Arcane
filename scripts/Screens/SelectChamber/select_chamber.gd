@@ -34,7 +34,7 @@ func _refresh_map() -> void:
 	var progress = GameData.unlocked_levels
 	for i in range(layers.size()):
 		layers[i].visible = (progress >= i + 1)
-		
+
 		buttons[i].modulate = Color.WHITE if progress >= i + 1 else Color(0.5, 0.5, 0.5)
 
 func _on_map_1_pressed() -> void:
@@ -58,6 +58,6 @@ func _load_level(id: int) -> void:
 		path = "res://scenes/levels/Map_1.tscn"
 	else:
 		path = "res://scenes/levels/level_" + str(id) + ".tscn"
-	
+
 	if ResourceLoader.exists(path):
 		SceneManager.load_scene(path)

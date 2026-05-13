@@ -24,7 +24,7 @@ func _ready() -> void:
 	_apply_class_stats()
 	add_to_group("player")
 	super._ready()
-	
+
 	_camera_node = Camera2D.new()
 	_camera_node.zoom = Vector2(2.0, 2.0)
 	_camera_node.position_smoothing_enabled = true
@@ -32,7 +32,7 @@ func _ready() -> void:
 	_camera_node.drag_horizontal_enabled = true
 	_camera_node.drag_vertical_enabled = true
 	add_child(_camera_node)
-	
+
 	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
 	collision_layer = 2
 	collision_mask = 5
@@ -41,7 +41,7 @@ func _ready() -> void:
 		animated_sprite.scale = Vector2(1, 1)
 		animated_sprite.offset = sprite_offset
 		animated_sprite.animation_finished.connect(_on_animation_finished)
-		
+
 	if element_timer:
 		element_timer.one_shot = true
 		element_timer.timeout.connect(_on_element_timer_timeout)
@@ -53,13 +53,13 @@ func _physics_process(delta: float) -> void:
 		return
 
 	var direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	
+
 	if direction != Vector2.ZERO:
 		velocity = direction * speed
 		last_direction = direction
 		if direction.x != 0:
 			animated_sprite.flip_h = direction.x < 0
-		
+
 		if not is_attacking and not _is_hurt:
 			_play_animation("Run")
 	else:
@@ -83,15 +83,15 @@ func _physics_process(delta: float) -> void:
 func attack() -> void:
 	if not _can_attack: return
 	_can_attack = false
-	if not is_attacking:
-		_play_animation("Attack", AnimPriority.ACTION)
-	is_attacking = true
-	
+
+	if _play_animation("Attack", AnimPriority.ACTION):
+		is_attacking = true
+
 	var am = get_node_or_null("/root/AudioManager")
 	if am: am.play_sfx("res://assets/audio/sfx/Weapons/sword_slice.wav", 2.0, randf_range(0.9, 1.1))
-	
+
 	_check_hit(25, 50.0)
-	
+
 	var t = get_tree()
 	if t:
 		await t.create_timer(attack_lock_time).timeout
@@ -100,15 +100,15 @@ func attack() -> void:
 func special_attack() -> void:
 	if not _can_attack: return
 	_can_attack = false
-	if not is_attacking:
-		_play_animation("attack2", AnimPriority.ACTION)
-	is_attacking = true
-	
+
+	if _play_animation("attack2", AnimPriority.ACTION):
+		is_attacking = true
+
 	var am = get_node_or_null("/root/AudioManager")
 	if am: am.play_sfx("res://assets/audio/sfx/Weapons/sword_clash.wav", 5.0, 0.8)
-	
+
 	_check_hit(45, 80.0)
-	
+
 	var t = get_tree()
 	if t:
 		await t.create_timer(attack_lock_time * 2.0).timeout
@@ -139,7 +139,7 @@ func receive_damage(amount: int) -> void:
 		_spawn_blood_vfx()
 		_play_hurt_anim()
 		var am = get_node_or_null("/root/AudioManager")
-		if am: 
+		if am:
 			am.play_sfx("res://assets/audio/sfx/Combat and Gore/squelching_1.wav", 2.0)
 			am.play_sfx("res://assets/audio/sfx/Retro/hurt.wav", 5.0, randf_range(0.9, 1.1))
 	super.receive_damage(amount)
@@ -171,38 +171,51 @@ func _spawn_blood_vfx() -> void:
 func interact() -> void:
 	if _is_interacting or interactables_in_range.is_empty(): return
 	_is_interacting = true
-	
+
 	var closest = null
 	var min_dist = 99999.0
-	
+
 	for item in interactables_in_range:
 		if not is_instance_valid(item): continue
 		if item == self or is_ancestor_of(item) or item.is_in_group("player"): continue
-		
+
 		var d = global_position.distance_to(item.global_position)
 		if d < min_dist:
 			min_dist = d
 			closest = item
-	
+
 	if closest:
 		if closest.has_method("interact"):
 			closest.interact(self)
 		elif closest.get_parent() and closest.get_parent() != self and closest.get_parent().has_method("interact"):
 			closest.get_parent().interact(self)
-			
+
 	_is_interacting = false
 
-func _play_animation(anim_name: String, priority: AnimPriority = AnimPriority.FREE) -> void:
-	if not animated_sprite: return
+func _play_animation(anim_name: String, priority: AnimPriority = AnimPriority.FREE) -> bool:
+	if not animated_sprite: return false
 	var sf = animated_sprite.sprite_frames
-	if not sf: return
-	
+	if not sf: return false
+
 	var final_anim = ""
-	for c in [anim_name, anim_name.to_lower(), anim_name.capitalize()]:
-		if sf.has_animation(c):
-			final_anim = c
-			break
-			
+
+	if anim_name == "Attack":
+		for fallback in ["Attack", "Attack1", "attack", "attack1", "Attack_1"]:
+			if sf.has_animation(fallback):
+				final_anim = fallback
+				break
+	elif anim_name == "attack2":
+		for fallback in ["attack2", "Attack2", "Attack_2", "Attack", "Attack1"]:
+			if sf.has_animation(fallback):
+				final_anim = fallback
+				break
+
+	if final_anim == "":
+		for c in [anim_name, anim_name.to_lower(), anim_name.capitalize()]:
+			if sf.has_animation(c):
+				final_anim = c
+				break
+
 	if final_anim == "":
 		match anim_name:
 			"Walk", "Run":
@@ -211,10 +224,11 @@ func _play_animation(anim_name: String, priority: AnimPriority = AnimPriority.FR
 						final_anim = fallback
 						break
 			_:
-				return
-				
+				return false
+
 	if final_anim != "":
-		_anim_play(animated_sprite, final_anim, priority)
+		return _anim_play(animated_sprite, final_anim, priority)
+	return false
 
 func _on_animation_finished() -> void:
 	if is_attacking:
@@ -226,7 +240,7 @@ func _check_hit(damage: int, range_px: float) -> void:
 	if not t: return
 	await t.create_timer(0.06).timeout
 	if not is_inside_tree(): return
-	
+
 	var space_state = get_world_2d().direct_space_state
 	var query = PhysicsShapeQueryParameters2D.new()
 	var circle = CircleShape2D.new()
@@ -275,12 +289,12 @@ func die() -> void:
 	GameManager.reset_progress()
 	set_collision_layer_value(1, false)
 	set_collision_mask_value(1, false)
-	
+
 	if animated_sprite:
 		_anim_play(animated_sprite, "Death", AnimPriority.LOCKED)
 		var t = get_tree()
 		if t: await t.create_timer(1.5).timeout
-	
+
 	if not is_inside_tree(): return
 	var tree_final = get_tree()
 	if tree_final:
@@ -292,14 +306,14 @@ func die() -> void:
 func _on_interactable_entered(body: Node2D) -> void:
 	if not is_instance_valid(body): return
 	if body == self or is_ancestor_of(body): return
-	
+
 	if body.has_method("_collect"):
 		body._collect(self)
 		return
 	if body.get_parent() and body.get_parent().has_method("_collect"):
 		body.get_parent()._collect(self)
 		return
-		
+
 	if body.is_in_group("interactable") or (body.get_parent() and body.get_parent().is_in_group("interactable")) or body.has_method("interact") or (body.get_parent() and body.get_parent().has_method("interact")):
 		if not interactables_in_range.has(body):
 			interactables_in_range.append(body)
