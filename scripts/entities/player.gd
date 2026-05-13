@@ -83,8 +83,9 @@ func _physics_process(delta: float) -> void:
 func attack() -> void:
 	if not _can_attack: return
 	_can_attack = false
+	if not is_attacking:
+		_play_animation("Attack", AnimPriority.ACTION)
 	is_attacking = true
-	_play_animation("Attack", AnimPriority.ACTION)
 	
 	var am = get_node_or_null("/root/AudioManager")
 	if am: am.play_sfx("res://assets/audio/sfx/Weapons/sword_slice.wav", 2.0, randf_range(0.9, 1.1))
@@ -99,8 +100,9 @@ func attack() -> void:
 func special_attack() -> void:
 	if not _can_attack: return
 	_can_attack = false
+	if not is_attacking:
+		_play_animation("attack2", AnimPriority.ACTION)
 	is_attacking = true
-	_play_animation("attack2", AnimPriority.ACTION)
 	
 	var am = get_node_or_null("/root/AudioManager")
 	if am: am.play_sfx("res://assets/audio/sfx/Weapons/sword_clash.wav", 5.0, 0.8)
