@@ -1,11 +1,12 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://bw5en72ib7a24"]
 
-[ext_resource type="Script" path="res://scenes/ui/floating_text.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://btc6g3usxnhs4" path="res://scenes/ui/floating_text.gd" id="1_script"]
 
-[node name="FloatingText" type="Node2D"]
+[node name="FloatingText" type="Node2D" unique_id=1515126000]
+scale = Vector2(0.45289856, 0.3388071)
 script = ExtResource("1_script")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=1151852009]
 offset_left = -100.0
 offset_top = -15.0
 offset_right = 100.0

@@ -29,7 +29,12 @@ func _on_mouse_entered() -> void:
 	_animate(_base_scale * 1.05)
 	for node in _sprite.get_children():
 		if node is AnimatedSprite2D:
-			node.play()
+			if node.sprite_frames.has_animation("Idle"):
+				node.play("Idle")
+			elif node.sprite_frames.has_animation("idle"):
+				node.play("idle")
+			else:
+				node.play()
 
 func _on_mouse_exited() -> void:
 	if not _sprite is AnimatedSprite2D: return

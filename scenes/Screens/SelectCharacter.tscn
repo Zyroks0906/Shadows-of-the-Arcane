@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://e65umwcv4cy6"]
+[gd_scene format=3 uid="uid://5tbjq5bwuwth"]
 
 [ext_resource type="Texture2D" uid="uid://ck24gsxkp2gh6" path="res://assets/InitialScreen/CharacterSelector/CharacterSelector.png" id="1_6ltoi"]
 [ext_resource type="Texture2D" uid="uid://cj2akpogsac52" path="res://assets/InitialScreen/CharacterSelector/Buttons_.png" id="2_imblf"]
@@ -200,7 +200,8 @@ texture_filter = 1
 position = Vector2(10.134705, 11.085999)
 scale = Vector2(5.5130167, 5.2511077)
 sprite_frames = ExtResource("6_6ltoi")
-animation = &"Attack1"
+animation = &"Idle"
+frame_progress = 0.5662481
 
 [node name="Selector3" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=1119183618]
 texture_filter = 1
@@ -290,6 +291,7 @@ position = Vector2(36.726807, 5.2648926)
 scale = Vector2(2.8250816, 2.6324527)
 sprite_frames = ExtResource("10_ub0sm")
 animation = &"Idle"
+frame_progress = 0.61178946
 
 [node name="Selector7" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=1378853029]
 texture_filter = 1
