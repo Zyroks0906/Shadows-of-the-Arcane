@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://bcc03cppa2dbu"]
+
+[ext_resource type="Texture2D" uid="uid://3p6u4l3rpht2" path="res://assets/tilesets/items and trap_animation/arrow/arrow_2.png" id="1_euiok"]
+[ext_resource type="Script" uid="uid://dr2tm58fmepl7" path="res://scripts/world/arrow_trap.gd" id="1_script"]
+
+[node name="ArrowTrap" type="Node2D" unique_id=857946466]
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1310158159]
+rotation = 1.5707964
+texture = ExtResource("1_euiok")
+
+[node name="ArrowSpawnPoint" type="Marker2D" parent="." unique_id=406256539]
+position = Vector2(-10, 0)
