@@ -25,22 +25,22 @@ func get_element_name(element: Element) -> String:
 
 func get_element_color(element: Element) -> Color:
 	match element:
-		Element.PYRO: return Color("
-		Element.HYDRO: return Color("
-		Element.ELECTRO: return Color("
-		Element.CRYO: return Color("
-		Element.ANEMO: return Color("
-		Element.GEO: return Color("
+		Element.PYRO: return Color("#ff4500")
+		Element.HYDRO: return Color("#1e90ff")
+		Element.ELECTRO: return Color("#9400d3")
+		Element.CRYO: return Color("#00ffff")
+		Element.ANEMO: return Color("#7fffd4")
+		Element.GEO: return Color("#daa520")
 		_: return Color.WHITE
 
 func get_element_secondary_color(element: Element) -> Color:
 	match element:
-		Element.PYRO: return Color("
-		Element.HYDRO: return Color("
-		Element.ELECTRO: return Color("
-		Element.CRYO: return Color("
-		Element.ANEMO: return Color("
-		Element.GEO: return Color("
+		Element.PYRO: return Color("#ff8c00")
+		Element.HYDRO: return Color("#00bfff")
+		Element.ELECTRO: return Color("#ba55d3")
+		Element.CRYO: return Color("#e0ffff")
+		Element.ANEMO: return Color("#afeeee")
+		Element.GEO: return Color("#bdb76b")
 		_: return Color.WHITE
 
 func get_reaction(element_1: Element, element_2: Element) -> Dictionary:
