@@ -26,7 +26,7 @@ func load_settings() -> void:
 		music_volume = config.get_value("audio", "music", 0.8)
 		sfx_volume = config.get_value("audio", "sfx", 1.0)
 		selected_music_track = config.get_value("audio", "track", selected_music_track)
-	
+
 	call_deferred("_apply_bus_volumes")
 
 func _apply_bus_volumes() -> void:

@@ -1,6 +1,6 @@
 extends Area2D
 
-@onready var sprite = get_parent() 
+@onready var sprite = get_parent()
 
 func _ready():
 	mouse_entered.connect(_on_mouse_entered)
@@ -26,7 +26,7 @@ func _animate_and_execute():
 	await get_tree().create_timer(0.1).timeout
 	sprite.frame = 3
 	await get_tree().create_timer(0.1).timeout
-	
+
 	match sprite.name:
 		"PlayButton":
 			SceneManager.load_scene("res://scenes/Screens/SelectCharacter.tscn")

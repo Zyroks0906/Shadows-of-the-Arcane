@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://5tbjq5bwuwth"]
+[gd_scene format=3 uid="uid://e65umwcv4cy6"]
 
 [ext_resource type="Texture2D" uid="uid://ck24gsxkp2gh6" path="res://assets/InitialScreen/CharacterSelector/CharacterSelector.png" id="1_6ltoi"]
 [ext_resource type="Texture2D" uid="uid://cj2akpogsac52" path="res://assets/InitialScreen/CharacterSelector/Buttons_.png" id="2_imblf"]
@@ -331,6 +331,29 @@ texture_filter = 1
 shape = SubResource("CapsuleShape2D_m47wo")
 
 [node name="Gladiator" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector8" unique_id=851210787]
+texture_filter = 1
+position = Vector2(-11.295654, -44.75171)
+scale = Vector2(3.2002878, 2.8998113)
+sprite_frames = ExtResource("12_30c4p")
+animation = &"Idle"
+
+[node name="Selector9" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers" unique_id=2123480221]
+visible = false
+texture_filter = 1
+position = Vector2(583, 47.000008)
+scale = Vector2(0.1, 0.1)
+sprite_frames = SubResource("SpriteFrames_63hbh")
+frame_progress = 0.84675294
+
+[node name="Area2D" type="Area2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector9" unique_id=1749134719]
+texture_filter = 1
+script = ExtResource("3_2gokd")
+
+[node name="Collision_9" type="CollisionShape2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector9/Area2D" unique_id=1588579453]
+texture_filter = 1
+shape = SubResource("CapsuleShape2D_m47wo")
+
+[node name="Gladiator" type="AnimatedSprite2D" parent="CanvasLayer/TextureRect/HBoxContainer/Containers/Selector9" unique_id=639692500]
 texture_filter = 1
 position = Vector2(-11.295654, -44.75171)
 scale = Vector2(3.2002878, 2.8998113)

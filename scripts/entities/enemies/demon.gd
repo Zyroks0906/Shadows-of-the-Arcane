@@ -3,7 +3,7 @@ extends BossBase
 @export var fireball_scene: PackedScene = load("res://scenes/entities/projectiles/fireball.tscn")
 
 func _init_stats() -> void:
-	max_health = 400
+	max_health = 2000
 	resistance = 0
 	character_name = "Demon"
 
@@ -96,7 +96,7 @@ func _finish_special() -> void:
 func _physics_process(delta: float) -> void:
 	if is_alive and is_instance_valid(player) and not is_attacking:
 		animated_sprite.flip_h = player.global_position.x < global_position.x
-		
+
 	if current_health < max_health * 0.4:
 		speed = 72.0
 		attack_cooldown = 0.4
@@ -116,18 +116,18 @@ func die() -> void:
 	is_alive = false
 	boss_state = BossState.DEATH
 	velocity = Vector2.ZERO
-	
+
 	GameManager.notify_boss_defeat(character_name)
-	
+
 	var death_anim = ""
 	if animated_sprite.sprite_frames.has_animation("death"):
 		death_anim = "death"
 	elif animated_sprite.sprite_frames.has_animation("Death"):
 		death_anim = "Death"
-		
+
 	if death_anim != "":
 		animated_sprite.play(death_anim)
 		await animated_sprite.animation_finished
-		
+
 	SceneManager.load_scene("res://scenes/ui/VictoryScreen.tscn")
 	queue_free()

@@ -51,7 +51,7 @@ func _on_body_exited(body: Node2D) -> void:
 func _show_message(message: String) -> void:
 	var hud = get_tree().get_first_node_in_group("hud")
 	if not hud: return
-	
+
 	if hud.has_method("show_message"):
 		hud.show_message(message, 3.0)
 	elif hud.has_method("show_interaction_prompt"):
@@ -85,7 +85,7 @@ func open() -> void:
 
 	var am_open = get_node_or_null("/root/AudioManager")
 	if am_open: am_open.play_sfx("res://assets/audio/sfx/Environment/door_open.wav")
-	
+
 	is_open = true
 	if collision: collision.set_deferred("disabled", true)
 	if sprite: sprite.visible = false

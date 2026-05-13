@@ -29,7 +29,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if not is_alive: return
-	
+
 	if is_instance_valid(player) and not is_attacking:
 		animated_sprite.flip_h = player.global_position.x < global_position.x
 
@@ -39,12 +39,12 @@ func _physics_process(delta: float) -> void:
 		if _is_hardened:
 			_is_hardened = false
 			mostrar_texto_flotante("NORMAL", Color.WHITE)
-			
+
 	if boss_state == BossState.SPECIAL and laser_sprite and laser_sprite.visible:
 		var dir = (player.global_position - global_position).normalized()
 		var target_angle = dir.angle()
 		laser_sprite.rotation = lerp_angle(laser_sprite.rotation, target_angle, delta * 2.5)
-		
+
 	super._physics_process(delta)
 
 func receive_damage(amount: int) -> void:
@@ -70,7 +70,7 @@ func _pattern_shockwave() -> void:
 	velocity = Vector2.ZERO
 	await get_tree().create_timer(1.5).timeout
 	if not is_alive: return
-	
+
 	mostrar_texto_flotante("SHOCKWAVE", Color.ORANGE)
 	_play_animation("attack1")
 	if is_instance_valid(player) and global_position.distance_to(player.global_position) < 130:
@@ -84,7 +84,7 @@ func _pattern_tracking_laser() -> void:
 	velocity = Vector2.ZERO
 	await get_tree().create_timer(1.5).timeout
 	if not is_alive: return
-	
+
 	if laser_sprite:
 		laser_sprite.visible = true
 		laser_sprite.play("default")
@@ -97,13 +97,13 @@ func _pattern_tracking_laser() -> void:
 			if laser_area:
 				for body in laser_area.get_overlapping_bodies():
 					_on_laser_hit(body)
-		
+
 		if not is_alive: return
 		laser_sprite.visible = false
 		if laser_area: laser_area.monitoring = false
 		mostrar_texto_flotante("VULNERABLE", Color.YELLOW)
 		await get_tree().create_timer(4.0).timeout
-	
+
 	if is_alive: _finish_special_golem()
 
 func _finish_special_golem() -> void:
@@ -121,19 +121,19 @@ func _on_laser_hit(body: Node2D) -> void:
 func _perform_basic_attack() -> void:
 	is_attacking = true
 	can_attack = false
-	
+
 	if is_instance_valid(player):
 		animated_sprite.flip_h = player.global_position.x < global_position.x
-		
+
 	var anim = "attack1" if randf() > 0.5 else "attack2"
 	_play_animation(anim)
 	await get_tree().create_timer(1.5).timeout
 	if not is_alive: return
-	
+
 	_check_hit()
 	await get_tree().create_timer(1.0).timeout
 	if not is_alive: return
-	
+
 	is_attacking = false
 	boss_state = BossState.CHASE
 	await get_tree().create_timer(attack_cooldown).timeout
@@ -150,19 +150,19 @@ func die() -> void:
 	is_alive = false
 	boss_state = BossState.DEATH
 	velocity = Vector2.ZERO
-	
+
 	var am = get_node_or_null("/root/AudioManager")
 	if am: am.play_sfx("res://assets/audio/sfx/Combat and Gore/squelching_2.wav", 5.0, 0.8)
-	
+
 	GameManager.notify_boss_defeat(character_name)
-	
+
 	var death_anim = ""
 	if animated_sprite.sprite_frames.has_animation("death"): death_anim = "death"
 	elif animated_sprite.sprite_frames.has_animation("Death"): death_anim = "Death"
-		
+
 	if death_anim != "":
 		animated_sprite.play(death_anim)
 		await animated_sprite.animation_finished
-		
+
 	await get_tree().create_timer(1.0).timeout
 	queue_free()

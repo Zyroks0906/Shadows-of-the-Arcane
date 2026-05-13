@@ -13,7 +13,7 @@ func _ready() -> void:
 
 func interact(_player: Player) -> void:
 	if is_open: return
-	
+
 	var has_key = false
 	match key_type:
 		"Normal":
@@ -28,7 +28,7 @@ func interact(_player: Player) -> void:
 			if GameManager.golden_keys > 0:
 				GameManager.golden_keys -= 1
 				has_key = true
-				
+
 	if has_key:
 		open_door()
 	else:

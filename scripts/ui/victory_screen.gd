@@ -16,11 +16,11 @@ func _ready() -> void:
 	_set_initial_state()
 	coins_label.text = "COINS: %d" % GameManager.total_coins
 	await _setup_hero_display()
-	
+
 	var mm = get_node_or_null("/root/MusicManager")
 	if mm:
 		mm.play_track("res://assets/audio/music/xDeviruchi - 16 bit Fantasy & Adventure (2025)/mp3/06 - Victory!.mp3", false)
-	
+
 	_run_entrance()
 
 func _set_initial_state() -> void:

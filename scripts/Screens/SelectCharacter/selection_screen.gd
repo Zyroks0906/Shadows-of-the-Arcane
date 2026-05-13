@@ -54,19 +54,19 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 				selected_character.deselect()
 			selected_character = self
 			_update_game_manager_selection()
-		
+
 		if _sprite is AnimatedSprite2D:
 			_sprite.frame = 2
 			await get_tree().create_timer(0.1).timeout
 			_sprite.frame = 3
 			await get_tree().create_timer(0.1).timeout
 			match _sprite.name:
-				"Confirm": 
+				"Confirm":
 					if selected_character:
 						SceneManager.load_scene(GameData.current_level_path)
 					else:
 						popup.popup_centered()
-				"SelectChamber": 
+				"SelectChamber":
 					if selected_character:
 						SceneManager.load_scene("res://scenes/Screens/SelectChamber.tscn")
 					else:
