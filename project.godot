@@ -14,9 +14,6 @@ config/name="Shadows of the Arcane"
 run/main_scene="res://scenes/Screens/initial_screen.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
-[audio]
-
-buses/default_bus_layout="res://default_bus_layout.tres"
 
 [autoload]
 
