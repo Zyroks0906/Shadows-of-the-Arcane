@@ -33,4 +33,4 @@ func _animate_and_execute():
 		"QuitButton":
 			get_tree().quit()
 		"OptionButton":
-			print("Opciones")
+			UIController.show_options()
