@@ -10,19 +10,52 @@ enum BossState { IDLE, CHASE, ATTACK, SPECIAL, HURT, DEATH }
 var special_timer: float = 0.0
 var current_attack_name: String = ""
 @export var attack_recovery_delay: float = 0.5
+# A boss belongs to its room: it only wakes when it can see you, never chases further than
+# `leash` from where it stands, and if it loses you for LOSE_TIME it walks back home,
+# recovers, and the fight (and its health bar) ends.
+@export var leash: float = 150.0
+const LOSE_TIME := 3.0
+var home: Vector2
+var _lost_t: float = 0.0
+var _returning: bool = false
 
 func _ready() -> void:
+	add_to_group("bosses")
+	knockback_scale = 0.15
+	cc_resistance = 0.6
 	super._ready()
 	boss_state = BossState.IDLE
+	(func(): home = global_position).call_deferred()
+
+# A hit always starts (or keeps) the fight, even from out of sight.
+func receive_damage(amount: int) -> void:
+	super.receive_damage(amount)
+	if is_alive and amount > 0 and boss_state == BossState.IDLE:
+		_returning = false
+		boss_state = BossState.CHASE
+	_lost_t = 0.0
+
+# In a fight: chasing, attacking or casting (not idle or walking home).
+func is_engaged() -> bool:
+	return is_alive and boss_state != BossState.IDLE and not _returning
+
+# Nothing solid (walls, layer 1) between the boss and the player.
+func _sees_player() -> bool:
+	if not is_instance_valid(player):
+		return false
+	var q := PhysicsRayQueryParameters2D.create(global_position, player.global_position, 1, [get_rid(), player.get_rid()])
+	return get_world_2d().direct_space_state.intersect_ray(q).is_empty()
 
 func _physics_process(delta: float) -> void:
 	if not is_alive: return
+	if _process_knockback(delta) or is_frozen: return
 
 	if not player:
 		player = get_tree().get_first_node_in_group("player")
 		return
 
 	special_timer -= delta
+	_watch_player(delta)
 
 	match boss_state:
 		BossState.IDLE:
@@ -41,10 +74,39 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _state_idle(_delta: float) -> void:
+	if _returning:
+		var to_home := home - global_position
+		if to_home.length() > 4.0:
+			velocity = to_home.normalized() * speed
+			_update_animations(to_home.normalized())
+			return
+		_returning = false
+		current_health = max_health # back home it recovers: no chip-and-run
 	_play_animation("idle")
 	velocity = Vector2.ZERO
-	if global_position.distance_to(player.global_position) < detection_range:
+	if global_position.distance_to(player.global_position) < detection_range and _sees_player():
 		boss_state = BossState.CHASE
+		_lost_t = 0.0
+
+# Counts how long the player has been out of reach during a fight; gives up after LOSE_TIME.
+func _watch_player(delta: float) -> void:
+	if not is_engaged() or is_attacking:
+		return
+	var gone := not _sees_player() or player.global_position.distance_to(home) > leash + detection_range
+	_lost_t = _lost_t + delta if gone else 0.0
+	if _lost_t >= LOSE_TIME:
+		_lost_t = 0.0
+		_returning = true
+		boss_state = BossState.IDLE
+
+# Chase velocity, but never past the leash: at the edge of its room it waits.
+func _leashed(v: Vector2) -> Vector2:
+	if home == Vector2.ZERO:
+		return v
+	var next := global_position + v * get_physics_process_delta_time()
+	if next.distance_to(home) > leash and next.distance_to(home) > global_position.distance_to(home):
+		return Vector2.ZERO
+	return v
 
 func _state_chase(_delta: float) -> void:
 	var distance = global_position.distance_to(player.global_position)
@@ -57,11 +119,11 @@ func _state_chase(_delta: float) -> void:
 		else:
 			_play_animation("idle")
 	else:
-		velocity = direction * speed
-		_update_animations(direction)
-
-	if distance > detection_range * 1.5:
-		boss_state = BossState.IDLE
+		velocity = _leashed(direction * speed)
+		if velocity == Vector2.ZERO:
+			_play_animation("idle")
+		else:
+			_update_animations(direction)
 
 func _choose_attack() -> void:
 	if special_timer <= 0:
@@ -115,6 +177,7 @@ func die() -> void:
 	is_alive = false
 	boss_state = BossState.DEATH
 	velocity = Vector2.ZERO
+	XpOrb.drop(global_position, 60, get_parent())
 
 	GameManager.notify_boss_defeat(name)
 

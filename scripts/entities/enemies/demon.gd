@@ -3,13 +3,13 @@ extends BossBase
 @export var fireball_scene: PackedScene = load("res://scenes/entities/projectiles/fireball.tscn")
 
 func _init_stats() -> void:
-	max_health = 2000
+	max_health = 900
 	resistance = 0
 	character_name = "Demon"
 
 func _ready() -> void:
 	base_element = ElementalSystem.Element.PYRO
-	speed = 48.0
+	speed = 40.0
 	attack_range = 45.0
 	attack_damage = 15
 	attack_cooldown = 0.7
@@ -116,6 +116,7 @@ func die() -> void:
 	is_alive = false
 	boss_state = BossState.DEATH
 	velocity = Vector2.ZERO
+	XpOrb.drop(global_position, 60, get_parent())
 
 	GameManager.notify_boss_defeat(character_name)
 
@@ -129,5 +130,14 @@ func die() -> void:
 		animated_sprite.play(death_anim)
 		await animated_sprite.animation_finished
 
-	SceneManager.load_scene("res://scenes/ui/VictoryScreen.tscn")
+	# Beating the Forest Depths boss opens the Whispering Caverns. Instead of cutting
+	# straight to the victory screen, a portal opens where it fell so the player can loot
+	# the reward chests first and leave when ready.
+	var exit := Node2D.new()
+	exit.set_script(load("res://scripts/world/level_exit.gd"))
+	exit.unlocks_level = 2
+	exit.glow_color = Color(1.0, 0.5, 0.3)
+	get_parent().add_child(exit)
+	exit.global_position = global_position + Vector2(0, 10)
+	exit._activate(true)
 	queue_free()

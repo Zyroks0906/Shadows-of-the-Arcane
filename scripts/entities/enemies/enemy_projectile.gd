@@ -8,6 +8,7 @@ extends Area2D
 var direction: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
+	GroundShadow.attach_flying(self, 9.0, 3.5)
 	get_tree().create_timer(lifetime).timeout.connect(queue_free)
 	body_entered.connect(_on_body_entered)
 	rotation = direction.angle()
@@ -20,7 +21,7 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 
 	if body is Player or body.has_method("take_elemental_hit"):
-		body.take_elemental_hit(damage, element)
+		body.take_elemental_hit(damage, element, self)
 		queue_free()
 	elif body is TileMap or body is StaticBody2D:
 		queue_free()
