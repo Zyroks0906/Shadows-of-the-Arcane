@@ -8,6 +8,10 @@ enum KeyType { NONE, ANY, SILVER, GOLDEN }
 @export var is_tutorial_door: bool = false
 @export var lock_after_pass: bool = false
 @export var boss_to_track: String = ""
+## Arena gate: drawn as portcullis bars instead of the door sprite.
+@export var gate_style: bool = false
+
+var _bars: PortcullisBars
 
 var is_locked: bool = false
 
@@ -16,8 +20,17 @@ var is_locked: bool = false
 @onready var detection_area: Area2D = $Area2D
 
 func _ready() -> void:
-	add_to_group("interactable")
-	if is_open:
+	if gate_style:
+		_bars = PortcullisBars.new()
+		add_child(_bars)
+		if sprite:
+			sprite.visible = false
+	else:
+		add_to_group("interactable")
+	if is_open and gate_style:
+		# Gates start raised; no sound on level load.
+		if collision: collision.disabled = true
+	elif is_open:
 		open()
 	else:
 		close()
@@ -67,39 +80,47 @@ func open() -> void:
 				return
 			GameManager.silver_keys -= 1
 			var am = get_node_or_null("/root/AudioManager")
-			if am: am.play_sfx("res://assets/audio/sfx/Environment/lock_unlock.wav")
+			if am: am.play_bank("lock", 0.0)
 		KeyType.GOLDEN:
 			if GameManager.golden_keys <= 0:
 				_show_message("You need a Golden Key to open this door")
 				return
 			GameManager.golden_keys -= 1
 			var am = get_node_or_null("/root/AudioManager")
-			if am: am.play_sfx("res://assets/audio/sfx/Environment/lock_unlock.wav")
+			if am: am.play_bank("lock", 0.0)
 		KeyType.ANY:
 			if GameManager.total_keys <= 0:
 				_show_message("You need a Key to open this door")
 				return
 			GameManager.total_keys -= 1
 			var am = get_node_or_null("/root/AudioManager")
-			if am: am.play_sfx("res://assets/audio/sfx/Environment/lock_unlock.wav")
+			if am: am.play_bank("lock", 0.0)
 
 	var am_open = get_node_or_null("/root/AudioManager")
-	if am_open: am_open.play_sfx("res://assets/audio/sfx/Environment/door_open.wav")
+	if am_open: am_open.play_bank("door_open", 0.0)
 
 	is_open = true
 	if collision: collision.set_deferred("disabled", true)
 	if sprite: sprite.visible = false
+	if _bars: _bars.set_closed(false, is_inside_tree() and get_tree().current_scene != null)
 
 func close() -> void:
 	is_open = false
 	if collision: collision.set_deferred("disabled", false)
-	if sprite: sprite.visible = true
+	if _bars:
+		_bars.set_closed(true)
+	elif sprite:
+		sprite.visible = true
 
 func unlock_by_event() -> void:
 	is_locked = false
 	open()
 
 func interact(_body: Node2D) -> void:
+	if gate_style:
+		if not is_open:
+			_show_message("The gate won't budge until the room is cleared.")
+		return
 	if is_locked:
 		if boss_to_track != "":
 			_show_message("The door is sealed. Defeat the boss to proceed.")

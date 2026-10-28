@@ -12,12 +12,14 @@ class_name SpikeTrap
 
 var is_active: bool = false
 var has_hit_this_cycle: bool = false
+var _hit_this_cycle: Array = [] # monsters already pierced this cycle
 
 func _ready() -> void:
 	add_child(timer)
 	timer.one_shot = true
 	timer.timeout.connect(_on_timer_timeout)
 	body_entered.connect(_on_body_entered)
+	collision_mask |= 4 # monsters walk into spikes too
 	if sprite:
 		sprite.frame_changed.connect(_on_sprite_frame_changed)
 		sprite.speed_scale = animation_speed
@@ -40,6 +42,7 @@ func _activate_trap() -> void:
 	await get_tree().create_timer(activation_delay).timeout
 	is_active = true
 	has_hit_this_cycle = false
+	_hit_this_cycle.clear()
 	if sprite:
 		sprite.play("default")
 	for body in get_overlapping_bodies():
@@ -55,6 +58,13 @@ func _on_body_entered(body: Node2D) -> void:
 	_check_damage(body)
 
 func _check_damage(body: Node) -> void:
+	# Monsters get pierced by the same share of their health as the hero (bosses stride
+	# over them).
+	if body is Enemy and not (body is BossBase):
+		if is_active and body.is_alive and not body in _hit_this_cycle and sprite and (sprite.frame == 2 or sprite.frame == 3):
+			_hit_this_cycle.append(body)
+			body.receive_damage(int(body.max_health * damage_percent))
+		return
 	if not is_active or has_hit_this_cycle or not body.is_in_group("player"):
 		return
 	if body.get("current_health") <= 0 or body.get("is_alive") == false:
