@@ -47,6 +47,7 @@ size = Vector2(16, 14)
 [node name="Chest" type="Node2D" unique_id=83327496]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1432472936]
+scale = Vector2(0.75, 0.75)
 sprite_frames = SubResource("SpriteFrames_krblq")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1962606305]
