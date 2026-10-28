@@ -9,7 +9,7 @@ var _hits_taken_recently: int = 0
 var _hit_timer: float = 0.0
 
 func _init_stats() -> void:
-	max_health = 600
+	max_health = 450
 	resistance = 0
 	character_name = "Golem"
 
@@ -73,10 +73,14 @@ func _pattern_shockwave() -> void:
 
 	mostrar_texto_flotante("SHOCKWAVE", Color.ORANGE)
 	_play_animation("attack1")
+	CombatFX.shockwave(global_position, Color.AQUAMARINE, 130.0, 0.45, 5.0)
+	CombatFX.shake(6.0, 0.4)
+	AudioManager.play_bank_at("stomp", global_position, 4.0, 0.5)
+	AudioManager.play_bank_at("heavy_flesh", global_position, 0.0, 0.5)
 	if is_instance_valid(player) and global_position.distance_to(player.global_position) < 130:
-		player.take_elemental_hit(int(attack_damage * 0.7), ElementalSystem.Element.ANEMO)
+		player.take_elemental_hit(int(attack_damage * 0.7), ElementalSystem.Element.ANEMO, self)
 		var push_dir = (player.global_position - global_position).normalized()
-		player.velocity = push_dir * 600
+		player.apply_knockback(push_dir * 450.0)
 	_finish_special_golem()
 
 func _pattern_tracking_laser() -> void:
@@ -116,7 +120,7 @@ func _finish_special_golem() -> void:
 
 func _on_laser_hit(body: Node2D) -> void:
 	if body == player and is_instance_valid(player):
-		player.take_elemental_hit(int(attack_damage * 0.3), ElementalSystem.Element.ELECTRO)
+		player.take_elemental_hit(int(attack_damage * 0.3), ElementalSystem.Element.ELECTRO, self)
 
 func _perform_basic_attack() -> void:
 	is_attacking = true
@@ -143,16 +147,18 @@ func _check_hit() -> void:
 	if not is_instance_valid(player): return
 	var distance := global_position.distance_to(player.global_position)
 	if distance <= attack_range + 5:
-		player.take_elemental_hit(attack_damage, base_element)
+		player.take_elemental_hit(attack_damage, base_element, self)
+		player.apply_knockback((player.global_position - global_position).normalized() * 260.0)
+		CombatFX.shake(3.0, 0.2)
 
 func die() -> void:
 	if not is_alive: return
 	is_alive = false
 	boss_state = BossState.DEATH
 	velocity = Vector2.ZERO
+	XpOrb.drop(global_position, 60, get_parent())
 
-	var am = get_node_or_null("/root/AudioManager")
-	if am: am.play_sfx("res://assets/audio/sfx/Combat and Gore/squelching_2.wav", 5.0, 0.8)
+	AudioManager.play_bank_at("roar", global_position, 4.0, 0.5)
 
 	GameManager.notify_boss_defeat(character_name)
 
