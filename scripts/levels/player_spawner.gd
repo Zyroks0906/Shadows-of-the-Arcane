@@ -34,6 +34,16 @@ func spawn_player() -> void:
 
 		add_child(player)
 		player.global_position = spawn_pos
+		# Progression snapshot: dying in this map rolls back to here.
+		DecorPhysics.apply(get_tree().current_scene, false) # bones crunch underfoot everywhere
+		Progression.snapshot()
+		# Keys open this level's doors only; coins and potions travel on.
+		GameManager.total_keys = 0
+		GameManager.silver_keys = 0
+		GameManager.golden_keys = 0
+		GameManager.snapshot_bag()
+		if get_tree().current_scene:
+			GameManager.current_map = get_tree().current_scene.scene_file_path
 		player.add_to_group("player")
 
 
@@ -46,19 +56,15 @@ func spawn_player() -> void:
 
 			hud = get_tree().root.find_child("HUD", true, false)
 
-		if hud:
-			print("Spawner: HUD encontrado. Conectando señales...")
-			if hud.has_method("update_health"):
-				player.health_changed.connect(hud.update_health)
-				player.mana_changed.connect(hud.update_mana)
-				hud.update_health(player.current_health, player.max_health)
-				hud.update_mana(player.current_mana, player.max_mana)
-		else:
+		# Health and mana are drawn by CombatHud, which follows the player itself.
+		if not hud:
 			push_warning("Spawner: ¡No se encontró el HUD en la escena!")
 
 
 		if animated_sprite and player.get("base_scale"):
 			animated_sprite.scale = player.base_scale
+			if player.has_method("_apply_anim_scale"):
+				player._apply_anim_scale()
 
 		print("Jugador listo y spawneado en: ", spawn_pos)
 		print("---------------------------------------")
