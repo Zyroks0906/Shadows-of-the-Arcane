@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c5v3q2i5pp27w"]
 
-[ext_resource type="Texture2D" uid="uid://cb838evjqxipg" path="res://assets/tilesets/character and tileset/Dungeon_Tileset.png" id="1_jp46r"]
+[ext_resource type="Texture2D" uid="uid://b420av3yadlp8" path="res://assets/tilesets/character and tileset/Dungeon_Tileset.png" id="1_jp46r"]
 [ext_resource type="Script" uid="uid://b268pnqpxfsr2" path="res://scripts/world/teleport.gd" id="2_n4s4w"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n4s4w"]
