@@ -31,6 +31,7 @@ animations = [{
 [node name="HealthPotion" type="Node2D" unique_id=1675642979]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1294117361]
+scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_ycb7o")
 autoplay = "default"
 

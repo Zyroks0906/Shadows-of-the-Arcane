@@ -32,6 +32,7 @@ radius = 12.0
 [node name="SilverKey" type="Node2D" unique_id=2120773244]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1088249845]
+scale = Vector2(0.7, 0.7)
 sprite_frames = SubResource("SpriteFrames_oiixa")
 autoplay = "default"
 
