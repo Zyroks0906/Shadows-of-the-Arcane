@@ -21,6 +21,27 @@ func _ready() -> void:
 	sfx_slider.value_changed.connect(_on_sfx_changed)
 	track_dropdown_btn.pressed.connect(_toggle_dropdown)
 	back_button.pressed.connect(hide_options)
+	# The whole audio page fits: no scrollbar (the panel grows to its content instead).
+	var scroll := back_button.get_parent().get_node_or_null("ScrollContainer") as ScrollContainer
+	if scroll:
+		scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	# Tabs under the title: AUDIO (this page) | CONTROLS. Only one page is ever on screen:
+	# CONTROLS hides this one and brings it back when it closes.
+	var tabs := HBoxContainer.new()
+	tabs.alignment = BoxContainer.ALIGNMENT_CENTER
+	tabs.add_theme_constant_override("separation", 12)
+	var vbox := back_button.get_parent()
+	ControlsMenu.style_panel(vbox.get_parent().get_parent() as Control, vbox.get_node_or_null("Title") as Label)
+	vbox.add_child(tabs)
+	vbox.move_child(tabs, 1)
+	for t in ["AUDIO", "CONTROLS"]:
+		var b := back_button.duplicate() as Button
+		b.text = t
+		b.custom_minimum_size = Vector2(180, 40)
+		tabs.add_child(b)
+		ControlsMenu.style_tab(b, t == "AUDIO") # the page you are on
+		if t == "CONTROLS":
+			b.pressed.connect(_open_controls)
 
 func _toggle_dropdown() -> void:
 	track_dropdown_panel.visible = not track_dropdown_panel.visible
@@ -114,6 +135,11 @@ func _on_track_selected(path: String, track_name: String) -> void:
 		sm.save_settings()
 	track_dropdown_btn.text = track_name
 	track_dropdown_panel.visible = false
+
+func _open_controls() -> void:
+	visible = false
+	track_dropdown_panel.visible = false
+	ControlsMenu.open_menu(func(): show_options())
 
 func show_options() -> void:
 	visible = true

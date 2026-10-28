@@ -15,6 +15,8 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause") or event.is_action_pressed("ui_cancel"):
+		if (PerkPicker.is_open() or DeathScreen.is_open() or Transmuter.TransmuteMenu.is_open() or ControlsMenu.is_open()):
+			return  # the perk choice owns the pause until a card is picked
 		var uic = get_node_or_null("/root/UIController")
 		if uic and uic.options_overlay and uic.options_overlay.visible:
 			uic.options_overlay.hide_options()

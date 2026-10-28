@@ -13,6 +13,7 @@ extends Control
 @onready var dark_overlay: ColorRect = $DarkOverlay
 
 func _ready() -> void:
+	_add_next_map_button()
 	_set_initial_state()
 	coins_label.text = "COINS: %d" % GameManager.total_coins
 	await _setup_hero_display()
@@ -40,7 +41,11 @@ func _run_entrance() -> void:
 	tween.tween_property(stats_container, "modulate:a", 1.0, 0.6).set_delay(1.3)
 	tween.tween_property(buttons_group, "modulate:a", 1.0, 0.6).set_delay(1.9)
 	await tween.finished
-	$ContentPanel/ContentCenter/VBoxLayout/ButtonsGroup/ContinueButton.grab_focus()
+	var next := buttons_group.get_node_or_null("NextMapButton") as Button
+	if next:
+		next.grab_focus()
+	else:
+		$ContentPanel/ContentCenter/VBoxLayout/ButtonsGroup/ContinueButton.grab_focus()
 
 func _setup_hero_display() -> void:
 	var class_name_str := GameManager.get_selected_class_name()
@@ -78,3 +83,21 @@ func _on_continue_button_pressed() -> void:
 
 func _on_menu_button_pressed() -> void:
 	SceneManager.load_scene("res://scenes/Screens/initial_screen.tscn")
+
+# "NEXT LEVEL" goes straight into the following chamber, keeping the character, level and
+# perks. Not shown after the last map.
+func _add_next_map_button() -> void:
+	var next := GameManager.next_map()
+	if next == "":
+		return
+	var cont := $ContentPanel/ContentCenter/VBoxLayout/ButtonsGroup/ContinueButton as Button
+	var b := cont.duplicate(0) as Button
+	b.name = "NextMapButton"
+	var label := b.get_node_or_null("ContinueText") as Label
+	if label:
+		label.text = "NEXT LEVEL"
+	buttons_group.add_child(b)
+	buttons_group.move_child(b, 0)
+	b.pressed.connect(func():
+		AudioManager.play_bank("ui_confirm", -4.0)
+		SceneManager.load_scene(next))

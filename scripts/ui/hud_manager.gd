@@ -5,8 +5,6 @@ var _total_map_coins: int = 0
 var _is_showing_message: bool = false
 var _message_tween: Tween
 
-@onready var health_sprite: AnimatedSprite2D = %HealthSprite
-@onready var mana_sprite: AnimatedSprite2D = %ManaSprite
 @onready var coin_label: Label = %CoinLabel
 @onready var key_label: Label = %KeyLabel
 @onready var health_potion_label: Label = %HealthPotionLabel
@@ -28,30 +26,6 @@ func _ready() -> void:
 		call_deferred("_init_map_stats")
 		_on_health_potions_changed(GameManager.health_potions)
 		_on_mana_potions_changed(GameManager.mana_potions)
-
-func update_health(current: float, maximum: float) -> void:
-	if not health_sprite or not health_sprite.sprite_frames: return
-
-	var ratio = clamp(float(current) / float(maximum), 0.0, 1.0)
-	var total_frames = 6
-	var target_frame = int((1.0 - ratio) * (total_frames - 1))
-
-	if ratio > 0.01 and target_frame == 5:
-		target_frame = 4
-
-	health_sprite.frame = clamp(target_frame, 0, 5)
-
-func update_mana(current: float, maximum: float) -> void:
-	if not mana_sprite or not mana_sprite.sprite_frames: return
-
-	var ratio = clamp(float(current) / float(maximum), 0.0, 1.0)
-	var total_frames = 6
-	var target_frame = int((1.0 - ratio) * (total_frames - 1))
-
-	if ratio > 0.01 and target_frame == 5:
-		target_frame = 4
-
-	mana_sprite.frame = clamp(target_frame, 0, 5)
 
 func _init_map_stats() -> void:
 	_total_map_keys = get_tree().get_nodes_in_group("collectible_key").size()
