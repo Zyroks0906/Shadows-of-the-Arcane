@@ -1,38 +1,67 @@
 extends Player
+class_name Cleric
 
-func _init_stats() -> void:
+# Support bruiser: gauntlet punches; E heals and shields, Q is an earthquake.
+func _init() -> void:
 	character_name = "Cleric"
+	base_element = ElementalSystem.Element.GEO
 	max_health = 110
 	max_mana = 100
-	strength = 8
+	strength = 10
 	intelligence = 10
 	resistance = 8
 	wisdom = 12
-	speed = 85.0
-	base_scale = Vector2(0.35, 0.35)
+	speed = 78.0
+	base_scale = Vector2(0.09, 0.09)
+	skill_name = "Sanctuary"
+	skill_cooldown = 8.0
+	burst_name = "Earthsplitter"
+	burst_cost = 60.0
+	# Dark zealot with gauntlets: punches with a dull body thud, a grave, dark voice.
+	snd_swing = [["fist_swing", -4.0, 0.85]]
+	snd_hit = [["punch", 0.0, 0.85], ["heavy_flesh", -8.0, 0.8]]
+	voice = "m4"
+	voice_pitch = 0.8
+	effort_chance = 0.3
+	block_stamina_max = 60.0
+	snd_block = [["heavy_clash", -2.0, 1.0]]
+	dodge_distance = 40.0
+	# Gauntlet punch: the fist slams down on frame 2 of 5. Short reach, quick.
+	attack_reach = 18.0
+	attack_arc_deg = 90.0
+	attack_startup = 0.12
+	attack_cycle = 0.42
+	attack_impact_frame = 2
+	attack_knockback = 170.0
 
-func attack() -> void:
-	if not can_attack or is_attacking: return
-	is_attacking = true
-	can_attack = false
-	_play_animation("Attack")
-	var t = get_tree()
-	if t: await t.create_timer(0.3).timeout
-	_check_hit(attack_damage, 35.0)
-	t = get_tree()
-	if t: await t.create_timer(0.2).timeout
-	is_attacking = false
-	can_attack = true
 
-func special_attack() -> void:
-	if not can_attack or is_attacking: return
-	if use_mana(25):
-		is_attacking = true
-		can_attack = false
-		_play_animation("Attack2")
-		mostrar_texto_flotante("HEAL", Color.GREEN)
-		recover_health(20)
-		var t = get_tree()
-		if t: await t.create_timer(0.5).timeout
-		is_attacking = false
-		can_attack = true
+func _heal() -> void:
+	var heal := 10 + wisdom
+	recover_health(heal)
+	add_shield(15, 6.0, ElementalSystem.get_element_color(base_element))
+	CombatFX.floating_label(global_position, "+%d HP" % heal, Color.GREEN, 1.0)
+	CombatFX.burst(global_position, Color(0.6, 1.0, 0.6), 20, 60.0, 0.6, -60.0, 2.5)
+	CombatFX.pvfx("radiant-heal", global_position, 0.55, 0.0, Color.WHITE, 1.0, 31, self)
+	AudioManager.play_bank("heal", -2.0, 0.8)
+	AudioManager.play_bank("magic_shield", -6.0, 0.8)
+	_aoe(global_position, 26.0, roundi(_melee_damage() * 0.5), ElementalSystem.Element.GEO, 180.0)
+	CombatFX.spike_ring("Crystal", global_position, 16.0, 6, 12.0)
+
+# E: heals, raises a Geo shield and pushes nearby enemies away.
+func _do_skill() -> void:
+	_start_action("attack2", 0.2, 0.5, -1, _heal)
+
+# Q: drives both gauntlets into the ground: an earthquake that stuns everything around.
+func _do_burst() -> void:
+	_start_action("Attack", 0.35, 0.8, attack_impact_frame, _quake)
+
+func _quake() -> void:
+	_aoe(global_position, 56.0, roundi(_melee_damage() * 2.4), ElementalSystem.Element.GEO, 240.0, 1.0, "burst")
+	CombatFX.spike_ring("Earth", global_position, 34.0, 10, 18.0)
+	CombatFX.spike("Earth", global_position + aim_direction * 10.0, 26.0, 2)
+	CombatFX.shockwave(global_position, Color(0.85, 0.7, 0.35), 56.0, 0.45, 3.0)
+	CombatFX.pvfx("earth-rupture", global_position, 0.9)
+	CombatFX.shake(6.0, 0.4)
+	CombatFX.hit_stop(0.08)
+	AudioManager.play_bank("stomp", 4.0, 0.7)
+	AudioManager.play_bank("heavy_flesh", 0.0, 0.6)
