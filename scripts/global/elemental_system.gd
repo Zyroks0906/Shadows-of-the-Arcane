@@ -10,6 +10,7 @@ const REACTION_DATA = {
 	"Superconduct": {"multiplier": 1.2, "color": Color.CYAN},
 	"Frozen": {"multiplier": 1.0, "color": Color.LIGHT_BLUE},
 	"Swirl": {"multiplier": 1.2, "color": Color.AQUAMARINE},
+	"Crystallize": {"multiplier": 1.0, "color": Color.GOLDENROD},
 	"None": {"multiplier": 1.0, "color": Color.WHITE}
 }
 
@@ -74,7 +75,14 @@ func get_reaction(element_1: Element, element_2: Element) -> Dictionary:
 	if (element_1 == Element.HYDRO and element_2 == Element.CRYO) or (element_1 == Element.CRYO and element_2 == Element.HYDRO):
 		return {"name": "Frozen", "data": REACTION_DATA["Frozen"]}
 
+	# Geo and Anemo are the two "catalyst" elements: they never react with each other.
+	if (element_1 == Element.GEO and element_2 == Element.ANEMO) or (element_1 == Element.ANEMO and element_2 == Element.GEO):
+		return {"name": "None", "data": REACTION_DATA["None"]}
+
 	if element_1 == Element.ANEMO or element_2 == Element.ANEMO:
 		return {"name": "Swirl", "data": REACTION_DATA["Swirl"]}
+
+	if element_1 == Element.GEO or element_2 == Element.GEO:
+		return {"name": "Crystallize", "data": REACTION_DATA["Crystallize"]}
 
 	return {"name": "None", "data": REACTION_DATA["None"]}

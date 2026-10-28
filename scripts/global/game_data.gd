@@ -3,7 +3,7 @@ extends Node
 const SAVE_PATH = "user://savegame.cfg"
 
 var unlocked_levels = 1
-var current_level_path = "res://scenes/levels/Map_1.tscn"
+var current_level_path = "res://scenes/levels/level_1.tscn"
 
 func _ready():
 	load_game()
