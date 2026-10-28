@@ -75,6 +75,8 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 func _update_game_manager_selection() -> void:
 	for child in _sprite.get_children():
 		if child is AnimatedSprite2D:
+			Progression.reset_run()  # a new character starts a new run: no perks, no loot
+			GameManager.reset_run()
 			match child.name:
 				"Archer": GameManager.set_selected_class(GameManager.CharacterClass.ARCHER)
 				"Knight": GameManager.set_selected_class(GameManager.CharacterClass.KNIGHT)
