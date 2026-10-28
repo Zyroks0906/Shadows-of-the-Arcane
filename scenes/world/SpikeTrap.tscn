@@ -23,7 +23,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"default",
-"speed": 5.0
+"speed": 8.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_trap"]
@@ -37,6 +37,7 @@ sprite_frames = SubResource("SpriteFrames_peaks")
 autoplay = "default"
 frame = 3
 frame_progress = 1.0
+speed_scale = 2.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1129411330]
 shape = SubResource("RectangleShape2D_trap")

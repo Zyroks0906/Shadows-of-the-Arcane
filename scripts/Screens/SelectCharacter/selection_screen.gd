@@ -29,7 +29,12 @@ func _on_mouse_entered() -> void:
 	_animate(_base_scale * 1.05)
 	for node in _sprite.get_children():
 		if node is AnimatedSprite2D:
-			node.play()
+			if node.sprite_frames.has_animation("Idle"):
+				node.play("Idle")
+			elif node.sprite_frames.has_animation("idle"):
+				node.play("idle")
+			else:
+				node.play()
 
 func _on_mouse_exited() -> void:
 	if not _sprite is AnimatedSprite2D: return
@@ -49,19 +54,19 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 				selected_character.deselect()
 			selected_character = self
 			_update_game_manager_selection()
-		
+
 		if _sprite is AnimatedSprite2D:
 			_sprite.frame = 2
 			await get_tree().create_timer(0.1).timeout
 			_sprite.frame = 3
 			await get_tree().create_timer(0.1).timeout
 			match _sprite.name:
-				"Confirm": 
+				"Confirm":
 					if selected_character:
 						SceneManager.load_scene(GameData.current_level_path)
 					else:
 						popup.popup_centered()
-				"SelectChamber": 
+				"SelectChamber":
 					if selected_character:
 						SceneManager.load_scene("res://scenes/Screens/SelectChamber.tscn")
 					else:
@@ -70,6 +75,8 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 func _update_game_manager_selection() -> void:
 	for child in _sprite.get_children():
 		if child is AnimatedSprite2D:
+			Progression.reset_run()  # a new character starts a new run: no perks, no loot
+			GameManager.reset_run()
 			match child.name:
 				"Archer": GameManager.set_selected_class(GameManager.CharacterClass.ARCHER)
 				"Knight": GameManager.set_selected_class(GameManager.CharacterClass.KNIGHT)

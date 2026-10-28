@@ -1,6 +1,6 @@
 extends Area2D
 
-@onready var sprite = get_parent() 
+@onready var sprite = get_parent()
 
 func _ready():
 	mouse_entered.connect(_on_mouse_entered)
@@ -8,6 +8,7 @@ func _ready():
 	input_event.connect(_on_input_event)
 
 func _on_mouse_entered():
+	AudioManager.play_bank("ui_select", -10.0)
 	sprite.frame = 1
 	var tween = create_tween()
 	tween.tween_property(sprite, "scale", Vector2(1.1, 1.1), 0.1)
@@ -22,15 +23,16 @@ func _on_input_event(_viewport, event, _shape_idx):
 		_animate_and_execute()
 
 func _animate_and_execute():
+	AudioManager.play_bank("ui_confirm", -4.0)
 	sprite.frame = 2
 	await get_tree().create_timer(0.1).timeout
 	sprite.frame = 3
 	await get_tree().create_timer(0.1).timeout
-	
+
 	match sprite.name:
 		"PlayButton":
 			SceneManager.load_scene("res://scenes/Screens/SelectCharacter.tscn")
 		"QuitButton":
 			get_tree().quit()
 		"OptionButton":
-			print("Opciones")
+			UIController.show_options()

@@ -10,7 +10,7 @@ func _ready() -> void:
 	if item_inside:
 		item_inside.visible = false
 		item_inside.process_mode = Node.PROCESS_MODE_DISABLED
-	
+
 	var detection_area = find_child("*", true, false)
 	for child in get_children():
 		if child is Area2D:
@@ -25,9 +25,9 @@ func open_chest() -> void:
 	is_open = true
 	if animated_sprite and animated_sprite.sprite_frames.has_animation(open_animation):
 		animated_sprite.play(open_animation)
-	
+
 	await get_tree().create_timer(0.3).timeout
-	
+
 	if item_inside:
 		item_inside.visible = true
 		item_inside.process_mode = Node.PROCESS_MODE_INHERIT

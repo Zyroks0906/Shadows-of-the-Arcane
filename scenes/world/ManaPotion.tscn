@@ -32,6 +32,7 @@ radius = 12.0
 [node name="ManaPotion" type="Node2D" unique_id=232375374]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=461415974]
+scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_pois2")
 autoplay = "default"
 

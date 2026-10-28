@@ -10,7 +10,7 @@ height = 12.0
 radius = 8.0
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=546131518]
-collision_mask = 15
+collision_layer = 2
 script = ExtResource("1_xhfnw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1799194401]
@@ -25,7 +25,7 @@ visible = false
 one_shot = true
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=574670713]
-zoom = Vector2(3, 3)
+zoom = Vector2(5, 5)
 
 [node name="InteractionArea" type="Area2D" parent="." unique_id=968431537]
 collision_layer = 0

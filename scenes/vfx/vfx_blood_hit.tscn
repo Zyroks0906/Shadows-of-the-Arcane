@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://don1i7grglvlg"]
+
+[ext_resource type="Texture2D" uid="uid://kqocsyv552bn" path="res://assets/VFX/Blood/VFX Blood Concepts FXOnly7.png" id="1_7qlh0"]
+[ext_resource type="Script" uid="uid://b3prbeavd5s5a" path="res://scripts/vfx/blood_hit_vfx.gd" id="1_script"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h8713"]
+atlas = ExtResource("1_7qlh0")
+region = Rect2(0, 0, 138, 59)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_as1tt"]
+atlas = ExtResource("1_7qlh0")
+region = Rect2(0, 59, 138, 59)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5migy"]
+atlas = ExtResource("1_7qlh0")
+region = Rect2(0, 118, 138, 59)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_u5vh4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h8713")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_as1tt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5migy")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="BloodHit" type="AnimatedSprite2D" unique_id=103470966]
+z_index = 5
+position = Vector2(-5.9999995, 0)
+scale = Vector2(0.41413042, 0.5478813)
+sprite_frames = SubResource("SpriteFrames_u5vh4")
+frame_progress = 0.7802427
+script = ExtResource("1_script")

@@ -1,9 +1,10 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bvw666vf5s08m"]
 
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Golem/PNG sheet/Character_sheet.png" id="1_55a6t"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Golem/weapon PNG/arm_projectile.png" id="2_aggbe"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Golem/weapon PNG/arm_projectile_glowing.png" id="3_6corh"]
-[ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Golem/weapon PNG/Laser_sheet.png" id="4_6corh"]
+[ext_resource type="Texture2D" uid="uid://bnor2qyxkclqk" path="res://assets/sprites/enemies/Bosses/Golem/PNG sheet/Character_sheet.png" id="1_55a6t"]
+[ext_resource type="Script" uid="uid://dnnm0ogoluowj" path="res://scripts/entities/enemies/golem.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://d3vxij3wqu2ay" path="res://assets/sprites/enemies/Bosses/Golem/weapon PNG/arm_projectile.png" id="2_aggbe"]
+[ext_resource type="Texture2D" uid="uid://b7bnqtls7fy4y" path="res://assets/sprites/enemies/Bosses/Golem/weapon PNG/arm_projectile_glowing.png" id="3_6corh"]
+[ext_resource type="Texture2D" uid="uid://d0w1bog1qymqt" path="res://assets/sprites/enemies/Bosses/Golem/weapon PNG/Laser_sheet.png" id="4_6corh"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_em88d"]
 atlas = ExtResource("1_55a6t")
@@ -431,7 +432,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_506ol")
 }],
-"loop": true,
+"loop": false,
 "name": &"death",
 "speed": 8.0
 }, {
@@ -803,20 +804,42 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Node2D" type="Node2D" unique_id=868604396]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c25cm"]
+size = Vector2(259.85974, 23.458847)
 
-[node name="Golem" type="AnimatedSprite2D" parent="." unique_id=338282404]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c25cm"]
+radius = 24.0
+height = 54.0
+
+[node name="Golem" type="CharacterBody2D" unique_id=868604396]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("1_script")
+speed = 30.0
+attack_damage = 25
+max_health = 800
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=338282404]
 sprite_frames = SubResource("SpriteFrames_lkq3g")
-animation = &"charge_attack"
-frame_progress = 0.81725305
+animation = &"idle"
 
 [node name="weapon" type="AnimatedSprite2D" parent="." unique_id=1948985593]
 position = Vector2(29, 23)
 sprite_frames = SubResource("SpriteFrames_8kmgn")
-animation = &"proyectil2"
-frame_progress = 0.37539634
+animation = &"proyectil"
 
 [node name="laser" type="AnimatedSprite2D" parent="." unique_id=595958368]
-position = Vector2(100, -30)
+position = Vector2(41.000004, -18)
+scale = Vector2(0.39251944, 0.29720226)
 sprite_frames = SubResource("SpriteFrames_ymise")
-frame_progress = 0.3813216
+frame = 10
+frame_progress = 0.32734227
+
+[node name="Area2D" type="Area2D" parent="laser" unique_id=271742172]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="laser/Area2D" unique_id=1995278141]
+position = Vector2(20.38115, 1.7294235)
+shape = SubResource("RectangleShape2D_c25cm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=716014424]
+shape = SubResource("CapsuleShape2D_c25cm")

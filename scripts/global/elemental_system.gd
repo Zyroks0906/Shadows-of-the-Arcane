@@ -1,7 +1,6 @@
 extends Node
 
-
-enum Element { NONE, PYRO, HYDRO, ELECTRO, CRYO, ANEMO }
+enum Element { NONE, PYRO, HYDRO, ELECTRO, CRYO, ANEMO, GEO }
 
 const REACTION_DATA = {
 	"Vaporize": {"multiplier": 2.0, "color": Color.ORANGE_RED},
@@ -11,6 +10,7 @@ const REACTION_DATA = {
 	"Superconduct": {"multiplier": 1.2, "color": Color.CYAN},
 	"Frozen": {"multiplier": 1.0, "color": Color.LIGHT_BLUE},
 	"Swirl": {"multiplier": 1.2, "color": Color.AQUAMARINE},
+	"Crystallize": {"multiplier": 1.0, "color": Color.GOLDENROD},
 	"None": {"multiplier": 1.0, "color": Color.WHITE}
 }
 
@@ -21,22 +21,42 @@ func get_element_name(element: Element) -> String:
 		Element.ELECTRO: return "Electro"
 		Element.CRYO: return "Cryo"
 		Element.ANEMO: return "Anemo"
+		Element.GEO: return "Geo"
 		_: return "None"
+
+func get_element_color(element: Element) -> Color:
+	match element:
+		Element.PYRO: return Color("#ff4500")
+		Element.HYDRO: return Color("#1e90ff")
+		Element.ELECTRO: return Color("#9400d3")
+		Element.CRYO: return Color("#00ffff")
+		Element.ANEMO: return Color("#7fffd4")
+		Element.GEO: return Color("#daa520")
+		_: return Color.WHITE
+
+func get_element_secondary_color(element: Element) -> Color:
+	match element:
+		Element.PYRO: return Color("#ff8c00")
+		Element.HYDRO: return Color("#00bfff")
+		Element.ELECTRO: return Color("#ba55d3")
+		Element.CRYO: return Color("#e0ffff")
+		Element.ANEMO: return Color("#afeeee")
+		Element.GEO: return Color("#bdb76b")
+		_: return Color.WHITE
 
 func get_reaction(element_1: Element, element_2: Element) -> Dictionary:
 	if element_1 == Element.NONE or element_2 == Element.NONE:
 		return {"name": "None", "data": REACTION_DATA["None"]}
-	
+
 	if element_1 == element_2:
 		return {"name": "None", "data": REACTION_DATA["None"]}
 
-	
 	if (element_1 == Element.PYRO and element_2 == Element.HYDRO) or (element_1 == Element.HYDRO and element_2 == Element.PYRO):
 		var mult = 2.0 if element_1 == Element.HYDRO else 1.5
 		var data = REACTION_DATA["Vaporize"].duplicate()
 		data["multiplier"] = mult
 		return {"name": "Vaporize", "data": data}
-		
+
 	if (element_1 == Element.PYRO and element_2 == Element.CRYO) or (element_1 == Element.CRYO and element_2 == Element.PYRO):
 		var mult = 2.0 if element_1 == Element.PYRO else 1.5
 		var data = REACTION_DATA["Melt"].duplicate()
@@ -55,7 +75,14 @@ func get_reaction(element_1: Element, element_2: Element) -> Dictionary:
 	if (element_1 == Element.HYDRO and element_2 == Element.CRYO) or (element_1 == Element.CRYO and element_2 == Element.HYDRO):
 		return {"name": "Frozen", "data": REACTION_DATA["Frozen"]}
 
+	# Geo and Anemo are the two "catalyst" elements: they never react with each other.
+	if (element_1 == Element.GEO and element_2 == Element.ANEMO) or (element_1 == Element.ANEMO and element_2 == Element.GEO):
+		return {"name": "None", "data": REACTION_DATA["None"]}
+
 	if element_1 == Element.ANEMO or element_2 == Element.ANEMO:
 		return {"name": "Swirl", "data": REACTION_DATA["Swirl"]}
+
+	if element_1 == Element.GEO or element_2 == Element.GEO:
+		return {"name": "Crystallize", "data": REACTION_DATA["Crystallize"]}
 
 	return {"name": "None", "data": REACTION_DATA["None"]}

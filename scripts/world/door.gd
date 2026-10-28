@@ -7,6 +7,11 @@ enum KeyType { NONE, ANY, SILVER, GOLDEN }
 @export var required_key: KeyType = KeyType.NONE
 @export var is_tutorial_door: bool = false
 @export var lock_after_pass: bool = false
+@export var boss_to_track: String = ""
+## Arena gate: drawn as portcullis bars instead of the door sprite.
+@export var gate_style: bool = false
+
+var _bars: PortcullisBars
 
 var is_locked: bool = false
 
@@ -15,75 +20,113 @@ var is_locked: bool = false
 @onready var detection_area: Area2D = $Area2D
 
 func _ready() -> void:
-	add_to_group("interactable")
-	if is_open:
+	if gate_style:
+		_bars = PortcullisBars.new()
+		add_child(_bars)
+		if sprite:
+			sprite.visible = false
+	else:
+		add_to_group("interactable")
+	if is_open and gate_style:
+		# Gates start raised; no sound on level load.
+		if collision: collision.disabled = true
+	elif is_open:
 		open()
 	else:
 		close()
-	
+
 	if detection_area:
 		detection_area.body_entered.connect(_on_body_entered)
 		detection_area.body_exited.connect(_on_body_exited)
 
+	if boss_to_track != "" and GameManager:
+		GameManager.boss_defeated.connect(_on_boss_defeated)
+
+func _on_boss_defeated(boss_name: String) -> void:
+	if boss_name == boss_to_track:
+		is_locked = false
+		lock_after_pass = false
+		open()
+
 func _on_body_entered(body: Node2D) -> void:
 	if not body.is_in_group("player"): return
-	
+
 	if is_tutorial_door and not is_open and not is_locked:
 		open()
 
 func _on_body_exited(body: Node2D) -> void:
 	if not body.is_in_group("player"): return
-	
+
 	if lock_after_pass and is_open and not is_locked:
 		close()
 		is_locked = true
-		print("Puerta bloqueada tras el paso del jugador")
+
+func _show_message(message: String) -> void:
+	var hud = get_tree().get_first_node_in_group("hud")
+	if not hud: return
+
+	if hud.has_method("show_message"):
+		hud.show_message(message, 3.0)
+	elif hud.has_method("show_interaction_prompt"):
+		hud.show_interaction_prompt(true, message)
 
 func open() -> void:
 	if is_locked: return
-	
+
 	match required_key:
 		KeyType.SILVER:
 			if GameManager.silver_keys <= 0:
-				print("!!! BLOQUEADO: Se requiere SILVER_KEY. Tienes: ", GameManager.silver_keys)
+				_show_message("You need a Silver Key to open this door")
 				return
 			GameManager.silver_keys -= 1
+			var am = get_node_or_null("/root/AudioManager")
+			if am: am.play_bank("lock", 0.0)
 		KeyType.GOLDEN:
 			if GameManager.golden_keys <= 0:
-				print("!!! BLOQUEADO: Se requiere GOLDEN_KEY. Tienes: ", GameManager.golden_keys)
+				_show_message("You need a Golden Key to open this door")
 				return
 			GameManager.golden_keys -= 1
+			var am = get_node_or_null("/root/AudioManager")
+			if am: am.play_bank("lock", 0.0)
 		KeyType.ANY:
 			if GameManager.total_keys <= 0:
-				print("!!! BLOQUEADO: Se requiere ANY_KEY. Tienes: ", GameManager.total_keys)
+				_show_message("You need a Key to open this door")
 				return
 			GameManager.total_keys -= 1
-	
+			var am = get_node_or_null("/root/AudioManager")
+			if am: am.play_bank("lock", 0.0)
+
+	var am_open = get_node_or_null("/root/AudioManager")
+	if am_open: am_open.play_bank("door_open", 0.0)
+
 	is_open = true
 	if collision: collision.set_deferred("disabled", true)
 	if sprite: sprite.visible = false
-	print("Puerta abierta!")
+	if _bars: _bars.set_closed(false, is_inside_tree() and get_tree().current_scene != null)
 
 func close() -> void:
 	is_open = false
 	if collision: collision.set_deferred("disabled", false)
-	if sprite: sprite.visible = true
-	print("Puerta cerrada")
+	if _bars:
+		_bars.set_closed(true)
+	elif sprite:
+		sprite.visible = true
 
 func unlock_by_event() -> void:
 	is_locked = false
-	print("Puerta desbloqueada por evento (Boss derrotado)")
 	open()
 
 func interact(_body: Node2D) -> void:
-	if is_locked:
-		if is_tutorial_door:
-			print("La puerta está sellada por una fuerza oscura (Mata al Boss)")
-		else:
-			print("La puerta está bloqueada por el otro lado")
+	if gate_style:
+		if not is_open:
+			_show_message("The gate won't budge until the room is cleared.")
 		return
-		
+	if is_locked:
+		if boss_to_track != "":
+			_show_message("The door is sealed. Defeat the boss to proceed.")
+		else:
+			_show_message("The door is locked from the other side.")
+		return
+
 	if not is_open:
 		open()
-	else:
-		print("La puerta ya está abierta")
