@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://csirbrx7irsjo"]
 
 [ext_resource type="Script" uid="uid://btgyguiosjds8" path="res://scripts/entities/enemy.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://c8v04skyqs3j5" path="res://assets/sprites/enemies/Slime/slime-Sheet.png" id="2_slime"]
+[ext_resource type="Texture2D" uid="uid://c1m8qi3tyi40x" path="res://assets/sprites/enemies/Slime/slime-Sheet.png" id="2_slime"]
 [ext_resource type="PackedScene" path="res://scenes/vfx/aura_electro.tscn" id="3_qoy5v"]
 [ext_resource type="Texture2D" uid="uid://cl2tsexc4tame" path="res://assets/VFX/Lightning/VFX5/Frames/lightning_skill5_frame1.png" id="4_obw3e"]
 [ext_resource type="Texture2D" uid="uid://b1b5hqbompw5f" path="res://assets/VFX/Lightning/VFX5/Frames/lightning_skill5_frame2.png" id="5_nkbfo"]
@@ -497,10 +497,14 @@ size = Vector2(21, 15)
 collision_layer = 4
 collision_mask = 5
 script = ExtResource("1_script")
-speed = 30.0
-attack_range = 20.0
-attack_delay = 0.4
+speed = 22.0
+attack_range = 11.0
+attack_damage = 12
+attack_delay = 0.45
 character_name = "Slime"
+body_scale = 0.4
+attack_reach = 14.0
+attack_arc_deg = 150.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1927768249]
 sprite_frames = SubResource("SpriteFrames_y8ejl")

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bsjun8k8ubxmq"]
 
-[ext_resource type="Texture2D" uid="uid://beme76rayyhp4" path="res://assets/sprites/enemies/Rat_and_Skeleton/rat base outline v2-Sheet.png" id="1_6fw2x"]
-[ext_resource type="Script" uid="uid://dk4sjsn1e43v6" path="res://scripts/entities/enemies/rat.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://05s6oxcuwj8k" path="res://assets/sprites/enemies/Rat_and_Skeleton/rat base outline v2-Sheet.png" id="1_6fw2x"]
+[ext_resource type="Script" uid="uid://djt8511npdsmv" path="res://scripts/entities/enemies/rat.gd" id="1_script"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g4dxq"]
 atlas = ExtResource("1_6fw2x")

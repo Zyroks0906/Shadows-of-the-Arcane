@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://5mei32fkpsm2"]
 
 [ext_resource type="Script" uid="uid://btgyguiosjds8" path="res://scripts/entities/enemy.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://dcsb4tgf170qj" path="res://assets/sprites/enemies/Rat_and_Skeleton/skeleton base outline v2-Sheet.png" id="2_skeleton"]
+[ext_resource type="Texture2D" uid="uid://cswisongv77nk" path="res://assets/sprites/enemies/Rat_and_Skeleton/skeleton base outline v2-Sheet.png" id="2_skeleton"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xikba"]
 atlas = ExtResource("2_skeleton")
@@ -279,10 +279,13 @@ height = 24.0
 collision_layer = 4
 collision_mask = 5
 script = ExtResource("1_script")
-speed = 50.0
-attack_range = 35.0
-attack_delay = 0.6
+speed = 34.0
+attack_range = 15.0
+attack_damage = 16
+attack_delay = 0.5
 character_name = "Esqueleto"
+body_scale = 0.5
+attack_reach = 20.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=487452820]
 sprite_frames = SubResource("SpriteFrames_gjs4x")

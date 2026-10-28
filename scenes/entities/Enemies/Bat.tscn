@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bx7umq3w1gbsn"]
 
 [ext_resource type="Texture2D" uid="uid://bx2guuwxoes0s" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-Attack1.png" id="1_bcmfs"]
-[ext_resource type="Script" uid="uid://pjtke8vpd4qe" path="res://scripts/entities/enemies/bat.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://ewp5xmn7gr2q" path="res://scripts/entities/enemies/bat.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://cxhnr6cteoqvw" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-Attack2.png" id="2_npu12"]
 [ext_resource type="Texture2D" uid="uid://c6dy0m1m053rs" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-Die.png" id="3_2tuet"]
 [ext_resource type="Texture2D" uid="uid://bu624shawjp2m" path="res://assets/sprites/enemies/Bat/Bat with VFX/Bat-Hurt.png" id="4_n1hpl"]
