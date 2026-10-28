@@ -4,7 +4,7 @@ extends Control
 
 func _ready() -> void:
 	if SceneManager.target_scene == "":
-		get_tree().change_scene_to_file("res://scenes/Screens/initial_screen.tscn")
+		get_tree().change_scene_to_file.call_deferred("res://scenes/Screens/initial_screen.tscn")
 		return
 
 	if loading_icon:
