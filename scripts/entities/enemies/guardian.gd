@@ -11,12 +11,12 @@ const WISP_SCENE := "res://scenes/entities/Enemies/Wisp.tscn"
 var _summoned: bool = false
 
 func _init_stats() -> void:
-	max_health = 600
+	max_health = 950
 	resistance = 4
 	character_name = "Guardian"
 	speed = 26.0
 	attack_range = 34.0
-	attack_damage = 18
+	attack_damage = 24
 	attack_cooldown = 1.6
 	attack_delay = 0.6
 	detection_range = 170.0
@@ -52,6 +52,8 @@ func _perform_basic_attack() -> void:
 	is_attacking = true
 	can_attack = false
 	_play_animation("attack1")
+	if is_instance_valid(player):
+		BossMoves.warn_cone(self, player.global_position - global_position, attack_range + 10.0, 120.0, attack_delay)
 	await get_tree().create_timer(attack_delay).timeout
 	if not is_alive: return
 	if is_instance_valid(player) and not is_frozen and global_position.distance_to(player.global_position) <= attack_range + 10:
