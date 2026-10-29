@@ -3,7 +3,7 @@ extends BossBase
 @export var fireball_scene: PackedScene = load("res://scenes/entities/projectiles/fireball.tscn")
 
 func _init_stats() -> void:
-	max_health = 900
+	max_health = 1500
 	resistance = 0
 	character_name = "Demon"
 
@@ -11,7 +11,7 @@ func _ready() -> void:
 	base_element = ElementalSystem.Element.PYRO
 	speed = 40.0
 	attack_range = 45.0
-	attack_damage = 15
+	attack_damage = 20
 	attack_cooldown = 0.7
 	attack_delay = 0.2
 	attack_recovery_delay = 0.2
@@ -58,6 +58,11 @@ func _pattern_blink_strike() -> void:
 	if player_back_dir == Vector2.ZERO:
 		player_back_dir = Vector2.LEFT
 	var behind_pos = player.global_position + (player_back_dir * 45)
+	BossMoves.warn_circle(get_parent(), behind_pos, 14.0, 0.45) # where it will appear
+	await t.create_timer(0.45).timeout
+	if not is_alive or not is_instance_valid(player):
+		_finish_special()
+		return
 	global_position = behind_pos
 	if animated_sprite:
 		animated_sprite.flip_h = (player.global_position.x < global_position.x)
@@ -78,9 +83,10 @@ func _pattern_jump_slam() -> void:
 	speed = original_speed
 	if global_position.distance_to(player.global_position) < 80:
 		_play_animation("attack2")
+		BossMoves.warn_circle(get_parent(), global_position, attack_range + 6.0, 0.5)
 		t = get_tree()
 		if not t: return
-		await t.create_timer(0.2).timeout
+		await t.create_timer(0.5).timeout
 		if is_alive: _check_hit()
 	_finish_special()
 
@@ -130,14 +136,6 @@ func die() -> void:
 		animated_sprite.play(death_anim)
 		await animated_sprite.animation_finished
 
-	# Beating the Forest Depths boss opens the Whispering Caverns. Instead of cutting
-	# straight to the victory screen, a portal opens where it fell so the player can loot
-	# the reward chests first and leave when ready.
-	var exit := Node2D.new()
-	exit.set_script(load("res://scripts/world/level_exit.gd"))
-	exit.unlocks_level = 2
-	exit.glow_color = Color(1.0, 0.5, 0.3)
-	get_parent().add_child(exit)
-	exit.global_position = global_position + Vector2(0, 10)
-	exit._activate(true)
+	# Beating it opens the stairway down in its hall (level1_extras: the way on to the
+	# Whispering Caverns), so the player can loot the reward chests first.
 	queue_free()

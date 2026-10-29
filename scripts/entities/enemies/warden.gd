@@ -9,7 +9,7 @@ const WISP_SCENE := "res://scenes/entities/Enemies/Wisp.tscn"
 var _called_winds: bool = false
 
 func _init_stats() -> void:
-	max_health = 750
+	max_health = 1250
 	resistance = 3
 	character_name = "Warden"
 
@@ -17,9 +17,9 @@ func _ready() -> void:
 	super._ready()
 	base_element = ElementalSystem.Element.ELECTRO
 	current_imbued_element = base_element
-	speed = 26.0
-	attack_damage = 22
-	special_attack_cooldown = 4.5
+	speed = 34.0
+	attack_damage = 30
+	special_attack_cooldown = 3.2
 	_setup_elemental_shader()
 	_setup_elemental_vfx_aura()
 	var light := PointLight2D.new()
