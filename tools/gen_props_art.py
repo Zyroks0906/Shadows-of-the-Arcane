@@ -147,3 +147,145 @@ bg = Image.new('RGBA', big.size, (34, 26, 40, 255))
 bg.alpha_composite(big)
 bg.save(os.path.join(os.environ.get('TEMP', OUT), 'transmuter_preview.png'))
 print('ok')
+
+
+# --- Puzzle pieces (scripts/world/push_puzzle.gd, rune_puzzle.gd) --------------------------
+def _img(w, h):
+    return Image.new('RGBA', (w, h), (0, 0, 0, 0))
+
+def _save(im, name):
+    im.save(os.path.join(OUT, name))
+
+O = (14, 10, 18, 255)
+ST_D, ST_M, ST_L, ST_H = (54, 50, 64, 255), (82, 78, 96, 255), (112, 108, 128, 255), (150, 146, 166, 255)
+MOSS_D, MOSS = (46, 70, 48, 255), (74, 104, 70, 255)
+RUNE_D = (40, 30, 56, 255)
+
+# Push block, 16 x 18: top face (lit), front face with a carved ring rune, cracks, moss.
+b = _img(16, 18); p = b.load()
+for y in range(18):
+    for x in range(16):
+        if x in (0, 15) or y in (0, 17):
+            p[x, y] = O
+        elif y <= 5:
+            p[x, y] = ST_H if y == 1 else ST_L
+        else:
+            p[x, y] = ST_M if x > 2 else ST_L
+for x in range(1, 15):
+    p[x, 6] = O if x % 5 else ST_D           # edge between top and front
+for y in range(7, 17):
+    p[14, y] = ST_D                          # shaded right side
+for (x, y) in [(5, 9), (6, 9), (7, 9), (8, 9), (9, 9), (4, 10), (10, 10), (4, 11), (10, 11), (4, 12), (10, 12), (5, 13), (6, 13), (7, 13), (8, 13), (9, 13), (7, 10), (7, 11), (7, 12)]:
+    p[x, y] = RUNE_D                         # engraved ring with a bar
+for (x, y) in [(2, 3), (3, 4), (11, 8), (12, 9), (12, 10)]:
+    p[x, y] = ST_D                           # cracks
+for (x, y) in [(1, 16), (2, 16), (3, 15), (1, 15), (13, 16), (14, 16)]:
+    p[x, y] = MOSS if (x + y) % 2 else MOSS_D
+_save(b, 'push_block.png')
+
+# Rune plate, 16 x 16: a sunken slab, bevelled, with a ring of rune ticks.
+pl = _img(16, 16); p = pl.load()
+for y in range(16):
+    for x in range(16):
+        e = min(x, y, 15 - x, 15 - y)
+        p[x, y] = O if e == 0 else (ST_L if e == 1 and (x < 8 or y < 8) else (ST_D if e == 1 else ST_M))
+import math
+for k in range(12):
+    a = k * math.pi / 6
+    p[int(round(7.5 + math.cos(a) * 5)), int(round(7.5 + math.sin(a) * 5))] = RUNE_D
+for (x, y) in [(7, 7), (8, 7), (7, 8), (8, 8)]:
+    p[x, y] = RUNE_D
+_save(pl, 'rune_plate.png')
+
+# Vault floor rune stone, 18 x 12: a flat carved disc set in the floor.
+rs = _img(18, 12); p = rs.load()
+for y in range(12):
+    for x in range(18):
+        d = ((x - 8.5) / 8.5) ** 2 + ((y - 5.5) / 5.5) ** 2
+        if d <= 1.0:
+            p[x, y] = O if d > 0.8 else (ST_L if y < 5 else ST_M)
+_save(rs, 'rune_stone.png')
+
+# Tablet (stele), 30 x 26: bevelled frame, dark inset where the runes light up.
+tb = _img(30, 26); p = tb.load()
+for y in range(26):
+    for x in range(30):
+        if x in (0, 29) or y in (0, 25):
+            p[x, y] = O
+        elif x in (1, 2) or y in (1, 2):
+            p[x, y] = ST_H
+        elif x in (27, 28) or y in (23, 24):
+            p[x, y] = ST_D
+        elif 4 <= x <= 25 and 5 <= y <= 18:
+            p[x, y] = (24, 18, 32, 255)
+        else:
+            p[x, y] = ST_M
+for x in range(4, 26):
+    p[x, 4] = O
+    p[x, 19] = ST_L
+for (x, y) in [(3, 21), (4, 21), (25, 21), (26, 21), (5, 22)]:
+    p[x, y] = MOSS
+_save(tb, 'rune_tablet.png')
+print('puzzle art ok')
+
+# --- Fortune shrine (scripts/world/fortune_shrine.gd), 32 x 40 ------------------------------
+# A carved stone cabinet: an arch with a star medallion, three reel windows (the reels are
+# drawn by the game), a coin slot, gold trim, and a lever with a red knob on the right side.
+GOLD_D, GOLD_M, GOLD_L, GOLD_H = (96, 64, 26, 255), (164, 116, 44, 255), (224, 176, 80, 255), (252, 226, 150, 255)
+RED_D, RED_L = (120, 24, 34, 255), (214, 64, 70, 255)
+fs = _img(32, 40); p = fs.load()
+def fill(x0, y0, x1, y1, c):
+    for yy in range(y0, y1 + 1):
+        for xx in range(x0, x1 + 1):
+            p[xx, yy] = c
+# Body: 2..26 wide, arch top, plinth.
+for y in range(4, 36):
+    for x in range(2, 27):
+        r = 12.5
+        if y < 9 and (x - 14) ** 2 + (y - 9) ** 2 > r * r:
+            continue
+        edge = x in (2, 26) or y == 35
+        p[x, y] = O if edge else (ST_L if x < 6 else (ST_D if x > 22 else ST_M))
+for x in range(2, 27):
+    for y in range(4, 10):
+        if p[x, y][3] and (x - 14) ** 2 + (y - 9) ** 2 > 11.6 ** 2:
+            p[x, y] = O
+# Gold trim along the arch and the base.
+for x in range(4, 25):
+    for y in range(5, 10):
+        d = ((x - 14) ** 2 + (y - 9) ** 2) ** 0.5
+        if 9.6 < d < 10.6 and p[x, y][3]:
+            p[x, y] = GOLD_L if x < 14 else GOLD_M
+fill(3, 32, 25, 32, GOLD_M); fill(3, 33, 25, 34, ST_D)
+for x in range(3, 26, 4):
+    p[x, 32] = GOLD_H
+# Star medallion in the arch.
+fill(12, 4, 16, 8, GOLD_D)
+for (x, y) in [(14, 3), (14, 4), (14, 5), (14, 6), (14, 7), (14, 8), (14, 9), (12, 6), (13, 6), (15, 6), (16, 6), (13, 5), (15, 5), (13, 7), (15, 7)]:
+    p[x, y] = GOLD_H if y < 6 else GOLD_L
+# Reel frame: a gold-rimmed panel with three dark windows.
+fill(3, 13, 25, 28, GOLD_D)
+fill(3, 14, 25, 27, O)
+for x0 in (4, 11, 18):                      # three 7-px windows: the reel icons are 7 x 7
+    fill(x0, 15, x0 + 6, 26, (20, 14, 26, 255))
+    fill(x0, 15, x0 + 6, 15, (36, 28, 44, 255))
+for x in (11, 18):                          # thin gold mullions between the reels
+    fill(x, 14, x, 27, GOLD_D)
+for x in range(3, 26):
+    p[x, 13] = GOLD_L
+p[3, 28] = GOLD_M; p[25, 28] = GOLD_M
+# Coin slot under the reels.
+fill(12, 30, 16, 30, O); fill(13, 30, 15, 30, (10, 8, 12, 255))
+# Lever on the right: iron rod up from a socket, red knob on top.
+fill(27, 20, 29, 24, IRON); fill(27, 20, 29, 20, IRON_L)
+for y in range(9, 21):
+    p[28, y] = IRON_L if y % 3 else IRON
+fill(27, 6, 30, 9, RED_D); fill(27, 6, 29, 8, RED_L); p[27, 6] = (250, 150, 150, 255)
+# Plinth shadow and a crack.
+for (x, y) in [(8, 31), (9, 30), (21, 11), (22, 12)]:
+    p[x, y] = ST_D
+_save(fs, 'fortune_shrine.png')
+big = fs.resize((fs.width * 8, fs.height * 8), Image.NEAREST)
+bg = Image.new('RGBA', big.size, (34, 26, 40, 255)); bg.alpha_composite(big)
+bg.save(os.path.join(os.environ.get('TEMP', OUT), 'fortune_preview.png'))
+print('fortune shrine ok')
