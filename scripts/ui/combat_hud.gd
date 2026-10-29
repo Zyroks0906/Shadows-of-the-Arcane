@@ -201,22 +201,41 @@ class _Meters extends Node2D:
 			draw_string(CombatHud.FONT, pos + Vector2(size.x + 8, 6), "GUARD", HORIZONTAL_ALIGNMENT_LEFT, -1, 7, Color(1, 0.9, 0.6, _guard_alpha))
 		# Dodge and special readiness, bottom left.
 		var vp := hud.get_viewport().get_visible_rect().size
-		var base := Vector2(vp.x / 2.0 - 46, vp.y - 30)
+		var base := Vector2(vp.x / 2.0 - 46, vp.y - 40)
 		_pip(base, "SPC", p.dodge_ready_fraction(), Color(0.55, 0.8, 1.0))
 		_pip(base + Vector2(46, 0), "E", p.skill_ready_fraction(), Color(0.6, 0.95, 0.8))
 		_pip(base + Vector2(92, 0), "Q", p.burst_fraction(), Color(1.0, 0.82, 0.3), true)
 
+	# Carved stone slots with gold rivets (tools/gen_hud_art.py): an engraved glyph in the
+	# middle, a shadow that drains away as the ability recharges, a gold-lit rim when ready,
+	# and the key on a small brass plate underneath.
+	const SLOT: Texture2D = preload("res://assets/sprites/ui/ability_slot.png")
+	const SLOT_LIT: Texture2D = preload("res://assets/sprites/ui/ability_slot_lit.png")
+	const GLYPHS := {"SPC": preload("res://assets/sprites/ui/glyph_dodge.png"), "E": preload("res://assets/sprites/ui/glyph_skill.png"), "Q": preload("res://assets/sprites/ui/glyph_burst.png")}
+
 	func _pip(center: Vector2, key: String, ready: float, color: Color, glow: bool = false) -> void:
-		var r := 16.0
-		if glow and ready >= 1.0:
+		var top := (center - Vector2(18, 18)).round()
+		var full := ready >= 1.0
+		if glow and full:
 			var pulse := 0.5 + 0.5 * sin(Time.get_ticks_msec() / 150.0)
-			draw_circle(center, r + 5 + pulse * 2.0, Color(color, 0.25 + 0.2 * pulse))
-		draw_circle(center, r + 2, Color(0, 0, 0, 0.6))
-		draw_circle(center, r, Color(0.12, 0.1, 0.16, 0.9))
-		if ready < 1.0:
-			draw_arc(center, r - 2, -PI / 2, -PI / 2 + TAU * ready, 24, Color(color, 0.5), 3.0)
+			draw_rect(Rect2(top - Vector2(3, 3), Vector2(42, 42)), Color(color, 0.18 + 0.15 * pulse))
+		draw_texture(SLOT_LIT if full else SLOT, top)
+		if not full:
+			# The recharge: the recess fills with the ability's colour from the bottom up,
+			# a bright surface line riding on top, so you see it filling.
+			var h := roundf(26.0 * clampf(ready, 0.0, 1.0))
+			var y0 := top.y + 31.0 - h
+			draw_rect(Rect2(Vector2(top.x + 5, y0), Vector2(26, h)), Color(color, 0.32))
+			if h > 0.0:
+				var shimmer := 0.6 + 0.4 * sin(Time.get_ticks_msec() / 120.0)
+				draw_rect(Rect2(Vector2(top.x + 5, y0), Vector2(26, 1)), Color(color.lightened(0.4), 0.9 * shimmer))
 		else:
-			draw_circle(center, r - 2, Color(color, 0.35))
-			draw_arc(center, r - 1, 0, TAU, 24, color, 2.0)
+			draw_rect(Rect2(top + Vector2(5, 5), Vector2(26, 26)), Color(color, 0.22))
+		draw_texture(GLYPHS.get(key, GLYPHS["E"]), top + Vector2(8, 8), color if full else Color(0.62, 0.6, 0.58))
+		# Brass key plate.
 		var w := CombatHud.FONT.get_string_size(key, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x
-		draw_string(CombatHud.FONT, center + Vector2(-w / 2.0, 4), key, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color(1, 1, 1, 1.0 if ready >= 1.0 else 0.5))
+		var plate := Rect2((center + Vector2(-w / 2.0 - 4, 19)).round(), Vector2(w + 8, 11))
+		draw_rect(plate.grow(1), Color(0.05, 0.03, 0.06, 0.9))
+		draw_rect(plate, Color(0.66, 0.48, 0.2) if full else Color(0.36, 0.3, 0.24))
+		draw_rect(Rect2(plate.position, Vector2(plate.size.x, 1)), Color(0.95, 0.8, 0.45) if full else Color(0.5, 0.44, 0.36))
+		draw_string(CombatHud.FONT, plate.position + Vector2(4, 9), key, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color(0.1, 0.06, 0.04) if full else Color(0.85, 0.8, 0.72))
