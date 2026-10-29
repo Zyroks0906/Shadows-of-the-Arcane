@@ -16,14 +16,14 @@ const RARITY_WEIGHTS := [55.0, 26.0, 12.0, 5.5, 1.5]
 
 # Each perk: value per rarity (common .. legendary). "fmt" builds the card text.
 const PERKS := {
-	"might": {"name": "Might", "fmt": "+%d%% physical damage", "values": [6, 10, 15, 22, 35]},
-	"arcana": {"name": "Arcana", "fmt": "+%d%% spell & skill damage", "values": [6, 10, 15, 22, 35]},
+	"might": {"name": "Might", "fmt": "+%d%% physical damage", "values": [8, 12, 18, 26, 40]},
+	"arcana": {"name": "Arcana", "fmt": "+%d%% spell & skill damage", "values": [8, 12, 18, 26, 40]},
 	"vitality": {"name": "Vitality", "fmt": "+%d max health (and heals it)", "values": [10, 16, 24, 35, 55]},
 	"iron_skin": {"name": "Iron Skin", "fmt": "+%d armour", "values": [1, 2, 3, 5, 8]},
-	"swiftness": {"name": "Swiftness", "fmt": "+%d%% movement speed", "values": [4, 6, 9, 13, 20]},
-	"fury": {"name": "Fury", "fmt": "+%d%% attack speed", "values": [5, 8, 12, 17, 26]},
+	"swiftness": {"name": "Swiftness", "fmt": "+%d%% movement speed", "values": [6, 9, 13, 18, 28]},
+	"fury": {"name": "Fury", "fmt": "+%d%% attack speed", "values": [10, 14, 20, 28, 40]},
 	"bulwark": {"name": "Bulwark", "fmt": "+%d%% guard stamina", "values": [10, 16, 24, 35, 55]},
-	"focus": {"name": "Focus", "fmt": "-%d%% skill (E) cooldown", "values": [5, 8, 12, 17, 25]},
+	"focus": {"name": "Focus", "fmt": "-%d%% skill (E) cooldown", "values": [8, 12, 16, 22, 30]},
 	"zeal": {"name": "Zeal", "fmt": "+%d%% ultimate (Q) charge", "values": [8, 12, 18, 26, 40]},
 	"vampirism": {"name": "Vampirism", "fmt": "Heal %d HP on hit (0.4 s cooldown)", "values": [1, 1, 2, 3, 5], "min": Rarity.UNCOMMON},
 	"mastery": {"name": "Elemental Mastery", "fmt": "+%d%% reaction damage", "values": [8, 12, 18, 26, 40]},
@@ -113,6 +113,14 @@ func take(card: Dictionary) -> void:
 		if player is Player:
 			player.apply_perks(id == "vitality", v if id == "vitality" else 0)
 	perks_changed.emit()
+	# Say what changed, on the hero, so a perk is felt the moment it's taken.
+	var hero := get_tree().get_first_node_in_group("player") as Node2D
+	if hero:
+		var total := int(perks[id])
+		var text: String = (PERKS[id]["fmt"] % v).to_upper()
+		if total != v:
+			text += "  (NOW %d)" % total
+		CombatFX.floating_label(hero.global_position + Vector2(0, -22), text, Color(1.0, 0.88, 0.5), 1.6)
 
 # Called when a map starts / when the player dies.
 func snapshot() -> void:
