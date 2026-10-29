@@ -5,7 +5,7 @@ class_name Gladiator
 func _init() -> void:
 	character_name = "Barbarian"
 	base_element = ElementalSystem.Element.NONE
-	max_health = 170
+	max_health = 150 # was 170: with 18 STR and x1.5 it outclassed every other class
 	max_mana = 30
 	strength = 18
 	intelligence = 4
@@ -38,7 +38,7 @@ func _init() -> void:
 	attack_startup = 0.30
 	attack_cycle = 0.75
 	attack_impact_frame = 38
-	attack_damage_mult = 1.5
+	attack_damage_mult = 1.3
 	attack_knockback = 230.0
 	attack_move_mult = 0.4
 
@@ -71,13 +71,8 @@ func _do_skill() -> void:
 	airborne = false
 	animated_sprite.position.y = _sprite_rest.y
 	_aoe(global_position, 40.0, roundi(_melee_damage() * 1.8 * damage_mult_buff), ElementalSystem.Element.NONE, 200.0, 0.7)
-	CombatFX.pvfx("earth-rupture", global_position, 0.75)
-	CombatFX.pvfx("landing-dust", global_position, 0.6)
-	CombatFX.shockwave(global_position, Color(0.85, 0.7, 0.5), 42.0, 0.35, 4.0)
-	CombatFX.burst(global_position, Color(0.55, 0.45, 0.35), 24, 80.0, 0.5, 120.0, 2.5)
-	CombatFX.shake(4.0, 0.3)
+	CombatFX.ground_slam(global_position, 42.0) # crater, dust ring, stones, the slam sound
 	CombatFX.hit_stop(0.06)
-	AudioManager.play_bank("stomp", 2.0, 0.8)
 	_finish_attack_anim()
 
 # Q: Spartan Rage for 7 s: swings 30% faster and hits 20% harder, but he guards nothing and
@@ -85,16 +80,68 @@ func _do_skill() -> void:
 func _do_burst() -> void:
 	_voice("effort", 4.0)
 	AudioManager.play_bank("roar", -2.0, 1.1)
-	CombatFX.shockwave(global_position, Color(1.0, 0.25, 0.2), 40.0, 0.4, 3.0)
+	# The rage: he flushes red and a red rim beats round his silhouette (a shader on his own
+	# sprite, so nothing floats over or covers him).
+	_rage_rim(7.0)
 	_buff("attack_speed_mult", 1.3, 7.0)
 	_buff("damage_mult_buff", 1.2, 7.0)
 	_buff("damage_taken_mult", 1.05, 7.0)
-	var tw := animated_sprite.create_tween()
-	tw.tween_property(animated_sprite, "modulate", Color(1.35, 0.75, 0.7), 0.2)
-	tw.tween_interval(6.6)
-	tw.tween_property(animated_sprite, "modulate", Color.WHITE, 0.2)
-	for i in 46:
-		if not is_alive:
+
+
+
+const RAGE_SHADER: Shader = preload("res://shaders/rage_outline.gdshader")
+
+func _rage_rim(seconds: float) -> void:
+	# The body flushes red (shader on the sprite) ...
+	var mat := ShaderMaterial.new()
+	mat.shader = RAGE_SHADER
+	mat.set_shader_parameter("width", 0.0)
+	animated_sprite.material = mat
+	# ... and a red glow of his own silhouette beats behind him.
+	var glow := _RageGlow.new()
+	glow.hero = animated_sprite
+	add_child(glow)
+	move_child(glow, 0)
+	var tw := create_tween()
+	tw.tween_method(func(v: float):
+		mat.set_shader_parameter("strength", v)
+		glow.strength = v, 0.0, 1.0, 0.25)
+	tw.tween_interval(seconds - 0.65)
+	tw.tween_method(func(v: float):
+		mat.set_shader_parameter("strength", v)
+		glow.strength = v, 1.0, 0.0, 0.4)
+	tw.tween_callback(func():
+		glow.queue_free()
+		if animated_sprite.material == mat:
+			animated_sprite.material = null)
+
+
+# A copy of the hero's current frame, a little larger, in additive red behind him.
+class _RageGlow extends AnimatedSprite2D:
+	var hero: AnimatedSprite2D
+	var strength := 0.0
+	var _t := 0.0
+
+	func _ready() -> void:
+		var m := CanvasItemMaterial.new()
+		m.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+		m.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
+		material = m
+		texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+
+	func _process(delta: float) -> void:
+		if not is_instance_valid(hero):
+			queue_free()
 			return
-		CombatFX.burst(global_position + Vector2(randf_range(-6, 6), randf_range(-12, 0)), Color(1.0, randf_range(0.1, 0.35), 0.1), 2, 18.0, 0.5, -60.0, 1.5)
-		await get_tree().create_timer(0.15).timeout
+		_t += delta
+		sprite_frames = hero.sprite_frames
+		animation = hero.animation
+		frame = hero.frame
+		flip_h = hero.flip_h
+		offset = hero.offset
+		centered = hero.centered
+		var grow := 1.1 + 0.04 * sin(_t * 7.0)
+		# Grow from the feet, not the middle, so the glow stands on the floor with him.
+		scale = hero.scale * grow
+		position = hero.position + Vector2(0, (hero.offset.y + (hero.sprite_frames.get_frame_texture(hero.animation, hero.frame).get_height() * 0.5 if hero.centered else 0.0)) * hero.scale.y * (1.0 - grow))
+		modulate = Color(1.0, 0.15, 0.05, (0.45 + 0.25 * sin(_t * 7.0)) * strength)

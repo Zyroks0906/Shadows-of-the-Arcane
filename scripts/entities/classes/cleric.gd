@@ -57,11 +57,9 @@ func _do_burst() -> void:
 
 func _quake() -> void:
 	_aoe(global_position, 56.0, roundi(_melee_damage() * 2.4), ElementalSystem.Element.GEO, 240.0, 1.0, "burst")
-	CombatFX.spike_ring("Earth", global_position, 34.0, 10, 18.0)
-	CombatFX.spike("Earth", global_position + aim_direction * 10.0, 26.0, 2)
-	CombatFX.shockwave(global_position, Color(0.85, 0.7, 0.35), 56.0, 0.45, 3.0)
-	CombatFX.pvfx("earth-rupture", global_position, 0.9)
-	CombatFX.shake(6.0, 0.4)
+	# The fist strikes the floor just in front of the cleric: everything starts there, at
+	# foot level, not from the body.
+	var strike := global_position + aim_direction.normalized() * 9.0
+	CombatFX.spike_ring("Earth", strike, 34.0, 10, 18.0)
+	CombatFX.ground_slam(strike, 56.0, Color(0.72, 0.6, 0.4))
 	CombatFX.hit_stop(0.08)
-	AudioManager.play_bank("stomp", 4.0, 0.7)
-	AudioManager.play_bank("heavy_flesh", 0.0, 0.6)
