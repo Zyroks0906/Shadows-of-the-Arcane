@@ -123,11 +123,13 @@ const BASE_AURA_REGEN := 3.0
 
 # Set when this creature rolled as an elite (see EliteAffix).
 var elite: EliteAffix = null
+var force_elite := false # set by a spawner that always brings an elite (ambush rooms)
 
 func _ready() -> void:
 	_init_stats()
 	_resolve_sound_set()
 	elite = EliteAffix.roll(self)
+	max_health = maxi(1, roundi(max_health * SettingsManager.diff("enemy_hp"))) # difficulty
 	if body_scale != 1.0:
 		scale *= body_scale
 	super._ready()
