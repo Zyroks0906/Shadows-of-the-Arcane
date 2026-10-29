@@ -10,6 +10,8 @@ enum KeyType { NONE, ANY, SILVER, GOLDEN }
 @export var boss_to_track: String = ""
 ## Arena gate: drawn as portcullis bars instead of the door sprite.
 @export var gate_style: bool = false
+## Puzzle gate: what it says when the player tries it (empty = arena gate text).
+@export var sealed_message: String = ""
 
 var _bars: PortcullisBars
 
@@ -119,7 +121,7 @@ func unlock_by_event() -> void:
 func interact(_body: Node2D) -> void:
 	if gate_style:
 		if not is_open:
-			_show_message("The gate won't budge until the room is cleared.")
+			_show_message(sealed_message if sealed_message != "" else "The gate won't budge until the room is cleared.")
 		return
 	if is_locked:
 		if boss_to_track != "":
