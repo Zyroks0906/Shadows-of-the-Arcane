@@ -30,3 +30,5 @@ Efectos de sonido de `assets/audio/sfx2/` (catálogo en `scripts/global/sound_ba
 |---|---|---|---|
 | Tajos, explosiones, hechizos, portal, humo (`assets/VFX/PVFX/`) | [PVFX Foundry](https://nerijs.itch.io/pvfx-foundry) | nerijs | CC0 1.0 |
 | Proyectiles de mago y nigromante (`assets/VFX/Spells/`) | [Spell Effects](https://opengameart.org/content/spell-effects-by-starsteelgaming) | StarsteelGaming | CC0 |
+| Roca del meteorito (`assets/VFX/Spells/rock.png`) | [Pixel Art Spells](https://opengameart.org/content/pixel-art-spells) | DevWizard | CC0 |
+| Jefe del nivel 3, el Campeón caído (`assets/sprites/enemies/Bosses/Champion/`) | [Dark Fantasy Enemy #1](https://geravolva.itch.io/dark-fantasy-enemy-1-animations) | Volva Studio (geravolva) | Gratuito, uso comercial con crédito |
