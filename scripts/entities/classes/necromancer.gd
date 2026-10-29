@@ -58,7 +58,8 @@ func _do_skill() -> void:
 
 # Q: marks the ground at the crosshair; a moment later a meteor crashes down there.
 func _do_burst() -> void:
-	var at := _target_point(cast_range)
+	var at := _burst_target(cast_range) # on the nearest enemy in sight
 	_start_action("attack2", 0.3, 0.6, -1, func():
 		AbilityZone.spawn(self, at, {"radius": 52.0, "delay": 0.9, "duration": 0.4, "damage": roundi(_spell_damage() * 3.0),
-			"element": ElementalSystem.Element.PYRO, "style": "fire", "explode_once": true, "stun": 0.6}))
+			"element": ElementalSystem.Element.PYRO, "style": "fire", "explode_once": true, "stun": 0.6,
+			"burn_ground": 6.0})) # the crater keeps burning: whatever walks in catches fire
