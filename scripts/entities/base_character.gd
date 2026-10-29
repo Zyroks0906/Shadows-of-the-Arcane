@@ -105,7 +105,18 @@ func _physics_process(delta: float) -> void:
 		_step_timer += delta
 		if _step_timer >= 0.34:
 			_step_timer = 0.0
-			AudioManager.play_bank("footstep", -20.0, 1.0, 0.1)
+			if _in_water():
+				# Wading: a splash instead of a step, and a ring of ripples at the feet.
+				AudioManager.play_sfx("res://assets/audio/sfx/water/splash_%d.wav" % (randi() % 3), -9.0, randf_range(0.9, 1.15))
+				CombatFX.shockwave(global_position + Vector2(0, 2), Color(0.7, 0.9, 1.0, 0.7), 9.0, 0.45, 1.0)
+			else:
+				AudioManager.play_bank("footstep", -20.0, 1.0, 0.1)
+
+func _in_water() -> bool:
+	for z in get_meta("zones", []):
+		if is_instance_valid(z) and z is ElementZone and z.style == ElementZone.Style.WATER:
+			return true
+	return false
 
 func die() -> void:
 	if not is_alive: return

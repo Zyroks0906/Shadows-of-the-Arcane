@@ -25,12 +25,25 @@ func _ready() -> void:
 	z_index = -1
 	var shape := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
-	rect.size = size
+	# A puddle is drawn as a blob inside its rect: only its wet middle slows you down.
+	rect.size = size * (0.78 if style == Style.WATER else 1.0)
 	shape.shape = rect
 	shape.position = size / 2.0
 	add_child(shape)
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	if style == Style.WATER:
+		# The pool itself is a shader (shaders/shallow_water.gdshader): ragged shore, light
+		# bands, glints. _draw only adds the drifting ripples on top.
+		var pool := ColorRect.new()
+		pool.size = size
+		pool.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var mat := ShaderMaterial.new()
+		mat.shader = load("res://shaders/shallow_water.gdshader")
+		mat.set_shader_parameter("rect_size", size)
+		pool.material = mat
+		add_child(pool)
+		pool.show_behind_parent = true
 
 func _on_body_entered(body: Node2D) -> void:
 	var c := body as BaseCharacter
@@ -88,7 +101,6 @@ func _imbue(c: BaseCharacter) -> void:
 func _draw() -> void:
 	match style:
 		Style.WATER:
-			draw_rect(Rect2(Vector2.ZERO, size), Color(0.2, 0.45, 0.75, 0.32))
 			# Drifting ripple highlights.
 			for i in int(size.x * size.y / 220.0):
 				var seed_v := float(i) * 12.9898
@@ -96,7 +108,7 @@ func _draw() -> void:
 				var py := fposmod(sin(seed_v * 1.7) * 24634.6345, 1.0) * size.y
 				var phase := fposmod(_t * 0.6 + fposmod(seed_v, 1.0), 1.0)
 				var w := 2.0 + phase * 5.0
-				draw_line(Vector2(px - w, py), Vector2(px + w, py), Color(0.75, 0.9, 1.0, 0.5 * (1.0 - phase)), 1.0)
+				draw_line(Vector2(px - w, py), Vector2(px + w, py), Color(0.7, 0.9, 1.0, 0.38 * (1.0 - phase)), 1.0)
 		Style.WIND:
 			var dir := push.normalized() if push != Vector2.ZERO else Vector2.RIGHT
 			var span := size.dot(dir.abs())
