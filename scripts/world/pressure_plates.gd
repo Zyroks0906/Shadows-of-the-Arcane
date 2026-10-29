@@ -1,60 +1,64 @@
 extends Node2D
 class_name PressurePlates
 
-# A trapped floor (Indiana Jones style): rows of pressure tiles across a corridor. In each
-# row one tile is safe, marked with a faint carved ring; stepping on any other tile clicks
-# and the wall trap on that row fires a quick burst of arrows across the corridor. Read the
-# floor, or time a dodge through the volley.
+# A trapped corridor floor. The corridor is split into a grid of hidden cells covering its
+# whole width (no slipping past along a wall). Some cells are pressure plates, a few per
+# row, never side by side; stepping on one clicks and the wall trap of that row fires a
+# burst of arrows across the corridor. The plates are invisible: one only shows (a sunken,
+# cracked slab) after it has been triggered, so a careful player learns the safe path.
 
 const BURST := 3
 const BURST_GAP := 0.12
 const WARN := 0.15
 
-var _plates: Array = [] # {pos, safe, trap, down_t, cooldown}
+var _cells: Array = [] # {rect: Rect2, trap: bool, arrow_trap, revealed, down, cd}
 
-# rows: [{"y": world y, "xs": [x...], "safe": index, "trap": ArrowTrap}]
-static func build(parent: Node, rows: Array) -> PressurePlates:
+# rows: [{"y": world y, "xs": [cell centre x...], "trapped": [bool...], "trap": ArrowTrap}]
+static func build(parent: Node, rows: Array, cell: Vector2 = Vector2(14, 16)) -> PressurePlates:
 	var p := PressurePlates.new()
 	p.name = "PressurePlates"
-	p.z_index = 0
-	parent.add_child(p)
+	PushPuzzle._floor_of(parent).add_child(p) # floor decals: under the characters
 	for r in rows:
 		for i in r["xs"].size():
-			p._plates.append({"pos": Vector2(r["xs"][i], r["y"]), "safe": i == r["safe"], "trap": r["trap"], "down": 0.0, "cd": 0.0})
+			p._cells.append({"rect": Rect2(Vector2(r["xs"][i], r["y"]) - cell / 2.0, cell), "trap": r["trapped"][i],
+				"arrow_trap": r["trap"], "revealed": false, "down": 0.0, "cd": 0.0})
 	return p
 
 func _process(delta: float) -> void:
 	var player := get_tree().get_first_node_in_group("player") as Node2D
-	for pl in _plates:
-		pl["down"] = maxf(pl["down"] - delta, 0.0)
-		pl["cd"] = maxf(pl["cd"] - delta, 0.0)
-		if not player or player.global_position.distance_to(pl["pos"]) > 6.0:
+	for c in _cells:
+		c["down"] = maxf(c["down"] - delta, 0.0)
+		c["cd"] = maxf(c["cd"] - delta, 0.0)
+		if not c["trap"] or not player or not (c["rect"] as Rect2).has_point(player.global_position):
 			continue
-		pl["down"] = 0.25
-		if pl["safe"] or pl["cd"] > 0.0 or not is_instance_valid(pl["trap"]):
+		c["down"] = 0.25
+		if c["cd"] > 0.0 or not is_instance_valid(c["arrow_trap"]):
 			continue
-		pl["cd"] = 1.2
-		_trigger(pl)
+		c["cd"] = 1.4
+		c["revealed"] = true
+		_trigger(c)
 	queue_redraw()
 
-func _trigger(pl: Dictionary) -> void:
-	AudioManager.play_bank_at("ui_click", pl["pos"], -2.0, 0.6)
+func _trigger(c: Dictionary) -> void:
+	var at: Vector2 = (c["rect"] as Rect2).get_center()
+	AudioManager.play_bank_at("ui_click", at, -2.0, 0.6)
+	AudioManager.play_bank_at("chain", at, -12.0, 1.6)
 	await get_tree().create_timer(WARN).timeout
 	for i in BURST:
-		if is_instance_valid(pl["trap"]):
-			pl["trap"]._fire_arrow()
+		if is_instance_valid(c["arrow_trap"]):
+			c["arrow_trap"]._fire_arrow()
 		await get_tree().create_timer(BURST_GAP).timeout
 
 func _draw() -> void:
-	for pl in _plates:
-		var c: Vector2 = to_local(pl["pos"])
-		var sink := 1.0 if pl["down"] > 0.0 else 0.0
-		var r := Rect2(c - Vector2(6, 6) + Vector2(0, sink), Vector2(12, 12))
-		draw_rect(r, Color(0.0, 0.0, 0.0, 0.22))
-		draw_rect(r, Color(0.55, 0.5, 0.6, 0.35), false, 1.0)
-		if pl["safe"]:
-			draw_arc(c + Vector2(0, sink), 3.0, 0.0, TAU, 12, Color(0.75, 0.7, 0.55, 0.22), 1.0)
-		else:
-			# hairline cracks around the tile edge
-			draw_line(r.position + Vector2(2, 2), r.position + Vector2(5, 4), Color(0, 0, 0, 0.35), 1.0)
-			draw_line(r.end - Vector2(2, 3), r.end - Vector2(5, 5), Color(0, 0, 0, 0.35), 1.0)
+	# Only plates that have already been stepped on show: sunken, cracked slabs.
+	for c in _cells:
+		if not c["revealed"]:
+			continue
+		var r: Rect2 = c["rect"]
+		r.position = to_local(r.position) + Vector2(1, 1 + (1.0 if c["down"] > 0.0 else 0.0))
+		r.size -= Vector2(2, 2)
+		draw_rect(r, Color(0.0, 0.0, 0.0, 0.25))
+		draw_rect(r, Color(0.5, 0.42, 0.45, 0.45), false, 1.0)
+		draw_line(r.position + Vector2(2, 3), r.position + Vector2(6, 6), Color(0, 0, 0, 0.45), 1.0)
+		draw_line(r.position + Vector2(6, 6), r.position + Vector2(4, 10), Color(0, 0, 0, 0.45), 1.0)
+		draw_line(r.end - Vector2(3, 4), r.end - Vector2(6, 7), Color(0, 0, 0, 0.45), 1.0)
