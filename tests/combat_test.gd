@@ -10,6 +10,7 @@ func check(cond: bool, msg: String) -> void:
 func _ready() -> void:
 	Progression.auto_pick = true
 	EliteAffix.enabled = false
+	SettingsManager.difficulty = SettingsManager.Difficulty.NORMAL # tests use the base numbers
 	_compile_all("res://scripts")
 	await _run()
 	print("RESULT failures=", fails)
@@ -127,6 +128,8 @@ func _run() -> void:
 	_run_bindings()
 	await _run_boss_leash()
 	await _run_brazier_puzzle()
+	_run_unlocks()
+	_run_rune_puzzle()
 	_check_sounds()
 
 func _run_progression() -> void:
@@ -142,6 +145,29 @@ func _run_progression() -> void:
 	Progression.take({"id": "might", "rarity": Progression.Rarity.EPIC})
 	check(kn.max_health >= hp0 + 24, "Vitality raises max health (%d -> %d)" % [hp0, kn.max_health])
 	check(kn._melee_damage() > dmg0, "Might raises physical damage (%d -> %d)" % [dmg0, kn._melee_damage()])
+	# Every perk must change the hero for real, not just a number on the card.
+	var cyc0 := kn.attack_cycle / (kn.attack_speed_mult * kn.perk_mult("fury"))
+	var spd0 := kn.speed
+	var cd0 := kn.skill_cooldown
+	var arm0 := kn.resistance
+	var st0 := kn.block_stamina_max
+	Progression.take({"id": "fury", "rarity": Progression.Rarity.COMMON})
+	Progression.take({"id": "swiftness", "rarity": Progression.Rarity.COMMON})
+	Progression.take({"id": "focus", "rarity": Progression.Rarity.COMMON})
+	Progression.take({"id": "iron_skin", "rarity": Progression.Rarity.COMMON})
+	Progression.take({"id": "bulwark", "rarity": Progression.Rarity.COMMON})
+	var cyc1 := kn.attack_cycle / (kn.attack_speed_mult * kn.perk_mult("fury"))
+	check(cyc1 < cyc0 * 0.93, "Fury shortens every swing (%.3f -> %.3f s)" % [cyc0, cyc1])
+	check(kn.speed > spd0 * 1.05, "Swiftness speeds up movement (%.0f -> %.0f)" % [spd0, kn.speed])
+	check(kn.skill_cooldown < cd0 * 0.95, "Focus cuts the skill cooldown (%.2f -> %.2f)" % [cd0, kn.skill_cooldown])
+	check(kn.resistance > arm0, "Iron Skin adds armour (%d -> %d)" % [arm0, kn.resistance])
+	check(kn.block_stamina_max > st0, "Bulwark adds guard stamina")
+	var ar := _player("archer")
+	await _wait(0.1)
+	var draw0: float = ar._full_draw()
+	Progression.take({"id": "fury", "rarity": Progression.Rarity.RARE})
+	check(ar._full_draw() < draw0, "Fury draws the bow faster too (%.2f -> %.2f s)" % [draw0, ar._full_draw()])
+	ar.queue_free()
 	Progression.snapshot()
 	Progression.add_xp(500)
 	var lv := Progression.level
@@ -443,6 +469,7 @@ func _elite(kind: int, pos: Vector2) -> Enemy:
 	s.global_position = pos
 	EliteAffix.forced = -1
 	EliteAffix.enabled = false
+	SettingsManager.difficulty = SettingsManager.Difficulty.NORMAL # tests use the base numbers
 	return s
 
 func _run_elites() -> void:
@@ -566,7 +593,7 @@ func _run_boss_leash() -> void:
 	p.global_position = g.home + Vector2(0, g.leash + g.detection_range + 300)
 	await _wait(1.0)
 	check(g.global_position.distance_to(g.home) <= g.leash + 5.0, "boss never leaves its leash")
-	await _wait(2.6)
+	await _wait(6.5) # it may finish a special (laser) before it notices you're gone
 	check(not g.is_engaged(), "boss gives up when you flee (no health bar)")
 	g.receive_damage(5)
 	check(g.is_engaged(), "a hit from out of sight starts the fight")
@@ -588,5 +615,39 @@ func _run_brazier_puzzle() -> void:
 	pz.braziers[0].interact()
 	pz.braziers[1].interact()
 	check(pz.done and chest.locked_reason == "", "both lit at once: the cage opens")
+	pz.queue_free()
+	chest.queue_free()
+
+# Levels unlock per character; the player's real save is restored afterwards.
+func _run_unlocks() -> void:
+	var saved: Dictionary = GameData._unlocked_by_class.duplicate()
+	var cls := GameManager.selected_class
+	GameData._unlocked_by_class.clear()
+	GameManager.selected_class = GameManager.CharacterClass.MAGE
+	GameData.unlock_level(2)
+	GameManager.selected_class = GameManager.CharacterClass.KNIGHT
+	check(GameData.unlocked_levels == 1, "beating level 1 with the Mage doesn't unlock level 2 for the Knight")
+	GameManager.selected_class = GameManager.CharacterClass.MAGE
+	check(GameData.unlocked_levels == 2, "the Mage keeps its own progress")
+	GameData._unlocked_by_class = saved
+	GameData.save_game()
+	GameManager.selected_class = cls
+	var d := SettingsManager.difficulty
+	SettingsManager.difficulty = SettingsManager.Difficulty.EXTREME
+	check(SettingsManager.diff("potions") == 0.0 and SettingsManager.diff("enemy_dmg") > 1.5, "Extreme: no potions, much harder hits")
+	SettingsManager.difficulty = d
+
+# Rune vault: a wrong rune resets the order; the right order opens the cages.
+func _run_rune_puzzle() -> void:
+	var chest: Node2D = load("res://assets/sprites/sprite_frames/Chest.tscn").instantiate()
+	chest.set_script(load("res://scripts/world/chest.gd"))
+	add_child(chest)
+	var pz := RunePuzzle.build(self, [Vector2(6000, 0), Vector2(6040, 0), Vector2(6080, 0), Vector2(6120, 0)], Vector2(6060, -40), [chest])
+	pz._step(pz.order[0], null)
+	pz._step(pz.order[2], null) # out of order
+	check(pz._progress == 0 and not pz.done, "a wrong rune resets the order")
+	for k in pz.order:
+		pz._step(k, null)
+	check(pz.done and chest.locked_reason == "", "the right order opens the vault")
 	pz.queue_free()
 	chest.queue_free()
