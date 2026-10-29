@@ -7,6 +7,7 @@ class_name ItemBanner
 
 const FONT: FontFile = preload("res://assets/fonts/PressStart2P-Regular.ttf")
 const HOLD := 2.2
+const TOP := 172.0
 
 static var _current: ItemBanner
 
@@ -77,9 +78,10 @@ func _ready() -> void:
 	_panel.position = Vector2(x, -size.y - 10)
 	_panel.modulate.a = 0.0
 	var tw := create_tween()
-	tw.tween_property(_panel, "position:y", 70.0, 0.28).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	# Below the level-title band (ends at y 156) and the boss bar: at y 70 it covered both.
+	tw.tween_property(_panel, "position:y", TOP, 0.28).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tw.parallel().tween_property(_panel, "modulate:a", 1.0, 0.15)
 	tw.tween_interval(HOLD)
 	tw.tween_property(_panel, "modulate:a", 0.0, 0.4)
-	tw.parallel().tween_property(_panel, "position:y", 50.0, 0.4)
+	tw.parallel().tween_property(_panel, "position:y", TOP - 20.0, 0.4)
 	tw.tween_callback(queue_free)

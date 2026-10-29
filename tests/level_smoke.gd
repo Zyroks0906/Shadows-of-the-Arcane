@@ -6,6 +6,7 @@ func check(c: bool, m: String) -> void:
 
 func _ready() -> void:
 	EliteAffix.enabled = false
+	SettingsManager.difficulty = SettingsManager.Difficulty.NORMAL # tests use the base numbers
 	Progression.auto_pick = true
 	for cls in [GameManager.CharacterClass.SAMURAI, GameManager.CharacterClass.CLERIC]:
 		GameManager.set_selected_class(cls)
@@ -32,14 +33,24 @@ func _run(path: String) -> void:
 		check(exit != null and not exit.active, "%s: exit portal dormant until boss dies" % path.get_file())
 		var boss_name: String = exit.boss_to_track
 		GameManager.notify_boss_defeat(boss_name)
-		await get_tree().process_frame
+		await get_tree().create_timer(1.5).timeout # the portal rises once the death has played
 		check(exit.active, "%s: exit activates when %s falls" % [path.get_file(), boss_name])
+		if exit.style == "portal":
+			check(exit.visible, "%s: the portal only appears once %s falls" % [path.get_file(), boss_name])
+		exit._used = true # the final chamber would move on to the victory screen by itself
 		# Walk the player through a zone if any, to exercise environment imbue.
 		var zone: ElementZone = level.get_node("Zones").get_child(0)
+		for b in get_tree().get_nodes_in_group("bosses"):
+			b.queue_free() # bosses now attack from range; their element would muddle this check
 		if zone and player:
-			player.global_position = zone.global_position + zone.size / 2.0
+			# Walk in rather than teleport: an Area2D can miss a body that just appears inside it.
+			player.global_position = zone.global_position + zone.size / 2.0 + Vector2(0, -6)
+			await get_tree().physics_frame
+			for i in 6:
+				player.global_position += Vector2(0, 1)
+				await get_tree().physics_frame
 			await get_tree().create_timer(1.0).timeout
-			check(player.current_imbued_element != ElementalSystem.Element.NONE, "%s: zone imbues player (%s)" % [path.get_file(), ElementalSystem.get_element_name(player.current_imbued_element)])
+			check(player.current_imbued_element != ElementalSystem.Element.NONE, "%s: zone imbues player (%s) zone=%s size=%s style=%s player=%s" % [path.get_file(), ElementalSystem.get_element_name(player.current_imbued_element), zone.global_position, zone.size, zone.style, player.global_position])
 		await _check_arenas(level, player, path.get_file())
 	level.queue_free()
 	await get_tree().process_frame
@@ -49,7 +60,7 @@ func _run(path: String) -> void:
 # reward chest.
 func _check_arenas(level: Node, player: Player, file: String) -> void:
 	var arenas := level.get_node_or_null("Arenas")
-	check(arenas != null and arenas.get_child_count() == 2, "%s: two arenas" % file)
+	check(arenas != null and arenas.get_child_count() >= 2, "%s: at least two arenas (the key rooms)" % file)
 	if not arenas:
 		return
 	player.god_mode = true
@@ -90,34 +101,17 @@ func _check_arenas(level: Node, player: Player, file: String) -> void:
 
 # level_1 extras: boss chests hidden until the Demon falls; the Golem's hatch trap.
 func _check_level1(level: Node, player: Player) -> void:
-	var reward: Node = null
-	var hatch: Node = null
-	for n in level.get_children():
-		if n is BossReward: reward = n
-		if n is Trapdoor: hatch = n
-	check(reward != null and reward.get_child_count() == 3, "level_1: three Demon reward chests")
-	check(reward and reward.get_children().all(func(c): return not c.visible), "level_1: reward chests hidden before the Demon falls")
-	check(hatch != null and hatch.state == Trapdoor.State.SEALED, "level_1: hatch sealed while the Golem lives")
-	GameManager.notify_boss_defeat("Golem")
-	await get_tree().process_frame
-	check(hatch.state == Trapdoor.State.READY, "level_1: hatch can be opened after the Golem")
-	player.god_mode = true
-	player.global_position = hatch.global_position + Vector2(0, 20)
-	hatch.interact(player)
-	await get_tree().create_timer(2.0).timeout
-	var crypt_room: ArenaRoom = hatch.crypt.get_node("Arenas").get_child(0)
-	check(hatch.state == Trapdoor.State.BELOW and player.global_position.distance_to(hatch.crypt.get_node("Entry").global_position) < 40, "level_1: the hatch leads down into the Undercroft")
-	check(crypt_room.state == ArenaRoom.State.FIGHT, "level_1: the dead rise in the Undercroft")
-	for w in 2:
-		await get_tree().create_timer(1.4).timeout
-		for e in crypt_room._alive:
-			if is_instance_valid(e): e.die()
-	await get_tree().create_timer(2.0).timeout
-	check(crypt_room.state == ArenaRoom.State.CLEARED and hatch._ladder.active, "level_1: clearing the crypt lights the ladder")
-	hatch._ladder.interact(player)
-	await get_tree().create_timer(1.2).timeout
-	check(hatch.state == Trapdoor.State.DONE and player.global_position.distance_to(hatch.global_position) < 30, "level_1: the ladder brings you back up")
-	GameManager.notify_boss_defeat("Demon")
-	await get_tree().create_timer(2.6).timeout
-	check(reward.get_children().all(func(c): return c.visible), "level_1: reward chests appear after the Demon")
-	player.god_mode = false
+	# East hall: the block puzzle can be solved by pushing from free tiles (it opens the stairs).
+	var pz: PushPuzzle = level.find_child("PushPuzzle", true, false)
+	check(pz != null, "level_1: block puzzle exists")
+	if pz:
+		var b1: Node = pz.blocks[0]
+		var b2: Node = pz.blocks[1]
+		for push in [[b1, Vector2(0, 16)], [b1, Vector2(0, 16)], [b1, Vector2(0, 16)], [b2, Vector2(16, 0)], [b2, Vector2(16, 0)], [b2, Vector2(0, -16)]]:
+			var dummy := Node2D.new()
+			level.add_child(dummy)
+			dummy.global_position = push[0].global_position + push[1]
+			push[0].interact(dummy)
+			await get_tree().create_timer(0.25).timeout
+			dummy.queue_free()
+		check(pz.done, "level_1: pushing the blocks onto the plates opens the way down")

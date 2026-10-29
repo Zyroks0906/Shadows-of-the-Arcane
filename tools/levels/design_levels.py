@@ -50,20 +50,26 @@ class Plan:
 # Potions: always more health than mana in a level.
 
 def caverns():
-    p = Plan(66, 52)
+    p = Plan(74, 52)
     # 1. Entrance grotto: safe, a potion to start. The rest room hangs below it.
     p.rect(3, 24, 11, 8)
     p.put(5, 27, 'P')
     p.put(11, 25, 'h')
     p.rect(14, 27, 7, 2)                      # -> hub
     p.rect(7, 32, 2, 5)                       # -> rest room
-    # Rest room (optional): a potion and a chest, a breather next to the start.
+    # Forgotten Cellar (optional ambush): the grate drops behind you, two waves come out
+    # of the dark, and only then does the chest rise. Nothing here is free.
     p.rect(3, 37, 11, 7)
-    p.put(5, 39, 'h')
-    p.put(8, 42, 'C')
+    p.door(7, 36, '=')
+    p.door(8, 36, '=')
+    p.put(8, 40, 'R')
+    for x, y in [(4, 38), (12, 38), (8, 42), (5, 41)]:
+        p.put(x, y, 'e')
+    for x, y in [(4, 42), (12, 40), (8, 38)]:
+        p.put(x, y, 'E')
+    p.put(11, 42, 'H')                        # the second wave brings an elite
+    p.put(10, 40, 'u')                        # reward: coins (and the arena's potion)
     p.put(12, 42, 'Y')                        # sealed chest: worth saving coins for
-    p.put(12, 39, '$')
-    p.put(4, 42, '$')
     # 2. Echo Hall (hub): a shallow pool in the middle, a couple of rats.
     p.rect(21, 22, 17, 11)
     p.rect(26, 25, 6, 4, ',')
@@ -92,12 +98,13 @@ def caverns():
         p.put(x, y, 'E')
     p.put(34, 39, 'k')
     p.put(26, 45, 'T')                        # transmuter: rises once the arena is cleared
+    p.put(31, 38, 'J')                        # fortune shrine, found by those who fight for the key
     # 4. Flooded Gallery: a deep river split by one shallow ford, wisps over the water.
     p.rect(20, 2, 18, 11)
     p.rect(20, 6, 18, 2, '~')
     p.rect(27, 5, 3, 4, ',')
-    p.rect(20, 8, 6, 1, ',')
-    p.rect(32, 5, 6, 1, ',')
+    p.rect(20, 8, 5, 2, ',')                 # shallows along the banks, not one-tile strips
+    p.rect(32, 4, 6, 2, ',')
     p.put(23, 3, 'w')
     p.put(35, 11, 'w')
     p.put(33, 3, 'e')
@@ -119,8 +126,7 @@ def caverns():
     p.put(56, 10, 'g')
     # 6. Vestibule: supplies; the golden door in its floor leads down to the lair.
     p.rect(44, 22, 9, 8)
-    p.put(45, 23, 'h')
-    p.put(51, 23, 'h')
+    p.put(48, 23, 'h')                        # one potion before the boss, not a stockpile
     p.put(51, 28, 'm')
     p.door(48, 30, 'G')
     p.rect(48, 31, 1, 4)
@@ -133,8 +139,31 @@ def caverns():
         p.put(x, y, 'c')
     for x, y in [(41, 46), (56, 46)]:
         p.put(x, y, 'z')
-    p.rect(40, 39, 2, 6, ',')
-    p.rect(56, 39, 2, 6, ',')
+    p.rect(42, 39, 4, 3, ',')                # two wading pools: fight in them at a cost
+    p.rect(52, 39, 4, 3, ',')
+    # 8. Sluice Hall (optional, west of the gallery): three canals of deep water stand
+    #    between you and a grotto. Each lever opens the sluices of some canals (marked on
+    #    its plate); drain all three to walk across.
+    p.rect(18, 10, 2, 2)                      # gallery -> sluice hall
+    p.rect(1, 3, 17, 12)
+    for x0 in (6, 9, 12):
+        p.rect(x0, 3, 2, 12, 'W')
+    for y in (5, 8, 12):
+        p.put(15, y, 'l')
+    p.put(2, 5, 'C')
+    p.put(2, 12, 'C')
+    p.put(4, 10, '$')
+    # 9. Echo Grotto (optional, east of the vestibule): four singing crystals. The echo
+    #    stone plays a melody; strike the crystals in the same order to raise the grate.
+    p.rect(53, 25, 3, 2)                      # vestibule -> grotto
+    p.rect(56, 22, 15, 8)
+    for x, y in [(58, 24), (68, 24), (58, 28), (68, 28)]:
+        p.put(x, y, 'K')
+    p.put(63, 26, 'Q')
+    p.door(63, 21, '%')
+    p.rect(60, 18, 7, 3)
+    p.put(61, 19, 'C')
+    p.put(65, 19, 'C')
     p.save('whispering_caverns.txt')
 
 
@@ -182,8 +211,7 @@ def skyhold():
     p.rect(38, 26, 6, 2)
     # 5. Vestibule: supplies; the golden door in its north wall, then the boss door.
     p.rect(44, 23, 9, 8)
-    p.put(45, 24, 'h')
-    p.put(51, 24, 'h')
+    p.put(48, 24, 'h')
     p.put(51, 29, 'm')
     p.door(48, 22, 'G')
     p.rect(48, 15, 1, 7)
@@ -219,7 +247,42 @@ def skyhold():
         p.put(x, y, 'E')
     p.put(60, 40, 'k')
     p.put(48, 43, 'T')                        # transmuter: rises once the arena is cleared
+    p.put(52, 34, 'J')                        # fortune shrine in the barracks
+    # 8. Sun Sanctum (optional, east of the vestibule): a shaft of sunlight falls through
+    #    the broken roof. Turn the mirrors (F) to carry the beam onto the sun sigil; the
+    #    sigil raises the grate of the reliquary.
+    p.rect(53, 26, 4, 2)                      # vestibule -> sanctum
+    p.rect(57, 21, 16, 12)
+    p.put(59, 21, 'S')
+    for x, y in [(59, 30), (66, 30), (66, 23), (63, 26), (69, 28)]:
+        p.put(x, y, 'M')
+    p.put(71, 23, 'N')
+    p.put(70, 31, 'p')
+    p.put(58, 32, 'p')
+    p.door(73, 27, '%')
+    p.rect(74, 25, 5, 5)
+    p.put(76, 26, 'C')
+    p.put(76, 28, 'C')
     p.save('skyhold_ruins.txt')
+
+
+def vault():
+    # The Rune Vault, under the small east room of level 1 (reached by the stairway the
+    # braziers unlock). A long hall: you arrive by the ladder at the bottom; the rune stones
+    # and the mural are placed by scripts/levels/level1_extras.gd; the treasure waits in a
+    # caged alcove at the top.
+    p = Plan(29, 20)
+    p.rect(2, 4, 25, 13)                      # main hall
+    p.rect(11, 1, 7, 3)                       # treasure alcove
+    p.rect(13, 17, 3, 2)                      # ladder alcove
+    p.put(14, 17, 'P')
+    p.put(14, 18, 'L')
+    for x, y in [(3, 5), (25, 5), (3, 15), (25, 15), (11, 2), (17, 2)]:
+        p.put(x, y, 'i')
+    for x, y in [(6, 5), (22, 5), (6, 15), (22, 15)]:
+        p.put(x, y, 'o')
+    p.put(3, 10, 'J')                         # fortune shrine: the vault's other treasure
+    p.save('vault.txt')
 
 
 def crypt():
@@ -247,3 +310,4 @@ if __name__ == '__main__':
     caverns()
     skyhold()
     crypt()
+    vault()

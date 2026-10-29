@@ -14,7 +14,8 @@ histórico: consúltalo con Grep cuando haga falta.
 - Los niveles 2 y 3 y la cripta se generan con `res://tools/level_builder.tscn` desde
   `tools/levels/*.txt` (los planos salen de `design_levels.py`).
 - Skills del proyecto en `.claude/skills/` (Godot: input-handling, godot-ui, save-load,
-  godot-code-review, ...).
+  godot-code-review, ...). Las `spritecook-*` están desactivadas en `.claude/skills_disabled/`
+  (SpriteCook es de pago); el arte se hace con herramientas gratuitas.
 - El usuario valora la lógica "humana" y el pulido visual: escala respecto al héroe, letras
   finas y nítidas, espaciado. Verifica con capturas, no solo compilando.
 - No hagas commit sin que el usuario lo pida. Habla en español.

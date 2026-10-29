@@ -47,10 +47,12 @@ func _setup() -> void:
 			if c:
 				guarded.append(c)
 		if not guarded.is_empty():
-			BrazierPuzzle.build(level, [Vector2(995, 354), Vector2(893, 332)], guarded, 6.0)
+			_rune_vault(level, guarded)
 	_boss_rewards(level)
+	_demon_stairs(level)
 	_golem_gates(level)
 	_trapped_floor(level)
+	DecorPhysics.apply(level, true) # again: the crypt and the vault are added above; their pots break too
 	# A gentler start: only the slow slime waits in the first room (the skeleton and the
 	# spawner right on top of the spawn point are removed before they wake up, 1 s in).
 	for n in ["EnemySpawners/RandomSpawner", "EnemySpawners/Skeleton"]:
@@ -65,6 +67,10 @@ func _setup() -> void:
 	var hatch := Node2D.new()
 	hatch.set_script(load("res://scripts/world/trapdoor.gd"))
 	level.add_child(hatch)
+	# Drawn with the floor, before the characters: they stand in front of the open pit.
+	var bg := level.get_node_or_null("Background")
+	if bg:
+		level.move_child(hatch, bg.get_index() + 1)
 	hatch.global_position = Vector2(846, 574)
 	# The Undercroft below the hatch lives far outside the map so it keeps level_1's state.
 	var crypt: Node2D = load("res://scenes/levels/crypt.tscn").instantiate()
@@ -292,8 +298,11 @@ func _trapped_floor(level: Node) -> void:
 	var traps := level.get_node_or_null("ArrowTraps")
 	if not traps:
 		return
+	# Hidden plates over the full corridor width (3 cells per row). Few per row, never two
+	# side by side, alternating, so a single winding safe path runs through.
+	var pattern := [[false, true, false], [true, false, true], [false, true, false], [true, false, false]]
 	var rows := []
-	var safe := 0
+	var k := 0
 	for name in ["ArrowTrap", "ArrowTrap4", "ArrowTrap2", "ArrowTrap3"]:
 		var t := traps.get_node_or_null(name)
 		if not t:
@@ -301,6 +310,124 @@ func _trapped_floor(level: Node) -> void:
 		if t.timer and t.timer.timeout.is_connected(t._on_timer_timeout):
 			t.timer.timeout.disconnect(t._on_timer_timeout)
 			t.timer.stop()
-		rows.append({"y": t.global_position.y, "xs": [614.0, 630.0], "safe": safe, "trap": t})
-		safe = 1 - safe
+		rows.append({"y": t.global_position.y, "xs": [608.0, 622.0, 636.0], "trapped": pattern[k % pattern.size()], "trap": t})
+		k += 1
 	PressurePlates.build(level, rows)
+
+# --- The Rune Vault ------------------------------------------------------------------------
+# Two puzzles in a row. Up here: light the brazier in the east room and the one in the west
+# room (across the spike pit) before either dies out, and the grate over the stairway in the
+# east room lifts. Down there (scenes/levels/vault.tscn, built from tools/levels/vault.txt):
+# a tablet shows four runes in order; step on the floor runes in that order and the cages
+# around the two chests in the alcove sink away.
+const VAULT_AT := Vector2(1700, 420)
+
+func _rune_vault(level: Node, chests: Array) -> void:
+	var vault: Node2D = load("res://scenes/levels/vault.tscn").instantiate()
+	level.add_child(vault)
+	vault.global_position = VAULT_AT
+	var cell := func(x: int, y: int) -> Vector2: return vault.to_global(Vector2(x * 16 + 8, y * 16 + 8))
+	# The way down, sealed until both braziers burn.
+	var down := Passage.new()
+	down.locked = true
+	down.locked_text = "A heavy grate seals the stairway. The rune plates on the floor are empty..."
+	level.add_child(down)
+	down.global_position = Vector2(1015, 362)
+	var up_target := Marker2D.new()
+	level.add_child(up_target)
+	up_target.global_position = Vector2(1015, 384)
+	down.target = vault.get_node("Entry") if vault.has_node("Entry") else up_target
+	var up := Passage.new()
+	up.going_down = false
+	up.target = up_target
+	vault.add_child(up)
+	up.global_position = cell.call(14, 18)
+	_open_east_rooms(level)
+	# Push the two rune blocks onto the two plates to lift the grate.
+	var pushes := PushPuzzle.build(level, [Vector2(936, 378), Vector2(1000, 378)], [Vector2(936, 330), Vector2(968, 394)]) # block 1: up x3; block 2: left x2, down x1
+	pushes.solved.connect(down.unlock)
+	# The treasure moves down into the alcove.
+	# The alcove is the highest floor of the vault: measure it on the generated floor layer
+	# (the builder pads the plan, so plan coordinates don't map 1:1).
+	var floor := vault.find_child("Floor", true, false) as TileMapLayer
+	var spot: Vector2 = cell.call(14, 3)
+	if floor:
+		var cells := floor.get_used_cells()
+		var top := 9999
+		for c in cells:
+			top = mini(top, c.y)
+		var xs := []
+		for c in cells:
+			if c.y == top + 2:
+				xs.append(c.x)
+		if not xs.is_empty():
+			xs.sort()
+			spot = floor.to_global(floor.map_to_local(Vector2i(xs[xs.size() / 2], top + 2)))
+	for i in chests.size():
+		var c: Node2D = chests[i]
+		c.reparent(vault)
+		c.global_position = spot + Vector2(-14 + i * 28, 0)
+	RunePuzzle.build(vault, [cell.call(8, 8), cell.call(20, 8), cell.call(8, 13), cell.call(20, 13)], cell.call(14, 11), chests)
+
+# The two small east rooms used to be split by a wall with a spike corridor through it: the
+# wall and the trap go, leaving one hall for the block puzzle. Floor goes where the wall was.
+const EAST_OPEN := Rect2(926, 318, 66, 80)
+const WALL_DONOR_X := 905.0 # a column of the west room: its wall rows are copied across
+
+func _open_east_rooms(level: Node) -> void:
+	var walls := level.find_child("Tileset", true, false) as TileMapLayer
+	var floor := level.find_child("Background", true, false) as TileMapLayer
+	if walls and floor:
+		var floor_src := -1
+		var floor_atlas := Vector2i.ZERO
+		for c in floor.get_used_cells():
+			floor_src = floor.get_cell_source_id(c)
+			floor_atlas = floor.get_cell_atlas_coords(c)
+			break
+		var tl := walls.local_to_map(walls.to_local(EAST_OPEN.position))
+		var br := walls.local_to_map(walls.to_local(EAST_OPEN.end))
+		var donor_x := walls.local_to_map(walls.to_local(Vector2(WALL_DONOR_X, EAST_OPEN.position.y))).x
+		for x in range(tl.x, br.x + 1):
+			# Interior: no wall, floor everywhere.
+			for y in range(tl.y, br.y + 1):
+				walls.erase_cell(Vector2i(x, y))
+				var at: Vector2 = walls.to_global(walls.map_to_local(Vector2i(x, y)))
+				if floor_src != -1:
+					floor.set_cell(floor.local_to_map(floor.to_local(at)), floor_src, floor_atlas)
+			# Top and bottom: the same wall rows as the west room (closes the merged hall).
+			for y in range(tl.y - 4, tl.y) + range(br.y + 1, br.y + 5):
+				var donor := Vector2i(donor_x, y)
+				if walls.get_cell_source_id(donor) != -1:
+					walls.set_cell(Vector2i(x, y), walls.get_cell_source_id(donor), walls.get_cell_atlas_coords(donor))
+		var deco := level.find_child("Decorations", true, false) as TileMapLayer
+		if deco:
+			for c in deco.get_used_cells():
+				if EAST_OPEN.has_point(deco.to_global(deco.map_to_local(c))):
+					deco.erase_cell(c)
+		# The floor tile is translucent; the void here had a red backdrop showing through.
+		var base := ColorRect.new()
+		base.color = Color(0.05, 0.035, 0.07)
+		base.size = EAST_OPEN.size + Vector2(8, 8)
+		base.z_index = -1
+		base.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		floor.add_child(base)
+		floor.move_child(base, 0)
+		base.global_position = EAST_OPEN.position - Vector2(4, 4)
+	var traps := level.get_node_or_null("Traps")
+	if traps:
+		for t in traps.get_children():
+			if t is Node2D and EAST_OPEN.grow(8.0).has_point(t.global_position):
+				t.queue_free()
+
+# The stairway in the Demon's hall is the way on to level 2 (no portal on this level): it
+# stays sealed while the Demon lives, then lights up with the exit glow; F goes down.
+func _demon_stairs(level: Node) -> void:
+	var exit := Node2D.new()
+	exit.set_script(load("res://scripts/world/level_exit.gd"))
+	exit.name = "DemonStairs"
+	exit.style = "stairs"
+	exit.boss_to_track = "Demon"
+	exit.unlocks_level = 2
+	exit.glow_color = Color(1.0, 0.62, 0.35)
+	level.add_child(exit)
+	exit.global_position = Vector2(117, 362) # the middle of the stairway going down

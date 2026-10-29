@@ -32,6 +32,7 @@ func _ready() -> void:
 			"guard": await _guard_session()
 			"chest": await _chest_session()
 			_ when c.begins_with("abil:"): await _ability_session(c.substr(5))
+			_ when c.begins_with("look:"): await _look_session(c.substr(5))
 			"level1": await _level1_session()
 			"victory": await _victory_session()
 			"boss": await _boss_session()
@@ -42,6 +43,24 @@ func _ready() -> void:
 			"controls": await _controls_session()
 			"settings": await _settings_session()
 			"zones": await _zones_session()
+			"difficulty": await _difficulty_session()
+			"champion": await _champion_session()
+			"plates": await _plates_session()
+			"tour": await _tour_session()
+			"vault": await _vault_session()
+			"puzzles": await _puzzles_session()
+			"shield": await _shield_session()
+			"newpuzzles": await _new_puzzles_session()
+			"pots": await _pots_session()
+			"pause": await _pause_session()
+			"exits": await _exits_session()
+			"bot_ambush": await _bot_ambush("barbarian")
+			"bot_ambush_archer": await _bot_ambush("archer")
+			"bot_ambush_mage": await _bot_ambush("mage")
+			"bot_puzzles": await _bot_puzzles()
+			"fortune": await _fortune_session()
+			"bolts": await _bolts_session()
+			"ult_aim": await _ult_aim_session()
 			"torches": await _torches()
 			"wind":
 				await _wind_session("knight")
@@ -56,6 +75,7 @@ func _load_level(path: String, cls: String) -> void:
 	add_child(level)
 	await _wait(2.6)
 	player = get_tree().get_first_node_in_group("player") as Player
+	_real_max_hp = player.max_health
 	player.max_health = 9999
 	player.current_health = 9999
 	player.current_mana = player.max_mana
@@ -417,6 +437,8 @@ func _ability_session(cls: String) -> void:
 	for k in 5:
 		await _wait(0.3)
 		await _shot("abil_%s_Q%d" % [cls, k + 1])
+	await _wait(1.6)
+	await _shot("abil_%s_Q_late" % cls) # what an ultimate leaves behind
 	await _unload()
 
 # level_1 additions: altar + sealed chest, the perk picker, the hatch trap.
@@ -471,7 +493,7 @@ func _boss_session() -> void:
 	await _shot("boss_bar")
 	await _shot("boss_gates", Vector2(846, 466))
 	for i in 8:
-		await _wait(0.2)
+		await _wait(0.6)
 		await _shot("boss_fight_%d" % i)
 	await _unload()
 
@@ -650,6 +672,35 @@ func _zones_session() -> void:
 	await _shot("zones_b")
 	await _unload()
 
+func _difficulty_session() -> void:
+	DifficultyPopup.ask(func(): pass)
+	await _wait(0.6)
+	await _shot("difficulty_popup")
+	DifficultyPopup._open._close()
+	await _wait(0.2)
+
+func _champion_session() -> void:
+	await _load_level("res://scenes/levels/level_3.tscn", "knight")
+	player.god_mode = true
+	await _wait(1.0)
+	var boss: Node2D = get_tree().get_first_node_in_group("bosses")
+	player.global_position = boss.global_position + Vector2(-60, 0)
+	await _wait(0.3)
+	boss.receive_damage(10)
+	for i in 6:
+		await _wait(0.5)
+		await _shot("champion_%d" % i)
+	await _unload()
+
+func _plates_session() -> void:
+	await _load_level("res://scenes/levels/level_1.tscn", "necromancer")
+	player.god_mode = true
+	await _wait(3.0)
+	player.global_position = Vector2(936, 336)
+	await _wait(0.8)
+	await _shot("plates_on", Vector2(936, 336))
+	await _unload()
+
 func _victory_session() -> void:
 	GameManager.current_map = GameManager.MAPS[0]
 	# In game it is a whole scene; under this Node2D a CanvasLayer gives it the screen size.
@@ -660,3 +711,664 @@ func _victory_session() -> void:
 	await _wait(3.5)
 	await _shot("victory")
 	holder.queue_free()
+
+# A walk through every level: spawn, then each interactable spot (chests, passages, puzzles,
+# exits) and each boss, one frame per place, for a visual check of the whole game.
+func _tour_session() -> void:
+	var levels := {"level_1": "necromancer", "level_2": "knight", "level_3": "archer"}
+	for lv in levels:
+		await _load_level("res://scenes/levels/%s.tscn" % lv, levels[lv])
+		player.god_mode = true
+		await _wait(1.0)
+		await _shot("tour_%s_00_spawn" % lv)
+		var spots: Array[Vector2] = []
+		for n in get_tree().get_nodes_in_group("interactable") + get_tree().get_nodes_in_group("bosses"):
+			var at: Vector2 = (n as Node2D).global_position
+			var near := false
+			for s in spots:
+				near = near or s.distance_to(at) < 110.0
+			if not near:
+				spots.append(at)
+		var vault := level.find_child("Vault", true, false)
+		if vault and vault.has_node("Entry"):
+			spots.append((vault.get_node("Entry") as Node2D).global_position + Vector2(0, -60))
+		var i := 1
+		for at in spots.slice(0, 12):
+			player.global_position = at + Vector2(0, 26)
+			await _wait(0.7)
+			await _shot("tour_%s_%02d" % [lv, i])
+			i += 1
+		await _unload()
+
+func _vault_session() -> void:
+	await _load_level("res://scenes/levels/level_1.tscn", "necromancer")
+	player.god_mode = true
+	await _wait(1.0)
+	var rp := level.find_child("RunePuzzle", true, false) as RunePuzzle
+	print("RUNES parent=", rp.get_parent().name, " z=", rp.get_parent().z_index, " tablet=", rp.tablet_pos)
+	player.global_position = rp.tablet_pos + Vector2(0, 40)
+	await _wait(1.0)
+	await _shot("vault_runes")
+	await _unload()
+
+# Plays the three level_1 puzzles for real (as the player would) and reports each step.
+func _puzzles_session() -> void:
+	await _load_level("res://scenes/levels/level_1.tscn", "necromancer")
+	player.god_mode = true
+	await _wait(1.0)
+	# 1. Block puzzle: stand behind each block and press F (interact) like the player.
+	var pz := level.find_child("PushPuzzle", true, false) as PushPuzzle
+	var down: Node = null
+	for n in level.find_children("*", "Node2D", true, false):
+		if n is Passage and n.going_down:
+			down = n
+	print("PUZZLE push: down passage locked=", down.locked if down else "none")
+	player.global_position = pz.blocks[0].global_position + Vector2(0, 30)
+	await _wait(0.8)
+	await _shot("pz_push_before")
+	for push in [[0, Vector2(0, 16)], [0, Vector2(0, 16)], [0, Vector2(0, 16)], [1, Vector2(16, 0)], [1, Vector2(16, 0)], [1, Vector2(0, -16)]]:
+		var b: Node2D = pz.blocks[push[0]]
+		player.global_position = b.global_position + push[1]
+		await _wait(0.1)
+		b.interact(player)
+		await _wait(0.35)
+	await _wait(0.5)
+	await _shot("pz_push_after")
+	print("PUZZLE push: solved=", pz.done, " down locked=", down.locked if down else "none")
+	# 2. Down the stairs into the vault.
+	if down:
+		player.global_position = down.global_position + Vector2(0, 8)
+		await _wait(0.2)
+		down.interact(player)
+		await _wait(1.6)
+	var rp := level.find_child("RunePuzzle", true, false) as RunePuzzle
+	print("PUZZLE vault: player near tablet=", player.global_position.distance_to(rp.tablet_pos) < 200.0)
+	# 3. Runes: one wrong step, then the right order, walking on each stone.
+	var wrong := rp.order[1]
+	player.global_position = rp.stones[wrong] + Vector2(0, 20)
+	await _wait(0.3)
+	player.global_position = rp.stones[wrong]
+	await _wait(0.4)
+	print("PUZZLE vault: after wrong rune progress=", rp._progress)
+	for k in rp.order:
+		player.global_position = rp.stones[k] + Vector2(0, 20)
+		await _wait(0.25)
+		player.global_position = rp.stones[k]
+		await _wait(0.35)
+	await _wait(1.2)
+	var open := true
+	for c in rp.chests:
+		open = open and c.locked_reason == ""
+	print("PUZZLE vault: solved=", rp.done, " chests unlocked=", open)
+	player.global_position = rp.tablet_pos + Vector2(0, 30)
+	await _wait(0.6)
+	await _shot("pz_vault_after")
+	# 4. Arrow plates: step on every cell of the first row; at least one must fire.
+	var plates := level.find_child("PressurePlates", true, false) as PressurePlates
+	var fired := 0
+	for c in plates._cells.slice(0, 3):
+		player.global_position = (c["rect"] as Rect2).get_center()
+		await _wait(0.6)
+		fired += 1 if c["revealed"] else 0
+	print("PUZZLE plates: cells=", plates._cells.size(), " fired in row 1=", fired)
+	await _shot("pz_plates")
+	await _unload()
+
+func _shield_session() -> void:
+	await _load_level("res://scenes/levels/level_1.tscn", "samurai")
+	for e in get_tree().get_nodes_in_group("enemies"):
+		e.queue_free()
+	await _wait(0.5)
+	player.add_shield(100, 30.0, ElementalSystem.get_element_color(ElementalSystem.Element.CRYO))
+	await _wait(0.6)
+	await _shot("shield_full", player.global_position + Vector2(0, -8))
+	player.receive_damage(10)
+	await _wait(0.05)
+	await _shot("shield_hit", player.global_position + Vector2(0, -8))
+	player.receive_damage(60)
+	await _wait(0.6)
+	await _shot("shield_low", player.global_position + Vector2(0, -8))
+	await _unload()
+
+# The level 2 and 3 puzzle rooms, played through: sluices, echo crystals, sun mirrors.
+func _new_puzzles_session() -> void:
+	await _load_level("res://scenes/levels/level_2.tscn", "knight")
+	player.god_mode = true
+	await _wait(1.0)
+	var sl := level.find_child("SluicePuzzle", true, false) as SluicePuzzle
+	print("NEWPZ sluice: channels=", sl.channels.size(), " levers=", sl.levers.size())
+	player.global_position = sl.levers[1].global_position + Vector2(0, 14)
+	await _wait(1.0)
+	await _shot("np_sluice_before")
+	sl.levers[0].interact(player)
+	await _wait(1.6)
+	await _shot("np_sluice_wrong")
+	sl.levers[0].interact(player)
+	await _wait(1.2)
+	for i in [1, 2]:
+		player.global_position = sl.levers[i].global_position + Vector2(0, 14)
+		await _wait(0.2)
+		sl.levers[i].interact(player)
+		await _wait(1.4)
+	print("NEWPZ sluice: solved=", sl.done, " full=", sl.channels.map(func(c): return c["full"]))
+	player.global_position = (sl.channels[2]["rect"] as Rect2).get_center() + Vector2(-24, 0)
+	await _wait(0.6)
+	await _shot("np_sluice_after")
+	var echo := level.find_child("EchoPuzzle", true, false) as EchoPuzzle
+	player.global_position = echo.stone_pos + Vector2(0, 20)
+	await _wait(0.9)
+	await _shot("np_echo_playing")
+	while echo._playing:
+		await _wait(0.1)
+	echo.strike(echo.crystals[(echo.melody[0] + 1) % 4]) # a wrong note first
+	await _wait(0.2)
+	await _shot("np_echo_wrong")
+	await _wait(0.4)
+	for r in 2:
+		while echo._playing or echo.melody.is_empty():
+			await _wait(0.1)
+		await _wait(0.6)
+		while echo._playing:
+			await _wait(0.1)
+		for n in echo.melody.duplicate():
+			echo.strike(echo.crystals[n])
+			await _wait(0.35)
+		await _wait(0.4)
+	await _wait(1.5)
+	var gate := level.get_tree().get_nodes_in_group("puzzle_gates")
+	print("NEWPZ echo: solved=", echo.done, " gate open=", gate.map(func(g): return g.is_open))
+	player.global_position = echo.stone_pos + Vector2(0, -30)
+	await _wait(0.6)
+	await _shot("np_echo_after")
+	await _unload()
+	await _load_level("res://scenes/levels/level_3.tscn", "archer")
+	player.god_mode = true
+	await _wait(1.0)
+	var mp := level.find_child("MirrorPuzzle", true, false) as MirrorPuzzle
+	player.global_position = mp.source + Vector2(40, 60)
+	await _wait(1.0)
+	await _shot("np_mirror_before")
+	var ms: Array = mp.mirrors.values()
+	for mask in 32:
+		for i in ms.size():
+			var want := (mask >> i) & 1 == 1
+			if ms[i].slash != want and not mp.done:
+				ms[i].interact(player)
+		if mp.done:
+			break
+	await _wait(1.5)
+	print("NEWPZ mirror: solved=", mp.done, " gate open=", level.get_tree().get_nodes_in_group("puzzle_gates").map(func(g): return g.is_open))
+	await _shot("np_mirror_after")
+	await _unload()
+
+func _pots_session() -> void:
+	await _load_level("res://scenes/levels/level_1.tscn", "samurai")
+	player.god_mode = true
+	for e in get_tree().get_nodes_in_group("enemies"):
+		e.queue_free()
+	await _wait(0.5)
+	var pots := get_tree().get_nodes_in_group("breakables")
+	print("POTS level_1 (+crypt): ", pots.size())
+	var pot: Node2D = pots[0]
+	for q in pots:
+		if q.global_position.distance_to(player.global_position) < pot.global_position.distance_to(player.global_position):
+			pot = q
+	player.global_position = pot.global_position + Vector2(-16, 2)
+	await _wait(0.6)
+	await _shot("pot_before", pot.global_position)
+	var at := pot.global_position
+	player._strike_arc(Vector2.RIGHT, 22.0, 120.0, 5, 0.0)
+	await _wait(0.08)
+	await _shot("pot_burst", at)
+	await _wait(1.0)
+	await _shot("pot_after", at)
+	print("POTS left after one hit: ", get_tree().get_nodes_in_group("breakables").size())
+	await _unload()
+
+func _pause_session() -> void:
+	var pm: CanvasLayer = load("res://scenes/ui/PauseMenu.tscn").instantiate()
+	add_child(pm)
+	await _wait(0.2)
+	pm.visible = true
+	pm.restart_btn.pressed.emit()
+	await _wait(0.3)
+	await _shot("pause_restart_armed")
+	pm.queue_free()
+
+# look:x,y[,level] — one frame of level_1 (or the given level) centred on a world point.
+func _look_session(arg: String) -> void:
+	var parts := arg.split(",")
+	var lv := "level_1" if parts.size() < 3 else parts[2]
+	await _load_level("res://scenes/levels/%s.tscn" % lv, "barbarian")
+	player.god_mode = true
+	for e in get_tree().get_nodes_in_group("enemies"):
+		e.set_physics_process(false)
+	player.global_position = Vector2(float(parts[0]), float(parts[1]))
+	await _wait(0.8)
+	await _shot("look_%s_%s_%s" % [lv, parts[0], parts[1]])
+	await _unload()
+
+func _exits_session() -> void:
+	await _load_level("res://scenes/levels/level_1.tscn", "barbarian")
+	player.god_mode = true
+	for e in get_tree().get_nodes_in_group("enemies"):
+		e.set_physics_process(false)
+	var st := level.find_child("DemonStairs", true, false)
+	player.global_position = st.global_position + Vector2(20, 24)
+	await _wait(0.8)
+	await _shot("exit_stairs_sealed")
+	GameManager.notify_boss_defeat("Demon")
+	await _wait(3.5)
+	await _shot("exit_stairs_open")
+	print("EXITS l1 stairs active=", st.active)
+	# The hatch: open it, come back up, and check the pit now blocks.
+	var hatch := level.find_child("*", true, false)
+	for n in level.get_children():
+		if n is Trapdoor:
+			hatch = n
+	GameManager.notify_boss_defeat("Golem")
+	await _wait(0.2)
+	hatch.interact(player)
+	await _wait(2.5)
+	hatch.climb_back()
+	await _wait(1.5)
+	player.global_position = hatch.global_position + Vector2(0, 20)
+	await _wait(0.3)
+	for i in 30:
+		player.velocity = Vector2(0, -60)
+		player.move_and_slide()
+		await get_tree().physics_frame
+	print("ORDER hatch idx=", hatch.get_index(), " z=", hatch.z_index, " player path=", player.get_path(), " z=", player.z_index, " parent idx=", player.get_parent().get_index(), " bg idx=", level.get_node("Background").get_index(), " bg z=", level.get_node("Background").z_index)
+	print("EXITS hatch: player y=", player.global_position.y, " hatch y=", hatch.global_position.y, " (blocked if player stays below)")
+	await _shot("exit_hatch_open")
+	await _unload()
+	await _load_level("res://scenes/levels/level_2.tscn", "knight")
+	var ex := level.find_child("ExitPortal", true, false)
+	print("EXITS l2 portal visible before boss=", ex.visible)
+	GameManager.notify_boss_defeat("Guardian")
+	await _wait(2.5)
+	print("EXITS l2 portal visible after boss=", ex.visible, " active=", ex.active)
+	await _unload()
+	await _load_level("res://scenes/levels/level_3.tscn", "archer")
+	var ex3 := level.find_child("ExitPortal", true, false)
+	print("EXITS l3 style=", ex3.style, " children=", ex3.get_child_count())
+	await _unload()
+
+# ------------------------------------------------------------------ bot player
+# Plays with the real input actions (moves, attacks, F, potions) and the mouse aim, so the
+# game reacts exactly as to a person; prints BOT lines and saves numbered frames.
+
+var _bot_shots := 0
+var _real_max_hp := 100
+
+# The bot plays with the class's real health (the other sessions use 9999).
+func _bot_real_hp() -> void:
+	player.max_health = _real_max_hp
+	player.current_health = _real_max_hp
+
+func _bot_say(t: String) -> void:
+	print("BOT ", t)
+
+func _bot_shot(tag: String) -> void:
+	_bot_shots += 1
+	await _shot("%02d_%s" % [_bot_shots, tag])
+
+func _cell(plan: Vector2i) -> Vector2:
+	return Vector2((plan.x + 3) * 16 + 8, (plan.y + 3) * 16 + 8) # builder levels pad 3 cells
+
+func _moves(d: Vector2) -> void:
+	var want := {"move_left": d.x < -2.0, "move_right": d.x > 2.0, "move_up": d.y < -2.0, "move_down": d.y > 2.0}
+	for a in want:
+		if want[a]:
+			Input.action_press(a)
+		else:
+			Input.action_release(a)
+
+func _stop() -> void:
+	_moves(Vector2.ZERO)
+
+# Walk to a point; if blocked, slide sideways for a moment like a person would.
+func _walk_to(target: Vector2, timeout: float = 8.0) -> bool:
+	var t := 0.0
+	var check_t := 0.0
+	var last := player.global_position
+	var side := 0.0
+	while t < timeout and is_instance_valid(player) and player.is_alive:
+		var d := target - player.global_position
+		if d.length() < 5.0:
+			break
+		if side > 0.0:
+			side -= get_physics_process_delta_time()
+			_moves(Vector2(-d.y, d.x).normalized() * 10.0 + d.normalized() * 3.0)
+		else:
+			_moves(d)
+		await get_tree().physics_frame
+		var dt := get_physics_process_delta_time()
+		t += dt
+		check_t += dt
+		if check_t > 0.4:
+			if player.global_position.distance_to(last) < 2.0:
+				side = 0.35
+			last = player.global_position
+			check_t = 0.0
+	_stop()
+	return is_instance_valid(player) and player.global_position.distance_to(target) < 10.0
+
+func _press_f() -> void:
+	player.interact() # the F action's handler
+
+func _enemies_near(at: Vector2, r: float) -> Array:
+	var out := []
+	for e in get_tree().get_nodes_in_group("enemies"):
+		if e is Node2D and e.is_alive and e.global_position.distance_to(at) < r:
+			out.append(e)
+	return out
+
+# Fight whatever is near until nothing is left for a while. Returns stats.
+func _fight(center: Vector2, radius: float, timeout: float, shot_every: float, tag: String) -> Dictionary:
+	var hp0: int = player.current_health
+	var pots0: int = GameManager.health_potions
+	var t := 0.0
+	var quiet := 0.0
+	var next_shot := 0.5
+	var next_skill := 2.0
+	var lowest: int = player.current_health
+	while t < timeout and player.is_alive:
+		var foes := _enemies_near(center, radius)
+		if foes.is_empty():
+			quiet += 0.1
+			_stop()
+			if quiet > 2.5:
+				break
+		else:
+			quiet = 0.0
+			foes.sort_custom(func(a, b): return a.global_position.distance_to(player.global_position) < b.global_position.distance_to(player.global_position))
+			var f: Node2D = foes[0]
+			_aim_at(f.global_position)
+			var dist := f.global_position.distance_to(player.global_position)
+			if dist > 20.0:
+				_moves(f.global_position - player.global_position)
+			else:
+				_stop()
+				_tap("attack_1")
+			if t > next_skill and dist < 40.0:
+				_tap("skill")
+				next_skill = t + 4.0
+			if player.current_health < player.max_health * 0.35 and GameManager.health_potions > 0:
+				_tap("use_health_potion")
+				_bot_say("%s: drank a potion at %d HP" % [tag, player.current_health])
+		lowest = mini(lowest, player.current_health)
+		if t >= next_shot:
+			next_shot = t + shot_every
+			await _bot_shot(tag)
+		await _wait(0.1)
+		t += 0.1
+	_stop()
+	return {"time": snappedf(t, 0.1), "hp_lost": hp0 - player.current_health, "lowest": lowest, "potions_used": pots0 - GameManager.health_potions, "alive": player.is_alive}
+
+func _bot_ambush(cls: String) -> void:
+	_bot_say("=== ambush as " + cls)
+	await _load_level("res://scenes/levels/level_2.tscn", cls)
+	EliteAffix.enabled = true
+	GameManager.health_potions = 3
+	_bot_real_hp()
+	await _wait(3.5) # the level title fades, like a player taking it in
+	_bot_say("start hp=%d/%d potions=%d" % [player.current_health, player.max_health, GameManager.health_potions])
+	await _bot_shot("spawn")
+	# Down the side passage from the entrance grotto into the Forgotten Cellar.
+	for wp in [_cell(Vector2i(7, 28)), _cell(Vector2i(7, 33)), _cell(Vector2i(7, 36)), _cell(Vector2i(8, 39))]:
+		var ok := await _walk_to(wp, 6.0)
+		if not ok:
+			_bot_say("could not reach %s (at %s)" % [wp, player.global_position])
+	await _wait(0.3)
+	await _bot_shot("cellar_enter")
+	var room: ArenaRoom = null
+	for r in level.find_child("Arenas", true, false).get_children():
+		if r.room_name == "FORGOTTEN CELLAR":
+			room = r
+	var res := await _fight(_cell(Vector2i(8, 40)), 140.0, 60.0, 2.5, "cellar_fight")
+	_bot_say("cellar fight: %s" % res)
+	await _wait(1.0)
+	await _bot_shot("cellar_cleared")
+	if room and room.reward:
+		await _walk_to(room.reward.global_position + Vector2(0, 14), 5.0)
+		var coins0 := GameManager.total_coins
+		var pots0 := GameManager.health_potions
+		_press_f()
+		await _wait(2.5)
+		for off in [Vector2(-18, 10), Vector2(18, 10), Vector2(18, -16), Vector2(-18, -16), Vector2(0, 14)]:
+			await _walk_to(room.reward.global_position + off, 1.5) # sweep over the drops
+		await _wait(1.0)
+		await _bot_shot("cellar_reward")
+		_bot_say("reward: +%d coins, +%d potions" % [GameManager.total_coins - coins0, GameManager.health_potions - pots0])
+	_bot_say("end hp=%d/%d potions=%d coins=%d" % [player.current_health, player.max_health, GameManager.health_potions, GameManager.total_coins])
+	await _unload()
+
+func _bot_open_chest_near(at: Vector2) -> void:
+	await _walk_to(at + Vector2(0, 14), 4.0)
+	var c0 := GameManager.total_coins
+	var p0 := GameManager.health_potions
+	_press_f()
+	await _wait(2.4)
+	for off in [Vector2(-16, 8), Vector2(16, 8), Vector2(0, 16)]:
+		await _walk_to(at + off, 1.2)
+	_bot_say("chest at %s: +%d coins, +%d potions" % [at, GameManager.total_coins - c0, GameManager.health_potions - p0])
+
+func _bot_puzzles() -> void:
+	await _load_level("res://scenes/levels/level_2.tscn", "samurai")
+	_bot_real_hp()
+	player.god_mode = true # the puzzles are what's being played here
+	await _wait(3.0)
+	# --- Sluice Hall: in from the flooded gallery.
+	var sl := level.find_child("SluicePuzzle", true, false) as SluicePuzzle
+	player.global_position = _cell(Vector2i(21, 10))
+	await _wait(0.5)
+	await _walk_to(_cell(Vector2i(17, 10)), 4.0)
+	await _wait(1.5)
+	await _bot_shot("sluice_arrive")
+	# A first try: the top lever (it drains the near canal... and the middle one).
+	var t0 := Time.get_ticks_msec()
+	for i in [0, 0, 1, 2]:
+		var lv: Node2D = sl.levers[i]
+		await _walk_to(lv.global_position + Vector2(0, 12), 4.0)
+		_press_f()
+		await _wait(1.3)
+		_bot_say("lever %d (drives %s, on=%s): canals full=%s" % [i + 1, lv.drives, lv.on, sl.channels.map(func(c): return c["full"])])
+		await _bot_shot("sluice_lever%d" % (i + 1))
+	_bot_say("sluice solved=%s after %.1fs" % [sl.done, (Time.get_ticks_msec() - t0) / 1000.0])
+	var crossed := await _walk_to(_cell(Vector2i(3, 6)), 8.0)
+	_bot_say("sluice: walked across the dry canals=%s" % crossed)
+	await _bot_shot("sluice_grotto")
+	for c in level.find_child("Items", true, false).get_children():
+		if c.has_method("open_chest") and c.global_position.distance_to(_cell(Vector2i(2, 8))) < 70.0:
+			await _bot_open_chest_near(c.global_position)
+	# --- Echo Grotto: in from the vestibule.
+	var echo := level.find_child("EchoPuzzle", true, false) as EchoPuzzle
+	player.global_position = _cell(Vector2i(54, 25))
+	await _wait(0.4)
+	await _walk_to(echo.stone_pos + Vector2(0, 18), 6.0)
+	await _wait(0.6)
+	await _bot_shot("echo_listening")
+	t0 = Time.get_ticks_msec()
+	var mistakes := 0
+	for r in 2:
+		while echo._playing:
+			await _wait(0.1)
+		await _wait(0.4)
+		var tune := echo.melody.duplicate()
+		if r == 0:
+			# A slip on the second note, like someone misremembering.
+			var wrong: int = (tune[1] + 1) % 4
+			await _walk_to(echo.crystals[tune[0]].global_position + Vector2(0, 12), 4.0)
+			_press_f()
+			await _wait(0.3)
+			await _walk_to(echo.crystals[wrong].global_position + Vector2(0, 12), 4.0)
+			_press_f()
+			mistakes += 1
+			await _wait(0.25)
+			await _bot_shot("echo_wrong_note")
+			await _wait(0.6)
+			while echo._playing or not echo._playing and echo._input != 0:
+				await _wait(0.1)
+			while echo._playing:
+				await _wait(0.1)
+			await _wait(0.3)
+			tune = echo.melody.duplicate()
+		_bot_say("echo round %d tune=%s playing=%s" % [echo._round, tune, echo._playing])
+		for n in tune:
+			await _walk_to(echo.crystals[n].global_position + Vector2(0, 12), 4.0)
+			_press_f()
+			await _wait(0.3)
+			_bot_say("  struck %d -> input=%d round=%d playing=%s" % [n, echo._input, echo._round, echo._playing])
+		await _wait(1.2)
+	await _wait(1.5)
+	_bot_say("echo solved=%s after %.1fs, %d mistake(s)" % [echo.done, (Time.get_ticks_msec() - t0) / 1000.0, mistakes])
+	await _bot_shot("echo_solved")
+	var through := await _walk_to(echo.stone_pos + Vector2(0, -62), 6.0)
+	_bot_say("echo: walked through the raised grate=%s" % through)
+	await _bot_shot("echo_alcove")
+	for c in level.find_child("Items", true, false).get_children():
+		if c.has_method("open_chest") and c.global_position.distance_to(echo.stone_pos + Vector2(0, -110)) < 70.0:
+			await _bot_open_chest_near(c.global_position)
+	await _unload()
+	# --- Sun Sanctum (level 3).
+	await _load_level("res://scenes/levels/level_3.tscn", "archer")
+	_bot_real_hp()
+	player.god_mode = true
+	await _wait(3.0)
+	var mp := level.find_child("MirrorPuzzle", true, false) as MirrorPuzzle
+	player.global_position = _cell(Vector2i(53, 26))
+	await _wait(0.4)
+	await _walk_to(_cell(Vector2i(60, 27)), 5.0)
+	await _wait(0.8)
+	await _bot_shot("sanctum_arrive")
+	# Work out which mirrors to turn (a person follows the light; the bot just knows).
+	var ms: Array = mp.mirrors.values()
+	var start := ms.map(func(m): return m.slash)
+	var plan := []
+	for mask in 32:
+		for i in ms.size():
+			ms[i].slash = (mask >> i) & 1 == 1
+		mp.trace()
+		if mp.hit:
+			for i in ms.size():
+				if ms[i].slash != start[i]:
+					plan.append(ms[i])
+			break
+	for i in ms.size():
+		ms[i].slash = start[i]
+	mp.trace()
+	t0 = Time.get_ticks_msec()
+	for m in plan:
+		await _walk_to(m.global_position + Vector2(0, 12), 6.0)
+		_press_f()
+		await _wait(0.5)
+		await _bot_shot("sanctum_turn")
+	await _wait(1.5)
+	_bot_say("sanctum solved=%s after %.1fs, turned %d mirror(s)" % [mp.done, (Time.get_ticks_msec() - t0) / 1000.0, plan.size()])
+	await _bot_shot("sanctum_solved")
+	var gate_in := await _walk_to(_cell(Vector2i(76, 27)), 8.0)
+	_bot_say("sanctum: walked into the reliquary=%s" % gate_in)
+	await _bot_shot("sanctum_reliquary")
+	for c in level.find_child("Items", true, false).get_children():
+		if c.has_method("open_chest") and c.global_position.distance_to(_cell(Vector2i(76, 27))) < 50.0:
+			await _bot_open_chest_near(c.global_position)
+	await _unload()
+
+func _fortune_session() -> void:
+	for lv in ["level_1", "level_2"]:
+		await _load_level("res://scenes/levels/%s.tscn" % lv, "samurai")
+		player.god_mode = true
+		for e in get_tree().get_nodes_in_group("enemies"):
+			e.set_physics_process(false)
+		var sh := level.find_child("FortuneShrine", true, false) as FortuneShrine
+		player.global_position = sh.global_position + Vector2(-22, 18)
+		await _wait(1.0)
+		await _shot("fortune_%s_world" % lv)
+		await _shot("fortune_%s_zoom" % lv, sh.global_position + Vector2(0, -16))
+		_bot_say("%s shrine at %s" % [lv, sh.global_position])
+		await _unload()
+	await _load_level("res://scenes/levels/level_2.tscn", "samurai")
+	player.god_mode = true
+	GameManager.total_coins = 200
+	var sh2 := level.find_child("FortuneShrine", true, false) as FortuneShrine
+	player.global_position = sh2.global_position + Vector2(0, 18)
+	await _wait(0.5)
+	sh2.interact(player)
+	await _wait(0.5)
+	await _shot("fortune_menu")
+	var menu = FortuneShrine.FortuneMenu._open
+	var tally := {}
+	for i in 12:
+		if not FortuneShrine.FortuneMenu.is_open():
+			sh2.interact(player)
+			await _wait(0.3)
+			menu = FortuneShrine.FortuneMenu._open
+		menu._pull()
+		await _wait(0.4)
+		if i == 0:
+			await _shot("fortune_spinning")
+		await _wait(1.6)
+		if FortuneShrine.FortuneMenu.is_open():
+			var r: String = menu._result.text
+			tally[r] = tally.get(r, 0) + 1
+			if i < 3:
+				await _shot("fortune_result_%d" % i)
+		else:
+			tally["(closed: world effect)"] = tally.get("(closed: world effect)", 0) + 1
+			await _wait(0.5)
+			await _shot("fortune_effect_%d" % i)
+			if PerkPicker.is_open():
+				Progression.take(Progression.roll(3, Progression.Rarity.RARE)[0])
+	_bot_say("12 pulls, coins 200 -> %d; %s" % [GameManager.total_coins, tally])
+	if FortuneShrine.FortuneMenu.is_open():
+		menu._close()
+	await _unload()
+
+# Enemy bolts of every element, frozen mid-flight in a column, for a look at the art.
+func _bolts_session() -> void:
+	await _load_level("res://scenes/levels/level_2.tscn", "knight")
+	player.god_mode = true
+	for e in get_tree().get_nodes_in_group("enemies"):
+		e.queue_free()
+	await _wait(0.5)
+	var E := ElementalSystem.Element
+	var els := [E.HYDRO, E.ANEMO, E.GEO, E.PYRO, E.CRYO, E.ELECTRO]
+	for i in els.size():
+		var b := ElementBolt.create(els[i], 1, Vector2.RIGHT, 0.0, null)
+		level.add_child(b)
+		b.global_position = player.global_position + Vector2(-30, -40 + i * 14)
+	await _wait(0.4)
+	await _shot("bolts_full")
+	await _unload()
+
+# Area ultimates must find the enemy by themselves: the crosshair is pointed the other way.
+func _ult_aim_session() -> void:
+	for cls in ["mage", "necromancer", "archer"]:
+		await _load_level("res://scenes/levels/level_1.tscn", cls)
+		player.god_mode = true
+		for e in get_tree().get_nodes_in_group("enemies"):
+			e.queue_free()
+		await _wait(0.3)
+		var d := _dummy(player.global_position + Vector2(64, 22))
+		await _wait(0.3)
+		_aim_at(player.global_position + Vector2(-90, -20)) # wrong way on purpose
+		await _wait(0.1)
+		player.energy = player.burst_cost
+		player.use_burst()
+		await _wait(1.0)
+		await _shot("ult_%s" % cls)
+		await _wait(2.0)
+		_bot_say("%s ultimate with the crosshair away: enemy hp 500 -> %d (%s)" % [cls, d.current_health, "HIT" if d.current_health < 500 else "MISSED"])
+		if cls == "mage":
+			# Glacial Path aimed a little off the enemy: the assist should still land it.
+			d.current_health = 500
+			await _wait(1.5)
+			_aim_at(d.global_position + Vector2(0, 20))
+			await _wait(0.1)
+			player.current_mana = player.max_mana
+			player.use_skill()
+			await _wait(1.0)
+			await _shot("mage_glacial_off_aim")
+			_bot_say("mage Glacial Path aimed 20 px off: enemy hp 500 -> %d (%s)" % [d.current_health, "HIT" if d.current_health < 500 else "MISSED"])
+		await _unload()

@@ -53,6 +53,9 @@ func _ready() -> void:
 	light.texture_scale = 0.35
 	add_child(light)
 
+	_add_spell_sprite()
+	if _spell:
+		return # the art carries its own trail; square particles only cheapened it
 	var trail := CPUParticles2D.new()
 	trail.amount = int(14 * size) + 4
 	trail.lifetime = 0.35
@@ -66,19 +69,22 @@ func _ready() -> void:
 	ramp.set_color(1, Color(_color, 0.0))
 	trail.color_ramp = ramp
 	add_child(trail)
-	_add_spell_sprite()
 
-# The player's spells use hand-drawn pixel art (StarsteelGaming, CC0): an ice spear for
-# Cryo, a fireball for Pyro, a crackling sphere for Electro. Other elements keep the orb.
+# Every bolt, the player's and the enemies', is pixel art: an ice spear for Cryo, a
+# fireball for Pyro, a crackling sphere for Electro (StarsteelGaming, CC0), and a water
+# comet, a wind ribbon and a stone shard for Hydro, Anemo and Geo (tools/gen_bolts.py).
 const SPELL_ART := {
 	ElementalSystem.Element.CRYO: ["res://assets/VFX/Spells/ice_spear.png", 6, Vector2(-46, -16)],
 	ElementalSystem.Element.PYRO: ["res://assets/VFX/Spells/fireball.png", 9, Vector2(-48, -16)],
 	ElementalSystem.Element.ELECTRO: ["res://assets/VFX/Spells/thunder_sphere.png", 8, Vector2(-32, -16)],
+	ElementalSystem.Element.HYDRO: ["res://assets/VFX/Spells/hydro_bolt.png", 6, Vector2(-48, -16)],
+	ElementalSystem.Element.ANEMO: ["res://assets/VFX/Spells/anemo_bolt.png", 6, Vector2(-48, -16)],
+	ElementalSystem.Element.GEO: ["res://assets/VFX/Spells/geo_bolt.png", 6, Vector2(-48, -16)],
 }
 var _spell: AnimatedSprite2D
 
 func _add_spell_sprite() -> void:
-	if not from_player or not SPELL_ART.has(element):
+	if not SPELL_ART.has(element):
 		return
 	var art: Array = SPELL_ART[element]
 	var tex: Texture2D = load(art[0])
@@ -131,6 +137,8 @@ func _on_body_entered(body: Node2D) -> void:
 	if from_player:
 		if body.is_in_group("player"):
 			return
+		if body.is_in_group("breakables"):
+			body.break_open(direction)
 		if body.is_in_group("enemies") and body.has_method("take_elemental_hit"):
 			body.take_elemental_hit(damage, element, source)
 			if is_instance_valid(source) and source.has_method("on_hit_landed"):

@@ -43,6 +43,8 @@ func _physics_process(delta: float) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if body is Player:
 		return
+	if body.is_in_group("breakables") and source is Player:
+		body.break_open(direction)
 
 	if body.is_in_group("enemies"):
 		if _hit.has(body):

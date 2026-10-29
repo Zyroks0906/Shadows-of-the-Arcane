@@ -60,11 +60,12 @@ func _ready() -> void:
 func _gale() -> bool:
 	return Time.get_ticks_msec() < _gale_until_ms
 
+# Fury (attack speed) draws the bow faster, as it speeds up every other class's swing.
 func _min_draw() -> float:
-	return MIN_DRAW * (0.5 if _gale() else 1.0)
+	return MIN_DRAW * (0.5 if _gale() else 1.0) / (attack_speed_mult * perk_mult("fury"))
 
 func _full_draw() -> float:
-	return FULL_DRAW * (0.5 if _gale() else 1.0)
+	return FULL_DRAW * (0.5 if _gale() else 1.0) / (attack_speed_mult * perk_mult("fury"))
 
 func _attack_element() -> ElementalSystem.Element:
 	return ElementalSystem.Element.ANEMO if _gale() else super._attack_element()
@@ -149,7 +150,7 @@ func _spawn_arrow(dir: Vector2, charge: float, target: Node2D) -> void:
 		push_error("Archer: arrow scene missing")
 		return
 	var arrow = arrow_scene.instantiate()
-	arrow.damage = roundi(strength * lerpf(0.7, 1.6, charge))
+	arrow.damage = roundi(strength * lerpf(0.7, 1.6, charge) * perk_mult("might"))
 	# Gale: a short burst window, so every quick arrow hits about three times as hard.
 	if _gale():
 		arrow.damage = roundi(arrow.damage * GALE_DAMAGE)
@@ -172,6 +173,7 @@ func _do_skill() -> void:
 	_gale_until_ms = Time.get_ticks_msec() + int(GALE_TIME * 1000.0)
 	CombatFX.spike_ring("Wind", global_position, 14.0, 5, 12.0)
 	AudioManager.play_bank("teleport", -4.0, 1.3)
+	_gale_aura()
 	_voice("effort")
 	# A green tint on her while the wind is with her.
 	var tw := animated_sprite.create_tween()
@@ -188,19 +190,13 @@ func _do_burst() -> void:
 # The ultimate is an auto-shot: straight at the closest enemy in sight (the crosshair only
 # matters when nobody is around).
 func _nearest_dir() -> Vector2:
-	var best: Node2D = null
-	var best_d := ARROW_RANGE
-	for e in _enemies():
-		var d := global_position.distance_to(e.global_position)
-		if e.is_alive and d < best_d:
-			best_d = d
-			best = e
+	var best := _nearest_visible_enemy(ARROW_RANGE) # never at one behind a wall
 	return (best.global_position - global_position).normalized() if best else _raw_aim_dir()
 
 func _tempest() -> void:
 	var dir := _nearest_dir()
 	var arrow = (load(ARROW_SCENE) as PackedScene).instantiate()
-	arrow.damage = roundi(strength * 2.2)
+	arrow.damage = roundi(strength * 2.2 * perk_mult("might"))
 	arrow.speed = 360.0
 	arrow.lifetime = 0.55
 	arrow.knockback_force = 160.0
@@ -213,7 +209,7 @@ func _tempest() -> void:
 	arrow.modulate = Color(0.7, 1.4, 1.1)
 	arrow.impact_sfx = [["arrow_hit", 0.0, 0.8]]
 	arrow.on_end = func(pos: Vector2):
-		AbilityZone.spawn(self, pos, {"radius": 40.0, "duration": 2.2, "tick": 0.45, "damage": roundi(strength * 0.6),
+		AbilityZone.spawn(self, pos, {"radius": 40.0, "duration": 3.6, "tick": 0.45, "damage": roundi(strength * 0.6 * perk_mult("might")),
 			"element": ElementalSystem.Element.ANEMO, "pull": 55.0, "style": "wind"})
 	get_parent().add_child(arrow)
 	arrow.global_position = global_position + dir * 10.0
@@ -247,3 +243,10 @@ class _NockedArrow extends Node2D:
 		draw_colored_polygon(PackedVector2Array([tip + dir * 2.0, tip - side, tip + side]), col)
 		draw_line(tail, tail - dir * 2.0 + side, Color(0.8, 0.3, 0.25), 1.0)
 		draw_line(tail, tail - dir * 2.0 - side, Color(0.8, 0.3, 0.25), 1.0)
+
+# While the gale lasts, wind keeps whipping round the archer: gusts of leaves (PVFX
+# leaf-gust) at her feet, so the mode is always visible.
+func _gale_aura() -> void:
+	while _gale() and is_alive:
+		CombatFX.pvfx("leaf-gust", global_position + Vector2(randf_range(-6, 6), -2), 0.3, randf() * TAU, Color(0.85, 1.0, 0.9), 1.2, 25)
+		await get_tree().create_timer(0.35, false).timeout

@@ -52,8 +52,9 @@ func _do_skill() -> void:
 	for e in get_tree().get_nodes_in_group("enemies"):
 		if e.is_alive and e.global_position.distance_to(global_position) < 40.0 and absf(dir.angle_to(e.global_position - global_position)) < deg_to_rad(55):
 			e.apply_stun(1.2)
-	CombatFX.slash(global_position + Vector2(0, -2), dir, 30.0, 100.0, Color(1.0, 0.85, 0.4), 8.0)
-	CombatFX.slash(global_position + Vector2(0, -2), dir, 20.0, 80.0, Color(1.0, 0.95, 0.7), 5.0)
+	# Gold, one colour: the crescent's own rainbow tones read as an element he doesn't have.
+	CombatFX.slash(global_position + Vector2(0, -2), dir, 30.0, 100.0, Color(1.0, 0.85, 0.4), 8.0, true)
+	CombatFX.slash(global_position + Vector2(0, -2), dir, 20.0, 80.0, Color(1.0, 0.95, 0.7), 5.0, true)
 	CombatFX.burst(global_position + dir * 14.0, Color(1.0, 0.85, 0.4), 14, 70.0, 0.3)
 	CombatFX.pvfx("arcane-parry", global_position + dir * 12.0 + Vector2(0, 4), 0.35, 0.0, Color.WHITE, 1.6)
 	AudioManager.play_bank("shield_block", 2.0, 0.85)
@@ -63,11 +64,11 @@ func _do_skill() -> void:
 		CombatFX.shake(2.5, 0.15)
 		AudioManager.play_bank("heavy_flesh", -2.0, 0.9)
 
-# Q: Aegis. Four golden shields circle the knight for 8 s, striking and shoving back
+# Q: Aegis. Four golden shields circle the knight for 11 s, striking and shoving back
 # whatever they pass through; behind them he takes a quarter less damage.
 func _do_burst() -> void:
 	CombatFX.shockwave(global_position, Color(1.0, 0.85, 0.35), 30.0, 0.3, 2.5)
 	AudioManager.play_bank("heal", 0.0, 0.7)
 	AudioManager.play_bank("shield_block", -2.0, 0.8)
-	AegisOrbit.summon(self, 4, 8.0, roundi(_melee_damage() * 0.8))
-	_buff("damage_taken_mult", 0.75, 8.0)
+	AegisOrbit.summon(self, 4, 11.0, roundi(_melee_damage() * 0.8)) # was 8 s
+	_buff("damage_taken_mult", 0.75, 11.0)

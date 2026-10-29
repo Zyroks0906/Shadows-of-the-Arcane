@@ -9,23 +9,22 @@ var _hits_taken_recently: int = 0
 var _hit_timer: float = 0.0
 
 func _init_stats() -> void:
-	max_health = 450
+	max_health = 650
 	resistance = 0
 	character_name = "Golem"
 
 func _ready() -> void:
 	base_element = ElementalSystem.Element.NONE
-	speed = 20.0
+	speed = 30.0
 	attack_range = 70.0
-	attack_damage = 40
-	attack_cooldown = 1.5
-	special_attack_cooldown = 5.0
+	attack_damage = 32
+	attack_cooldown = 1.2
+	special_attack_cooldown = 4.0
 	super._ready()
 	if laser_sprite: laser_sprite.visible = false
 	if weapon_sprite: weapon_sprite.visible = false
 	if laser_area:
-		laser_area.monitoring = false
-		laser_area.body_entered.connect(_on_laser_hit)
+		laser_area.monitoring = false # the old sprite laser is replaced by BossMoves.laser
 
 func _physics_process(delta: float) -> void:
 	if not is_alive: return
@@ -56,100 +55,59 @@ func receive_damage(amount: int) -> void:
 		mostrar_texto_flotante("FOCUSED", Color.ORANGE)
 	super.receive_damage(amount)
 
-func _perform_special_attack() -> void:
-	is_attacking = true
-	can_attack = false
-	var dist = global_position.distance_to(player.global_position)
-	if dist < 90:
-		_pattern_shockwave()
-	else:
-		_pattern_tracking_laser()
+# --- Moves (BossMoves: each one telegraphed) ------------------------------------------
+# Close: arm slams in a cone. In reach of its eye: a sweeping laser. Too close for comfort:
+# a shockwave. Below half health it is enraged: faster wind-ups, more specials, and it
+# starts calling down rock rain.
+var _move_i := 0
 
-func _pattern_shockwave() -> void:
-	_play_animation("charge_energy")
-	velocity = Vector2.ZERO
-	await get_tree().create_timer(1.5).timeout
-	if not is_alive: return
+func _enraged() -> bool:
+	return current_health < max_health * 0.5
 
-	mostrar_texto_flotante("SHOCKWAVE", Color.ORANGE)
-	_play_animation("attack1")
-	CombatFX.shockwave(global_position, Color.AQUAMARINE, 130.0, 0.45, 5.0)
-	CombatFX.shake(6.0, 0.4)
-	AudioManager.play_bank_at("stomp", global_position, 4.0, 0.5)
-	AudioManager.play_bank_at("heavy_flesh", global_position, 0.0, 0.5)
-	if is_instance_valid(player) and global_position.distance_to(player.global_position) < 130:
-		player.take_elemental_hit(int(attack_damage * 0.7), ElementalSystem.Element.ANEMO, self)
-		var push_dir = (player.global_position - global_position).normalized()
-		player.apply_knockback(push_dir * 450.0)
-	_finish_special_golem()
-
-func _pattern_tracking_laser() -> void:
-	_play_animation("charge_energy")
-	velocity = Vector2.ZERO
-	await get_tree().create_timer(1.5).timeout
-	if not is_alive: return
-
-	if laser_sprite:
-		laser_sprite.visible = true
-		laser_sprite.play("default")
-		if laser_area: laser_area.monitoring = true
-		var duration = 3.5
-		while duration > 0:
-			duration -= 0.1
-			await get_tree().create_timer(0.1).timeout
-			if not is_alive: break
-			if laser_area:
-				for body in laser_area.get_overlapping_bodies():
-					_on_laser_hit(body)
-
-		if not is_alive: return
-		laser_sprite.visible = false
-		if laser_area: laser_area.monitoring = false
-		mostrar_texto_flotante("VULNERABLE", Color.YELLOW)
-		await get_tree().create_timer(4.0).timeout
-
-	if is_alive: _finish_special_golem()
-
-func _finish_special_golem() -> void:
-	if not is_alive: return
-	special_timer = special_attack_cooldown
-	is_attacking = false
-	boss_state = BossState.CHASE
-	await get_tree().create_timer(attack_cooldown).timeout
-	if is_alive: can_attack = true
-
-func _on_laser_hit(body: Node2D) -> void:
-	if body == player and is_instance_valid(player):
-		player.take_elemental_hit(int(attack_damage * 0.3), ElementalSystem.Element.ELECTRO, self)
+# The eye, near the top of the body (sprite measured once).
+var _eye_cache := Vector2.INF
+func _eye() -> Vector2:
+	if _eye_cache == Vector2.INF:
+		var m := GroundShadow._measure(animated_sprite)
+		_eye_cache = Vector2(0.0, lerpf(m["top"], m["foot"].y, 0.2)) * absf(scale.y)
+	return _eye_cache
 
 func _perform_basic_attack() -> void:
 	is_attacking = true
 	can_attack = false
-
+	velocity = Vector2.ZERO
 	if is_instance_valid(player):
 		animated_sprite.flip_h = player.global_position.x < global_position.x
+	_play_animation("attack1")
+	await BossMoves.slam(self, 58.0, 110.0, attack_damage, 0.55 if _enraged() else 0.75)
+	await _end_move(attack_cooldown)
 
-	var anim = "attack1" if randf() > 0.5 else "attack2"
-	_play_animation(anim)
-	await get_tree().create_timer(1.5).timeout
-	if not is_alive: return
+func _perform_special_attack() -> void:
+	is_attacking = true
+	can_attack = false
+	velocity = Vector2.ZERO
+	_move_i += 1
+	_play_animation("charge_energy")
+	var d := global_position.distance_to(player.global_position) if is_instance_valid(player) else 999.0
+	if d < 60.0:
+		mostrar_texto_flotante("SHOCKWAVE", Color.ORANGE)
+		await BossMoves.shockwave(self, 110.0, int(attack_damage * 0.8))
+	elif _enraged() and _move_i % 2 == 0:
+		mostrar_texto_flotante("ROCK RAIN", Color.ORANGE)
+		await BossMoves.rock_rain(self, 6, int(attack_damage * 0.7))
+	else:
+		await BossMoves.laser(self, _eye(), 0.9, 3.0 if _enraged() else 2.2, maxi(4, attack_damage / 6), 1.2 if _enraged() else 0.9)
+	special_timer = special_attack_cooldown * (0.6 if _enraged() else 1.0)
+	await _end_move(attack_cooldown * 0.6)
 
-	_check_hit()
-	await get_tree().create_timer(1.0).timeout
-	if not is_alive: return
-
+func _end_move(cooldown: float) -> void:
+	if not is_alive:
+		return
 	is_attacking = false
 	boss_state = BossState.CHASE
-	await get_tree().create_timer(attack_cooldown).timeout
-	if is_alive: can_attack = true
-
-func _check_hit() -> void:
-	if not is_instance_valid(player): return
-	var distance := global_position.distance_to(player.global_position)
-	if distance <= attack_range + 5:
-		player.take_elemental_hit(attack_damage, base_element, self)
-		player.apply_knockback((player.global_position - global_position).normalized() * 260.0)
-		CombatFX.shake(3.0, 0.2)
+	await get_tree().create_timer(cooldown, false).timeout
+	if is_alive:
+		can_attack = true
 
 func die() -> void:
 	if not is_alive: return

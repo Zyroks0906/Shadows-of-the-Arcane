@@ -27,6 +27,9 @@ func _ready() -> void:
 	monitoring = true
 	monitorable = true
 	_attach_shadow.call_deferred()
+	# Harder difficulties find fewer potions (Extreme: none). Decided once, when it appears.
+	if type in [ItemType.HEALTH_POTION, ItemType.MANA_POTION] and randf() >= SettingsManager.diff("potions"):
+		_item_root().queue_free.call_deferred()
 
 var _shadow: GroundShadow
 var _shadow_y: float = 0.0
@@ -133,7 +136,7 @@ func _collect(_player_node: Node2D) -> void:
 
 	match type:
 		ItemType.COIN:
-			value = roundi(value * (1.0 + Progression.value("greed") / 100.0))
+			value = maxi(1, roundi(value * (1.0 + Progression.value("greed") / 100.0) * SettingsManager.diff("coins")))
 			GameManager.add_coins(value)
 			Progression.stat("coins", value)
 			AudioManager.play_bank("coin", -4.0)

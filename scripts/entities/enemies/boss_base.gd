@@ -81,7 +81,9 @@ func _state_idle(_delta: float) -> void:
 			_update_animations(to_home.normalized())
 			return
 		_returning = false
-		current_health = max_health # back home it recovers: no chip-and-run
+		# Back home it recovers a quarter of its health: chip-and-run isn't free, but a long
+		# fight isn't wiped either.
+		current_health = mini(max_health, current_health + max_health / 4)
 	_play_animation("idle")
 	velocity = Vector2.ZERO
 	if global_position.distance_to(player.global_position) < detection_range and _sees_player():
@@ -92,7 +94,9 @@ func _state_idle(_delta: float) -> void:
 func _watch_player(delta: float) -> void:
 	if not is_engaged() or is_attacking:
 		return
-	var gone := not _sees_player() or player.global_position.distance_to(home) > leash + detection_range
+	# Only a real escape ends the fight: being far from its room. Losing sight of you behind
+	# a pillar inside the arena does not (it used to, and the boss "vanished" mid-fight).
+	var gone := player.global_position.distance_to(home) > leash + detection_range
 	_lost_t = _lost_t + delta if gone else 0.0
 	if _lost_t >= LOSE_TIME:
 		_lost_t = 0.0
@@ -112,6 +116,11 @@ func _state_chase(_delta: float) -> void:
 	var distance = global_position.distance_to(player.global_position)
 	var direction = (player.global_position - global_position).normalized()
 
+	# A special can come from range: bosses don't just walk at you.
+	if special_timer <= 0.0 and can_attack and distance < detection_range and _sees_player():
+		velocity = Vector2.ZERO
+		boss_state = BossState.SPECIAL
+		return
 	if distance <= attack_range:
 		velocity = Vector2.ZERO
 		if can_attack:
@@ -143,10 +152,12 @@ func _perform_basic_attack() -> void:
 	is_attacking = true
 	can_attack = false
 	_play_animation("attack1")
+	if is_instance_valid(player):
+		BossMoves.warn_cone(self, player.global_position - global_position, attack_range + 6.0, 110.0, maxf(attack_delay, 0.45))
 
 	var tree = get_tree()
 	if not tree: return
-	await tree.create_timer(attack_delay).timeout
+	await tree.create_timer(maxf(attack_delay, 0.45)).timeout
 	if is_alive: _check_hit()
 
 	tree = get_tree()

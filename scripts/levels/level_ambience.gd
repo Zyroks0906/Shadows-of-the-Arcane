@@ -51,8 +51,11 @@ func _ready() -> void:
 	_motes.spread = 180.0
 	_motes.initial_velocity_min = 2.0
 	_motes.initial_velocity_max = 8.0
-	_motes.scale_amount_min = 0.8
-	_motes.scale_amount_max = 1.6
+	# Soft round motes (a square pixel read as a dead pixel, not as drifting dust).
+	_motes.texture = CombatFX._dot_tex()
+	_motes.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_motes.scale_amount_min = 0.22
+	_motes.scale_amount_max = 0.38
 	_motes.local_coords = false
 	_motes.z_index = 30
 	var ramp := Gradient.new()

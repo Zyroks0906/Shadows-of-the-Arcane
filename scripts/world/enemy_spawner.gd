@@ -8,6 +8,8 @@ class_name EnemySpawner
 @export var element_pool: Array[ElementalSystem.Element] = []
 @export var spawn_on_ready: bool = true
 @export var spawn_delay: float = 1.0
+## Always an elite (a random affix), e.g. the second wave of an ambush room.
+@export var elite: bool = false
 
 func _ready() -> void:
 	if spawn_on_ready:
@@ -47,6 +49,7 @@ func spawn_enemy(summon: bool = false) -> Enemy:
 		enemy.position = position
 		if summon:
 			enemy.tree_entered.connect(_materialise.bind(enemy), CONNECT_ONE_SHOT)
+		enemy.force_elite = elite
 		get_parent().add_child.call_deferred(enemy)
 		return enemy
 	else:

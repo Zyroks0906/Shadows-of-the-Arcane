@@ -4,7 +4,8 @@ class_name DecorPhysics
 # Makes a level's decoration behave like real objects:
 #  - bones and skulls lying on the floor can be walked over and crunch underfoot,
 #  - (with `solid_props`) every other floor prop — pots, urns, pillars, sarcophagi — blocks
-#    the way like a wall does; things hung on a wall (cobwebs, chains, banners) never block.
+#    the way like a wall does; things hung on a wall (cobwebs, chains, banners) never block,
+#  - pots and jars become BreakablePots: any attack smashes them.
 # Bones are the Dungeon tileset's (8,6) and (7,7) in source 1 (also what the level builder
 # scatters on levels 2 and 3).
 
@@ -29,6 +30,9 @@ static func apply(level: Node, solid_props: bool) -> void:
 			var src: int = layer.get_cell_source_id(c)
 			if not layer.tile_set.has_source(src):
 				layer.erase_cell(c) # stale cells pointing at a tileset that no longer exists
+				continue
+			if BreakablePot.is_pot(layer, c):
+				BreakablePot.from_tile(layer, c) # pots break; they block on their own
 				continue
 			var atlas: Vector2i = layer.get_cell_atlas_coords(c)
 			var center: Vector2 = layer.to_global(layer.map_to_local(c))

@@ -509,6 +509,9 @@ func on_hit_landed(kind: String = "basic") -> void:
 # Damages every visible enemy within `radius` of `center`. Returns those hit.
 func _aoe(center: Vector2, radius: float, damage: int, element: ElementalSystem.Element, knock: float, stun: float = 0.0, kind: String = "skill") -> Array:
 	var hit := []
+	for pot in get_tree().get_nodes_in_group("breakables"):
+		if pot.global_position.distance_to(center) <= radius + 4.0:
+			pot.break_open(pot.global_position - center)
 	for e in get_tree().get_nodes_in_group("enemies"):
 		if not (e is Node2D) or not e.is_alive:
 			continue
@@ -575,6 +578,30 @@ func _target_point(max_range: float) -> Vector2:
 	if hit:
 		return global_position.lerp(hit["position"], 0.85)
 	return global_position + to
+
+# The closest living enemy you can actually see (no wall between), within `max_range`.
+func _nearest_visible_enemy(max_range: float) -> Node2D:
+	var best: Node2D = null
+	var best_d := max_range
+	var space := get_world_2d().direct_space_state
+	for e in _enemies():
+		if not (e is Node2D) or not e.is_alive:
+			continue
+		var d := global_position.distance_to(e.global_position)
+		if d >= best_d:
+			continue
+		var q := PhysicsRayQueryParameters2D.create(global_position, e.global_position, 1, [get_rid(), e.get_rid()])
+		if space.intersect_ray(q):
+			continue
+		best_d = d
+		best = e
+	return best
+
+# Where an area ultimate lands: on the nearest enemy in sight, so a hard-won ultimate never
+# goes off into a wall or empty floor; the crosshair only counts when nobody is around.
+func _burst_target(max_range: float) -> Vector2:
+	var e := _nearest_visible_enemy(max_range)
+	return e.global_position if e else _target_point(max_range)
 
 # Temporary stat change that undoes itself.
 func _buff(prop: String, value: float, duration: float) -> void:
@@ -690,7 +717,7 @@ func _melee_impact(dir: Vector2, reach: float, arc_deg: float, damage: int, kb: 
 	var hits := _strike_arc(dir, reach, arc_deg, damage, kb)
 	var el := _attack_element()
 	var col := Color(1, 1, 1) if el == ElementalSystem.Element.NONE else ElementalSystem.get_element_color(el).lightened(0.4)
-	CombatFX.slash(global_position + Vector2(0, -2), dir, reach, arc_deg, col, (3.0 + reach * 0.08) * 1.5)
+	CombatFX.slash(global_position + Vector2(0, -2), dir, reach, arc_deg, col, (3.0 + reach * 0.08) * 1.5, el == ElementalSystem.Element.NONE)
 	_debug_swing = {"dir": dir, "reach": reach, "arc": arc_deg, "until": Time.get_ticks_msec() + 250}
 	if hits > 0:
 		on_hit_landed("basic")
@@ -723,6 +750,9 @@ func _strike_arc(dir: Vector2, reach: float, arc_deg: float, damage: int, kb: fl
 			continue
 		# Anything overlapping the character itself counts even if it is slightly behind.
 		if dist > r + 4.0 and absf(dir.angle_to(to)) > half + atan2(r, dist):
+			continue
+		if body.is_in_group("breakables"):
+			body.break_open(to) # pots: no energy or lifesteal for smashing scenery
 			continue
 		if body.has_method("take_elemental_hit"):
 			body.take_elemental_hit(damage, _attack_element(), self)
@@ -820,6 +850,8 @@ func use_mana_potion() -> void:
 		AudioManager.play_bank("magic_shield", -10.0, 1.3)
 
 func take_elemental_hit(damage: int, element: ElementalSystem.Element, source: Node = null) -> void:
+	if damage > 0 and source is Enemy:
+		damage = maxi(1, roundi(damage * SettingsManager.diff("enemy_dmg"))) # difficulty
 	if _is_invulnerable():
 		return
 	if damage > 0 and source is Node2D and _guard and is_instance_valid(source):
@@ -965,6 +997,8 @@ func receive_damage(amount: int) -> void:
 		shield_hp -= absorbed
 		amount -= absorbed
 		CombatFX.floating_label(global_position, "-%d" % absorbed, Color.GOLDENROD, 0.8)
+		if _shield_ring:
+			_shield_ring.flash()
 		if shield_hp <= 0:
 			_break_shield()
 		if amount <= 0:
@@ -1246,34 +1280,58 @@ func _update_interaction_prompt() -> void:
 
 class _ShieldRing extends Node2D:
 	var color: Color = Color.GOLDENROD
-	var strength: float = 1.0 # shield left / shield given: fewer shards as it wears down
+	var strength: float = 1.0 # shield left / shield given: the bubble thins and cracks
 	var _t: float = 0.0
+	var _hit: float = 0.0 # 1 on a blocked hit, fades: the facets flare up
 
 	func _process(delta: float) -> void:
 		_t += delta
+		_hit = maxf(_hit - delta * 2.5, 0.0)
 		var p := get_parent() as Player
 		if p and p._shield_max > 0:
 			strength = clampf(float(p.shield_hp) / p._shield_max, 0.0, 1.0)
 		queue_redraw()
 
-	# A crystal barrier: a faint bubble (flattened, so it sits around the body rather than
-	# on the floor), a glinting rim, and six crystal shards orbiting; shards drop out as the
-	# shield takes damage.
+	func flash() -> void:
+		_hit = 1.0
+
+	# Crystallize barrier, after Genshin's: a clear bubble of the element's colour around the
+	# body. Brighter towards the rim (fresnel), a soft highlight on the upper left, and a
+	# honeycomb of facets that is barely there until a hit makes it flare. Worn down, it
+	# fades and cracks. Nothing orbits.
 	func _draw() -> void:
 		var owner_p := get_parent() as Player
 		var c := owner_p.body_center() if owner_p else Vector2(0, -6)
-		var r := 13.0 + sin(_t * 3.0) * 0.6
-		draw_set_transform(c, 0.0, Vector2(1.0, 0.92))
-		draw_circle(Vector2.ZERO, r, Color(color, 0.1))
-		draw_arc(Vector2.ZERO, r, 0.0, TAU, 40, Color(color, 0.35), 1.0)
-		var glint := _t * 1.8
-		draw_arc(Vector2.ZERO, r, glint, glint + 0.7, 10, Color(1, 1, 1, 0.6), 1.0)
+		var tint := color.lerp(Color.WHITE, 0.25)
+		var k := 0.55 + 0.45 * strength
+		var rx := 12.0 + sin(_t * 2.4) * 0.4
+		var ry := 14.5 + sin(_t * 2.4) * 0.4
+		draw_set_transform(c, 0.0, Vector2(1.0, ry / rx))
+		draw_circle(Vector2.ZERO, rx, Color(tint, 0.07 * k + 0.08 * _hit))
+		# Fresnel: rings growing brighter towards the edge.
+		for i in 3:
+			draw_arc(Vector2.ZERO, rx - i * 1.0, 0.0, TAU, 48, Color(tint, [0.55, 0.22, 0.1][i] * k + 0.3 * _hit), 1.0)
+		# Honeycomb facets, clipped to the bubble.
+		var fa := 0.25 * _hit
+		if fa > 0.01:
+			var h := 4.0
+			for row in range(-4, 5):
+				for col in range(-3, 4):
+					var hc := Vector2(col * h * 1.5, row * h * 1.732 + (h * 0.866 if col % 2 != 0 else 0.0))
+					if hc.length() > rx - 2.5:
+						continue
+					var pts := PackedVector2Array()
+					for v in 7:
+						pts.append(hc + Vector2.from_angle(v * TAU / 6.0) * h)
+					draw_polyline(pts, Color(Color.WHITE, fa), 1.0)
+		# Specular highlight on the upper left, with a small glint dot.
+		draw_arc(Vector2.ZERO, rx - 2.0, PI * 1.08, PI * 1.42, 10, Color(1, 1, 1, 0.55 * k), 1.5)
+		draw_circle(Vector2(-rx * 0.45, -rx * 0.62), 1.0, Color(1, 1, 1, 0.7 * k))
+		# A faint lower rim, as if light passed through the crystal.
+		draw_arc(Vector2.ZERO, rx - 1.0, PI * 0.2, PI * 0.8, 14, Color(tint.lightened(0.3), 0.35 * k), 1.0)
+		# Cracks once it is nearly spent.
+		if strength < 0.4:
+			var cr := Color(1, 1, 1, 0.6)
+			draw_polyline(PackedVector2Array([Vector2(rx * 0.7, -rx * 0.5), Vector2(rx * 0.35, -rx * 0.2), Vector2(rx * 0.45, rx * 0.15), Vector2(rx * 0.15, rx * 0.4)]), cr, 1.0)
+			draw_line(Vector2(rx * 0.35, -rx * 0.2), Vector2(rx * 0.05, -rx * 0.3), cr, 1.0)
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-		var shards := maxi(1, ceili(6 * strength))
-		for i in shards:
-			var a := _t * 1.2 + TAU * i / 6.0
-			var p := c + Vector2(cos(a) * (r + 1.0), sin(a) * (r + 1.0) * 0.55)
-			var s := 2.6 + 0.4 * sin(_t * 5.0 + i)
-			var pts := PackedVector2Array([p + Vector2(0, -s * 1.4), p + Vector2(s * 0.7, 0), p + Vector2(0, s * 1.4), p + Vector2(-s * 0.7, 0)])
-			draw_colored_polygon(pts, Color(color.lightened(0.25), 0.9))
-			draw_line(p + Vector2(0, -s * 1.4), p + Vector2(0, s * 1.4), Color(1, 1, 1, 0.7), 1.0)

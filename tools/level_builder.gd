@@ -16,10 +16,18 @@ extends Node
 #             'h' health potion   'm' mana potion   '$' coin   'C' chest   'x' spike trap
 #   arenas    'R' combat room (the floor region around it, bounded by gates/doors)
 #             '=' arena gate (open until the player walks in, closes during the fight)
-#             'E' second-wave enemy (random)   rewards revealed on clear: 'k' chest with the
-#             silver key, 'g' chest with the golden key, 'r' chest with supplies
+#             'E' second-wave enemy (random)   'H' second-wave elite (random, always elite)   rewards revealed on clear: 'k' chest with the
+#             silver key, 'g' chest with the golden key, 'r' chest with supplies,
+#             'u' chest with coins (optional ambush rooms)
 #   extras    'T' transmuting altar (mana potions -> health potions)
 #             'Y' sealed chest (costs coins, offers a rare perk)
+#             'J' fortune shrine (a slot machine: spend coins, gamble for perks or curses)
+#   puzzles   '%' puzzle gate (closed until the room's puzzle is solved)
+#             'W' sluice channel (water a lever puzzle can drain)   'l' lever
+#             'K' singing crystal   'Q' echo stone (plays the melody)
+#             'M' sun mirror   'S' sunbeam source   'N' sun sigil (the beam's target)
+#             Puzzle cells become markers under PuzzleMarks; scripts/levels/level_puzzles.gd
+#             builds the puzzles from them at runtime.
 
 const T := 16
 const GENERATED_SEED := 1337
@@ -36,6 +44,7 @@ const SCN := {
 	"orc": "res://scenes/entities/Enemies/Orc.tscn",
 	"guardian": "res://scenes/entities/Enemies/GuardianBoss.tscn",
 	"golem": "res://scenes/entities/Enemies/Golem.tscn",
+	"champion": "res://scenes/entities/Enemies/Champion.tscn",
 	"door": "res://scenes/world/door.tscn",
 	"silver_key": "res://scenes/world/SilverKey.tscn",
 	"golden_key": "res://assets/sprites/sprite_frames/GoldenKey.tscn",
@@ -71,8 +80,22 @@ const LEVELS := [
 		"boss_name": "",
 	},
 	{
+		# The Rune Vault under level 1's east room (see scripts/levels/level1_extras.gd).
+		"theme": "crypt",
+		"fragment": true,
+		"layout": "res://tools/levels/vault.txt",
+		"out": "res://scenes/levels/vault.tscn",
+		"root_name": "Vault",
+		"wall_tex": "res://assets/tilesets/character and tileset/Dungeon_Tileset.png",
+		"torch_light": Color(0.75, 0.6, 1.0),
+		"pool": ["skeleton"],
+		"elements": [],
+		"room_names": [],
+		"boss_name": "",
+	},
+	{
 		"theme": "caverns",
-		"room_names": ["WISP SHRINE", "SLIME POOLS"],
+		"room_names": ["WISP SHRINE", "FORGOTTEN CELLAR", "SLIME POOLS"], # in plan order (top to bottom)
 		"sealed_cost": 25,
 		"layout": "res://tools/levels/whispering_caverns.txt",
 		"out": "res://scenes/levels/level_2.tscn",
@@ -105,23 +128,23 @@ const LEVELS := [
 		"title": "SKYHOLD RUINS & TOWER",
 		"subtitle": "Where the winds still guard the sigil",
 		"music": MUSIC + "11 - The Mighty Kingdom.mp3",
-		"darkness": Color(0.55, 0.5, 0.7),
+		"darkness": Color(0.44, 0.41, 0.6),
 		"player_light": Color(1.0, 0.9, 0.8),
 		"motes": Color(0.8, 0.6, 1.0, 0.6),
 		"mote_gravity": Vector2(4, -7),
 		"torch_light": Color(0.8, 0.55, 1.0),
 		"pool": ["skeleton", "orc", "bat", "wisp"],
 		"elements": [ElementalSystem.Element.ANEMO, ElementalSystem.Element.ELECTRO, ElementalSystem.Element.PYRO, ElementalSystem.Element.GEO],
-		"boss": "golem",
-		"boss_script": "res://scripts/entities/enemies/warden.gd",
-		"boss_name": "Warden",
+		"boss": "champion", # its own design and moves (the Golem was reused here before)
+		"boss_name": "Champion",
 		"unlocks": 0,
 		"exit_glow": Color(0.8, 0.6, 1.0),
+		"exit_style": "none", # the final boss: beating it is the victory
 	},
 ]
 
 const FLOORISH_EXCLUDE := " #"
-const SOLID_CHARS := "~po"
+const SOLID_CHARS := "~p" # pots ("o") block on their own as BreakablePots
 const WIND := {">": Vector2.RIGHT, "<": Vector2.LEFT, "A": Vector2.UP, "V": Vector2.DOWN}
 
 var rng := RandomNumberGenerator.new()
@@ -337,10 +360,10 @@ func _floor_tile(theme: String, x: int, y: int) -> Array:
 	return [SRC_THEME, _pick([Vector2i(1, 1), Vector2i(2, 2), Vector2i(3, 3), Vector2i(0, 6), Vector2i(1, 7), Vector2i(2, 6)])]
 
 func _water_tile(x: int, y: int) -> Vector2i:
-	var wn := ch(x, y - 1) == "~"
-	var ws := ch(x, y + 1) == "~"
-	var we := ch(x + 1, y) == "~"
-	var ww := ch(x - 1, y) == "~"
+	var wn := "~W".contains(ch(x, y - 1))
+	var ws := "~W".contains(ch(x, y + 1))
+	var we := "~W".contains(ch(x + 1, y))
+	var ww := "~W".contains(ch(x - 1, y))
 	var tx := 21
 	if not ww and we: tx = 20
 	elif not we and ww: tx = 22
@@ -363,8 +386,10 @@ func _build_level(def: Dictionary) -> void:
 	var background := _layer("Background", ts, -10)
 	var floor_layer := _layer("Floor", ts, -9)
 	var water := _layer("Water", ts, -9)
-	# FG's water is bright daylight blue; pull it into the level's palette.
-	water.modulate = def.get("water_tint", Color.WHITE)
+	# The water's colour and motion come from shaders/water.gdshader (the tiles give shape).
+	var wmat := ShaderMaterial.new()
+	wmat.shader = load("res://shaders/water.gdshader")
+	water.material = wmat
 	var walls := _layer("Walls", ts, -8)
 	var decor := _layer("Decor", ts, -7)
 	var overhead := _layer("Overhead", ts, 6)
@@ -378,6 +403,9 @@ func _build_level(def: Dictionary) -> void:
 		root.add_child(n)
 		groups[g] = n
 
+	var marks := Node2D.new()
+	marks.name = "PuzzleMarks"
+	root.add_child(marks)
 	var spawn_pos := Vector2.ZERO
 	var exit_pos := Vector2.ZERO
 	var face_count := 0
@@ -408,6 +436,13 @@ func _build_level(def: Dictionary) -> void:
 			_decorate_floor(theme, x, y, decor)
 
 			var pos := cell_center(x, y)
+			if c == "W":
+				_put_tile(water, x, y, SRC_FG, _water_tile(x, y)) # full until a lever drains it
+			if "WlKQMSN%".contains(c):
+				var m := Marker2D.new()
+				m.name = "%s_%d_%d" % [("lever" if c == "l" else c), x, y]
+				m.position = pos
+				marks.add_child(m, true)
 			match c:
 				"P": spawn_pos = pos
 				"L": _add_ladder(root, pos)
@@ -416,11 +451,16 @@ func _build_level(def: Dictionary) -> void:
 				"B": _add_boss(def, groups["Bosses"], pos)
 				"e": spawner_at[Vector2i(x, y)] = _add_spawner(def, groups["EnemySpawners"], pos, "")
 				"E": spawner_at[Vector2i(x, y)] = _add_spawner(def, groups["EnemySpawners"], pos, "")
+				"H":
+					spawner_at[Vector2i(x, y)] = _add_spawner(def, groups["EnemySpawners"], pos, "")
+					spawner_at[Vector2i(x, y)].elite = true
 				"R": room_markers.append(Vector2i(x, y))
 				"=": gate_at[Vector2i(x, y)] = _add_gate(groups["Doors"], x, y)
+				"%": _add_puzzle_gate(groups["Doors"], x, y)
 				"k": reward_at[Vector2i(x, y)] = _add_reward_chest(groups["Items"], pos, SCN["silver_key"])
 				"g": reward_at[Vector2i(x, y)] = _add_reward_chest(groups["Items"], pos, SCN["golden_key"])
 				"r": reward_at[Vector2i(x, y)] = _add_reward_chest(groups["Items"], pos, SCN["health"])
+				"u": reward_at[Vector2i(x, y)] = _add_reward_chest(groups["Items"], pos, SCN["coin"])
 				"s": spawner_at[Vector2i(x, y)] = _add_spawner(def, groups["EnemySpawners"], pos, "slime")
 				"w": spawner_at[Vector2i(x, y)] = _add_spawner(def, groups["EnemySpawners"], pos, "wisp")
 				"O": spawner_at[Vector2i(x, y)] = _add_spawner(def, groups["EnemySpawners"], pos, "orc")
@@ -435,6 +475,12 @@ func _build_level(def: Dictionary) -> void:
 				"$": _add_instance(groups["Items"], SCN["coin"], pos)
 				"C": _add_chest(groups["Items"], pos)
 				"T": _add_transmuter(groups["Props"], pos)
+				"J":
+					var shrine := StaticBody2D.new()
+					shrine.name = "FortuneShrine"
+					shrine.set_script(load("res://scripts/world/fortune_shrine.gd"))
+					shrine.position = pos + Vector2(0, 6)
+					groups["Props"].add_child(shrine, true)
 				"Y": _add_sealed_chest(def, groups["Items"], pos)
 				"x": _add_instance(groups["Traps"], SCN["spikes"], pos)
 				"D": _add_door(groups["Doors"], x, y, Door.KeyType.SILVER, "")
@@ -475,7 +521,14 @@ func _build_level(def: Dictionary) -> void:
 		exit.boss_to_track = def["boss_name"]
 		exit.unlocks_level = def["unlocks"]
 		exit.glow_color = def["exit_glow"]
+		exit.style = def.get("exit_style", "portal")
 		root.add_child(exit)
+
+	if marks.get_child_count() > 0:
+		var puzzles := Node2D.new()
+		puzzles.name = "Puzzles"
+		puzzles.set_script(load("res://scripts/levels/level_puzzles.gd"))
+		root.add_child(puzzles)
 
 	var amb := Node2D.new()
 	amb.name = "Ambience"
@@ -601,6 +654,20 @@ func _add_gate(parent: Node2D, x: int, y: int) -> Node2D:
 	parent.add_child(door, true)
 	return door
 
+# A portcullis that stays down until the puzzle of its room is solved.
+func _add_puzzle_gate(parent: Node2D, x: int, y: int) -> void:
+	var door: Node2D = load(SCN["door"]).instantiate()
+	door.name = "PuzzleGate"
+	door.position = cell_center(x, y)
+	if floorish(x - 1, y) and floorish(x + 1, y):
+		door.rotation = PI / 2.0
+	door.required_key = Door.KeyType.NONE
+	door.is_open = false
+	door.gate_style = true
+	door.sealed_message = "Sealed by an old mechanism. Solve this room's puzzle."
+	parent.add_child(door, true)
+	door.add_to_group("puzzle_gates", true)
+
 # A chest that stays hidden until its arena is cleared, holding a specific item.
 func _add_reward_chest(parent: Node2D, pos: Vector2, item_scene: String) -> Node2D:
 	var chest := _add_instance(parent, SCN["chest"], pos)
@@ -644,7 +711,7 @@ func _add_arena(parent: Node2D, marker: Vector2i, gate_at: Dictionary, spawner_a
 		if spawner_at.has(c):
 			var sp: Node2D = spawner_at[c]
 			sp.spawn_on_ready = false
-			if ch(c.x, c.y) == "E":
+			if ch(c.x, c.y) in ["E", "H"]:
 				w2.append(sp)
 			else:
 				w1.append(sp)
@@ -808,7 +875,7 @@ func _add_zones(parent: Node2D) -> void:
 			if c == ",":
 				zone.style = ElementZone.Style.WATER
 				zone.element = ElementalSystem.Element.HYDRO
-				zone.speed_mult = 0.7
+				zone.speed_mult = 0.6 # wading costs time: enemies get a hit in
 			else:
 				zone.style = ElementZone.Style.WIND
 				zone.element = ElementalSystem.Element.ANEMO

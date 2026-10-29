@@ -10,6 +10,22 @@ var aim_assist: float = 0.75
 var selected_music_track: String = "res://assets/audio/music/xDeviruchi - 16 bit Fantasy & Adventure (2025)/mp3/04 - Silent Forest.mp3"
 var screen_shake: bool = true
 
+# --- Difficulty ---------------------------------------------------------------------------
+# Picked before a run (and in Settings). Scales enemies and loot:
+#   enemy_hp / enemy_dmg multiply monsters' health and damage, coins scales coin drops,
+#   potions is the chance a potion drop actually appears (Extreme: none at all).
+enum Difficulty { EASY, NORMAL, HARD, EXTREME }
+const DIFFICULTY := {
+	Difficulty.EASY: {"name": "Easy", "enemy_hp": 0.75, "enemy_dmg": 0.7, "coins": 1.3, "potions": 1.0},
+	Difficulty.NORMAL: {"name": "Normal", "enemy_hp": 1.0, "enemy_dmg": 1.0, "coins": 1.0, "potions": 1.0},
+	Difficulty.HARD: {"name": "Hard", "enemy_hp": 1.35, "enemy_dmg": 1.35, "coins": 0.85, "potions": 0.6},
+	Difficulty.EXTREME: {"name": "Extreme", "enemy_hp": 1.7, "enemy_dmg": 1.9, "coins": 0.7, "potions": 0.0},
+}
+var difficulty: Difficulty = Difficulty.NORMAL
+
+func diff(key: String) -> float:
+	return float(DIFFICULTY[difficulty][key])
+
 # --- Key bindings ---------------------------------------------------------------------
 # Every rebindable action has two slots (primary, secondary); either one triggers it. Only
 # keyboard and mouse events are managed here: gamepad bindings stay as project.godot sets
@@ -108,6 +124,7 @@ func save_settings() -> void:
 	config.set_value("audio", "track", selected_music_track)
 	config.set_value("gameplay", "aim_assist", aim_assist)
 	config.set_value("gameplay", "screen_shake", screen_shake)
+	config.set_value("gameplay", "difficulty", int(difficulty))
 	for action in bindings:
 		config.set_value("controls", action, bindings[action])
 	config.save(SETTINGS_FILE)
@@ -122,6 +139,7 @@ func load_settings() -> void:
 		selected_music_track = config.get_value("audio", "track", selected_music_track)
 		aim_assist = config.get_value("gameplay", "aim_assist", 0.75)
 		screen_shake = config.get_value("gameplay", "screen_shake", true)
+		difficulty = int(config.get_value("gameplay", "difficulty", Difficulty.NORMAL)) as Difficulty
 		for action in bindings:
 			var saved = config.get_value("controls", action, [])
 			if saved is Array and saved.size() == 2:

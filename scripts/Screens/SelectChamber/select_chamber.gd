@@ -61,7 +61,7 @@ func _load_level(id: int) -> void:
 		path = "res://scenes/levels/level_" + str(id) + ".tscn"
 
 	if ResourceLoader.exists(path):
-		SceneManager.load_scene(path)
+		DifficultyPopup.ask(func(): SceneManager.load_scene(path)) # each run picks its difficulty
 
 # Ways out besides entering a map: back to the character screen or to the title screen.
 func _add_nav_buttons() -> void:

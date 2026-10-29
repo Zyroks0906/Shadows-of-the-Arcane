@@ -68,8 +68,8 @@ func _do_burst() -> void:
 		_play_layers(snd_swing, randf_range(1.0, 1.3), -2.0)
 		await get_tree().create_timer(0.11).timeout
 	CombatFX.shockwave(global_position, Color(0.7, 0.9, 1.0), 48.0, 0.35, 4.0)
-	CombatFX.pvfx("resonant-break", global_position, 0.9)
-	CombatFX.pvfx("splash-crown", global_position, 0.8)
+	CombatFX.pvfx("resonant-break", global_position, 0.55)
+	CombatFX.pvfx("splash-crown", global_position, 0.55)
 	CombatFX.hit_stop(0.08)
 	CombatFX.shake(3.0, 0.25)
 	_aoe(global_position, 48.0, roundi(_melee_damage() * 1.2), ElementalSystem.Element.HYDRO, 160.0, 0.4, "burst")

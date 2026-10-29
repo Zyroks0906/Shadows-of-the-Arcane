@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://bc87k50dfvvl5"]
+[gd_scene format=3 uid="uid://obaxwd6xmjg3"]
 
 [ext_resource type="Script" uid="uid://sf3508vwqhv1" path="res://scripts/entities/player.gd" id="1_xhfnw"]
 
@@ -7,7 +7,7 @@ radius = 4.0
 height = 12.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_interaction"]
-radius = 8.0
+radius = 14.0
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=546131518]
 collision_layer = 2
