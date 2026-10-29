@@ -112,8 +112,19 @@ func burst(world_pos: Vector2, color: Color, amount: int = 16, speed: float = 90
 	p.gravity = Vector2(0, gravity)
 	p.damping_min = speed * 0.8
 	p.damping_max = speed * 1.6
-	p.scale_amount_min = size * 0.5
-	p.scale_amount_max = size
+	# Never flat squares: fast bursts throw streaks that align with their flight (sparks,
+	# shards, spray), slow ones soft round motes (dust, embers). Both shrink as they fade.
+	var streak := speed >= 60.0
+	p.texture = _streak_tex() if streak else _dot_tex()
+	p.particle_flag_align_y = streak
+	var k := 0.45 if streak else 0.32
+	p.scale_amount_min = size * 0.5 * k
+	p.scale_amount_max = size * k
+	var shrink := Curve.new()
+	shrink.add_point(Vector2(0.0, 1.0))
+	shrink.add_point(Vector2(1.0, 0.25))
+	p.scale_amount_curve = shrink
+	p.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	var ramp := Gradient.new()
 	ramp.set_color(0, color.lightened(0.5))
 	ramp.set_color(1, Color(color, 0.0))
@@ -121,6 +132,33 @@ func burst(world_pos: Vector2, color: Color, amount: int = 16, speed: float = 90
 	scene.add_child(p)
 	p.emitting = true
 	p.finished.connect(p.queue_free)
+
+var _dot: Texture2D
+var _streak: Texture2D
+
+# A soft round mote, 8 px: bright core fading to its rim.
+func _dot_tex() -> Texture2D:
+	if not _dot:
+		var img := Image.create(8, 8, false, Image.FORMAT_RGBA8)
+		for y in 8:
+			for x in 8:
+				var d := Vector2(x - 3.5, y - 3.5).length() / 4.0
+				img.set_pixel(x, y, Color(1, 1, 1, clampf(1.0 - d * d, 0.0, 1.0)))
+		_dot = ImageTexture.create_from_image(img)
+	return _dot
+
+# A spark streak, 3 x 10: brightest at the head (top), tapering into a tail.
+func _streak_tex() -> Texture2D:
+	if not _streak:
+		var img := Image.create(3, 10, false, Image.FORMAT_RGBA8)
+		for y in 10:
+			var a := 1.0 - y / 10.0
+			img.set_pixel(1, y, Color(1, 1, 1, a))
+			if y < 6:
+				img.set_pixel(0, y, Color(1, 1, 1, a * 0.35))
+				img.set_pixel(2, y, Color(1, 1, 1, a * 0.35))
+		_streak = ImageTexture.create_from_image(img)
+	return _streak
 
 # A small, directional spurt at the point of impact: a handful of 1-2 px drops thrown
 # away from the attacker, falling and fading in ~0.3 s. No lingering mess.
@@ -143,8 +181,16 @@ func blood(world_pos: Vector2, dir: Vector2, color: Color, amount: int = 9) -> v
 	p.gravity = Vector2(0, 260.0)
 	p.damping_min = 60.0
 	p.damping_max = 120.0
-	p.scale_amount_min = 1.0
-	p.scale_amount_max = 2.0
+	# Drops, not squares: little streaks along their flight that shrink as they fall.
+	p.texture = _streak_tex()
+	p.particle_flag_align_y = true
+	p.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	p.scale_amount_min = 0.35
+	p.scale_amount_max = 0.6
+	var shrink := Curve.new()
+	shrink.add_point(Vector2(0.0, 1.0))
+	shrink.add_point(Vector2(1.0, 0.3))
+	p.scale_amount_curve = shrink
 	var ramp := Gradient.new()
 	ramp.set_color(0, color.lightened(0.15))
 	ramp.set_color(1, Color(color.darkened(0.3), 0.0))
@@ -212,7 +258,11 @@ func spike_ring(kind: String, center: Vector2, radius: float, count: int = 8, he
 
 # The visible swing of a melee attack: a crescent along the real attack direction, so a
 # side-view sprite can still hit up, down or diagonally and read correctly.
-func slash(world_pos: Vector2, dir: Vector2, reach: float, arc_deg: float, color: Color = Color(1, 1, 1), width: float = 4.0) -> void:
+const PLAIN_SLASH: Shader = preload("res://shaders/plain_slash.gdshader")
+
+# `plain`: the painted crescent without its own colours: steel grey for a physical swing,
+# or one flat colour (`color`) for a tinted one such as the knight's gold.
+func slash(world_pos: Vector2, dir: Vector2, reach: float, arc_deg: float, color: Color = Color(1, 1, 1), width: float = 4.0, plain: bool = false) -> void:
 	var scene := get_tree().current_scene
 	if not scene:
 		return
@@ -220,12 +270,19 @@ func slash(world_pos: Vector2, dir: Vector2, reach: float, arc_deg: float, color
 	# to the swing's reach, tinted with the attack's colour; a faint drawn arc underneath
 	# keeps the exact hit area readable.
 	var d := dir.normalized()
-	var fx := pvfx("crescent-slash", world_pos, reach / 34.0, d.angle() + PI / 2.0, color.lightened(0.2), 1.3, 45)
+	# The crescent sits in front of the swinger, not on its body.
+	var fx := pvfx("crescent-slash", world_pos + d * reach * 0.3, reach / 34.0, d.angle() + PI / 2.0, Color.WHITE if plain else color.lightened(0.2), 1.3, 45)
+	if fx and plain:
+		var mat := ShaderMaterial.new()
+		mat.shader = PLAIN_SLASH
+		if color != Color(1, 1, 1):
+			mat.set_shader_parameter("tint", color) # a single-colour crescent (e.g. gold)
+		fx.material = mat
 	var s := _Slash.new()
 	s.dir = d
 	s.reach = reach
 	s.half = deg_to_rad(arc_deg * 0.5)
-	s.color = Color(color, 0.35) if fx else color
+	s.color = Color(Color(0.85, 0.86, 0.9) if plain else color, 0.35) if fx else color
 	s.width = width * (0.5 if fx else 1.0)
 	s.z_index = 44
 	s.global_position = world_pos
@@ -392,3 +449,97 @@ func _pvfx_frames(effect: String) -> Dictionary:
 	var out := {"frames": sf, "pivot": Vector2(piv[0], piv[1])}
 	_pvfx_cache[effect] = out
 	return out
+
+
+# A blow into the ground at `at` (where the fist / feet strike): the floor breaks there -
+# fissures in the stone's own colours, chipped slabs, a small pit - a puff of dust, the
+# slam sound and a shake. The break is drawn with the floor, under the characters.
+const SLAM_SFX := "res://assets/audio/sfx/impact/slam.wav"
+
+func ground_slam(at: Vector2, radius: float, tint: Color = Color(0.62, 0.52, 0.42)) -> void:
+	var scene := get_tree().current_scene
+	if not scene:
+		return
+	var decal := _SlamCracks.new()
+	decal.radius = radius
+	_floor_near_player(scene).add_child(decal)
+	decal.global_position = at
+	burst(at + Vector2(0, -1), tint.darkened(0.15), 10, 40.0, 0.5, 25.0, 1.8) # earthy dust motes
+	AudioManager.play_sfx(SLAM_SFX, 0.0, randf_range(0.92, 1.05))
+	shake(5.0, 0.3)
+
+# The floor layer of the level the hero is in (so decals draw under the characters).
+func _floor_near_player(scene: Node) -> Node:
+	var p: Node = get_tree().get_first_node_in_group("player")
+	while p:
+		for n in ["Floor", "Background"]:
+			var f := p.get_node_or_null(n)
+			if f is TileMapLayer:
+				return f
+		p = p.get_parent()
+	return PushPuzzle._floor_of(scene)
+
+class _SlamCracks extends Node2D:
+	# A broken floor slab seen from above: everything flattened to the floor's perspective.
+	const DARK := Color(0.03, 0.02, 0.04)
+	const LIT := Color(0.46, 0.42, 0.5)
+	const STONE := Color(0.17, 0.15, 0.19)
+	var radius := 40.0
+	var life := 5.0
+	var fissures: Array = [] # [points, width at the root]
+	var chips: Array = []    # PackedVector2Array quads
+
+	func _ready() -> void:
+		var n := randi_range(6, 8)
+		for i in n:
+			var a := TAU * i / n + randf_range(-0.3, 0.3)
+			var length := radius * randf_range(0.17, 0.3)
+			fissures.append([_crack(Vector2.ZERO, a, length, 5), 2.0])
+			# A branch off the middle of most fissures.
+			if randf() < 0.7:
+				var pts: PackedVector2Array = fissures[-1][0]
+				var from := pts[2]
+				fissures.append([_crack(from, a + randf_range(0.5, 0.9) * (1 if randf() < 0.5 else -1), length * 0.4, 3), 1.0])
+		for i in 4:
+			var c := Vector2.from_angle(randf() * TAU) * radius * randf_range(0.1, 0.25) * Vector2(1.0, 0.6)
+			var sz := randf_range(1.2, 2.2)
+			var q := PackedVector2Array()
+			var a0 := randf() * TAU
+			for k in 4:
+				q.append((c + Vector2.from_angle(a0 + TAU * k / 4.0 + randf_range(-0.3, 0.3)) * sz * Vector2(1.0, 0.7)).round())
+			chips.append(q)
+
+	func _crack(from: Vector2, a: float, length: float, steps: int) -> PackedVector2Array:
+		var pts := PackedVector2Array([from])
+		var p := from
+		for k in steps:
+			a += randf_range(-0.4, 0.4)
+			p += Vector2.from_angle(a) * (length / steps) * Vector2(1.0, 0.6)
+			pts.append(p.round())
+		return pts
+
+	func _process(delta: float) -> void:
+		life -= delta
+		if life <= 0.0:
+			queue_free()
+		queue_redraw()
+
+	func _draw() -> void:
+		var a := clampf(life / 1.5, 0.0, 1.0)
+		# The pit where the blow landed.
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 0.6))
+		draw_circle(Vector2.ZERO, radius * 0.13, Color(DARK, 0.8 * a))
+		draw_arc(Vector2.ZERO, radius * 0.13, PI * 0.15, PI * 0.85, 8, Color(LIT, 0.7 * a), 1.0)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		# Fissures: wide at the root, a hairline at the tip, a lit lip on the lower side.
+		for f in fissures:
+			var pts: PackedVector2Array = f[0]
+			for k in pts.size() - 1:
+				var w := maxf(1.0, roundf(f[1] * (1.0 - float(k) / pts.size())))
+				draw_line(pts[k] + Vector2(0, 1), pts[k + 1] + Vector2(0, 1), Color(LIT, 0.28 * a), 1.0)
+				draw_line(pts[k], pts[k + 1], Color(DARK, 0.85 * a), w)
+		# Chipped stone thrown loose round the pit.
+		for q in chips:
+			draw_colored_polygon(q, Color(STONE, 0.95 * a))
+			draw_polyline(q + PackedVector2Array([q[0]]), Color(DARK, 0.8 * a), 1.0)
+			draw_line(q[0], q[1], Color(LIT, 0.4 * a), 1.0)
