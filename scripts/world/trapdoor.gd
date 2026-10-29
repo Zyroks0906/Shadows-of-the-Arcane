@@ -5,6 +5,8 @@ class_name Trapdoor
 # can be pried open (F): the lid swings up and the player climbs down into the Undercroft
 # (scenes/levels/crypt.tscn, placed far away inside level_1). The dead rise there in two
 # waves; clearing them grants a rare-or-better perk and lights the ladder back up.
+# Once open, the pit is solid (you walk round it, not through it) and F takes you down
+# again whenever you like, e.g. to use the transmuter below.
 
 @export var guarded_by: String = "Golem"
 
@@ -13,6 +15,12 @@ var state: State = State.SEALED
 var crypt: Node2D # set by level1_extras
 var _lid: float = 0.0
 var _ladder: _LadderExit
+var _lid_node: Node2D
+var _glow: Node2D
+var _glow_light: PointLight2D
+var _t := 0.0
+var _on := 0.0
+var _pit_body: StaticBody2D
 
 func _ready() -> void:
 	# A floor hatch: walkable, but the player's interaction area can find it.
@@ -22,10 +30,21 @@ func _ready() -> void:
 	area.add_to_group("interactable")
 	var shape := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
-	rect.size = Vector2(16, 16)
+	rect.size = Vector2(26, 26) # reachable from beside the pit once it blocks
 	shape.shape = rect
 	area.add_child(shape)
 	add_child(area)
+	# The lid stands up in front of whoever is behind the hatch: drawn over the characters.
+	_lid_node = Node2D.new()
+	_lid_node.z_index = 1
+	_lid_node.draw.connect(_draw_lid)
+	add_child(_lid_node)
+	# The way-down glow (ExitGlow), lit once the Golem falls and the hatch can be used.
+	_glow = Node2D.new()
+	_glow.draw.connect(func(): ExitGlow.draw(_glow, _t, Color(1.0, 0.8, 0.42), _on, false, 34.0))
+	add_child(_glow)
+	_glow_light = ExitGlow.light(Color(1.0, 0.8, 0.42))
+	add_child(_glow_light)
 	GameManager.boss_defeated.connect(func(n: String):
 		if n == guarded_by and state == State.SEALED:
 			state = State.READY)
@@ -36,8 +55,9 @@ func interact(_body: Node2D = null) -> void:
 			_say("The hatch is held shut. The guardian of this room still stands.")
 		State.READY:
 			_open()
-		State.DONE:
-			_say("The Undercroft below is silent now.")
+		State.BELOW, State.DONE:
+			if crypt:
+				_travel((crypt.get_node("Entry") as Node2D).global_position + Vector2(0, -10))
 
 func _say(text: String) -> void:
 	var hud = get_tree().get_first_node_in_group("hud")
@@ -49,8 +69,9 @@ func _open() -> void:
 	AudioManager.play_bank_at("creak", global_position, 2.0, 0.7)
 	AudioManager.play_bank_at("chain", global_position, -2.0, 0.6)
 	var tw := create_tween()
-	tw.tween_method(func(v): _lid = v; queue_redraw(), 0.0, 1.0, 0.7).set_ease(Tween.EASE_OUT)
+	tw.tween_method(func(v): _lid = v; queue_redraw(); _lid_node.queue_redraw(), 0.0, 1.0, 0.7).set_ease(Tween.EASE_OUT)
 	await tw.finished
+	_block_pit()
 	await get_tree().create_timer(0.3).timeout
 	if not crypt:
 		state = State.DONE
@@ -75,8 +96,20 @@ func _on_crypt_cleared() -> void:
 	if _ladder:
 		_ladder.active = true
 
+func _block_pit() -> void:
+	if _pit_body:
+		return
+	_pit_body = StaticBody2D.new()
+	_pit_body.collision_layer = 1
+	var shape := CollisionShape2D.new()
+	var r := RectangleShape2D.new()
+	r.size = Vector2(14, 12)
+	shape.shape = r
+	_pit_body.add_child(shape)
+	add_child(_pit_body)
+
 func climb_back() -> void:
-	if state != State.BELOW:
+	if state != State.BELOW and state != State.DONE:
 		return
 	state = State.DONE
 	await _travel(global_position + Vector2(0, 14))
@@ -108,6 +141,12 @@ func _travel(to: Vector2) -> void:
 	await tw2.finished
 	layer.queue_free()
 
+func _process(delta: float) -> void:
+	_t += delta
+	_on = move_toward(_on, 0.0 if state == State.SEALED else 1.0, delta * 0.8)
+	_glow_light.energy = _on * (0.8 + 0.2 * sin(_t * 2.2))
+	_glow.queue_redraw()
+
 func _draw() -> void:
 	if _lid <= 0.0:
 		return
@@ -119,13 +158,17 @@ func _draw() -> void:
 	draw_line(Vector2(3, -4), Vector2(3, 5), Color(0.45, 0.3, 0.18), 1.0)
 	for y in [-2, 1, 4]:
 		draw_line(Vector2(-3, y), Vector2(3, y), Color(0.38, 0.25, 0.15), 1.0)
-	# ...and the lid swinging up on its top hinge: it foreshortens as it rises, then rests
-	# open above the hole.
+
+func _draw_lid() -> void:
+	if _lid <= 0.0:
+		return
+	# The lid swinging up on its top hinge: it foreshortens as it rises, then rests open
+	# above the hole.
 	var lid_h := maxf(12.0 * absf(cos(_lid * PI * 0.5)), 4.0)
 	var y0 := -6.0 - lid_h * _lid
-	draw_rect(Rect2(-7, y0, 14, lid_h), Color(0.2, 0.12, 0.08))
-	draw_rect(Rect2(-6, y0 + 1, 12, lid_h - 2), Color(0.5, 0.32, 0.18))
-	draw_line(Vector2(-6, y0 + lid_h * 0.5), Vector2(6, y0 + lid_h * 0.5), Color(0.62, 0.62, 0.68), 1.0)
+	_lid_node.draw_rect(Rect2(-7, y0, 14, lid_h), Color(0.2, 0.12, 0.08))
+	_lid_node.draw_rect(Rect2(-6, y0 + 1, 12, lid_h - 2), Color(0.5, 0.32, 0.18))
+	_lid_node.draw_line(Vector2(-6, y0 + lid_h * 0.5), Vector2(6, y0 + lid_h * 0.5), Color(0.62, 0.62, 0.68), 1.0)
 
 # The ladder back up in the crypt: dark until the room is clear, then it glows and F climbs.
 class _LadderExit extends Node2D:
@@ -133,7 +176,11 @@ class _LadderExit extends Node2D:
 	var active: bool = false
 	var _t: float = 0.0
 
+	var _light: PointLight2D
+
 	func _ready() -> void:
+		_light = ExitGlow.light(Color(1.0, 0.82, 0.45))
+		add_child(_light)
 		var area := Area2D.new()
 		area.collision_layer = 64
 		area.collision_mask = 0
@@ -153,12 +200,13 @@ class _LadderExit extends Node2D:
 			return
 		hatch.climb_back()
 
+	var _on := 0.0
+
 	func _process(delta: float) -> void:
 		_t += delta
+		_on = move_toward(_on, 1.0 if active else 0.0, delta * 0.8) # fades in when the dead fall
+		_light.energy = _on * (0.9 + 0.2 * sin(_t * 2.2))
 		queue_redraw()
 
 	func _draw() -> void:
-		if active:
-			var a := 0.35 + 0.25 * sin(_t * 4.0)
-			draw_circle(Vector2.ZERO, 11.0, Color(1.0, 0.85, 0.45, a * 0.4))
-			draw_arc(Vector2.ZERO, 11.0, 0, TAU, 24, Color(1.0, 0.85, 0.45, a), 1.0)
+		ExitGlow.draw(self, _t, Color(1.0, 0.8, 0.42), _on, true, 46.0)
