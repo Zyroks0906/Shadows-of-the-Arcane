@@ -30,6 +30,21 @@ static func on_map(layers: Array[TileMapLayer], at: Vector2) -> bool:
 			return true
 	return false
 
+# The closest point on the map to `at` (cell centres, searched outwards ring by ring).
+static func nearest_on_map(layers: Array[TileMapLayer], at: Vector2) -> Vector2:
+	for r in range(1, 16):
+		var best := Vector2.INF
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var p := at + Vector2(dx, dy) * 8.0
+				if on_map(layers, p) and (best == Vector2.INF or p.distance_to(at) < best.distance_to(at)):
+					best = p
+		if best != Vector2.INF:
+			return best
+	return at
+
 
 # A safety net attached to every enemy (bosses too), whatever its own movement code does:
 # every so often it checks the ground under the enemy's feet; off the map (a blink, a leap
@@ -59,8 +74,10 @@ class Guard extends Node:
 				return
 		if MapBounds.on_map(_ground, body.global_position):
 			_last = body.global_position
-		elif _last != Vector2.INF:
-			body.global_position = _last
+		else:
+			# Back to the last spot it stood on; one that was put outside from the start
+			# (a spawn behind a wall) goes to the nearest ground instead.
+			body.global_position = _last if _last != Vector2.INF else MapBounds.nearest_on_map(_ground, body.global_position)
 			if body is CharacterBody2D:
 				body.velocity = Vector2.ZERO
 			if "knockback" in body:

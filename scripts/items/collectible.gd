@@ -72,10 +72,12 @@ func _item_root() -> Node2D:
 
 # Thrown out of a chest: flies in an arc from `from` to `to`, bounces twice, and can only be
 # picked up a moment after it settles, so the player sees what dropped.
-func pop_out(from: Vector2, to: Vector2, delay: float = 0.0) -> void:
+# `ground`: a floor point the thrower stands on, when `from` is up in its art (the crucible's
+# basin hangs over the wall behind it): the landing must be reachable from there.
+func pop_out(from: Vector2, to: Vector2, delay: float = 0.0, ground: Vector2 = Vector2.INF) -> void:
 	var root := _item_root()
 	_thrown = true
-	to = _safe_landing(root, from, to)
+	to = _safe_landing(root, from if ground == Vector2.INF else ground, to)
 	set_deferred("monitoring", false)
 	root.global_position = from
 	root.visible = false
@@ -107,12 +109,13 @@ func _safe_landing(root: Node2D, from: Vector2, to: Vector2) -> Vector2:
 	var hit := space.intersect_ray(PhysicsRayQueryParameters2D.create(from, to, 1))
 	if hit:
 		to = from.lerp(hit["position"], 0.75)
-	return _free_spot(root, to)
+	return _free_spot(root, to, from)
 
 # A spot the player can stand on and reach: on the map's ground and not inside anything
 # solid (walls, crystals, props on physics layer 1). The spot itself, else the nearest of
-# a few rings around it.
-static func _free_spot(root: Node2D, at: Vector2) -> Vector2:
+# a few rings around it. With `seen_from`, only spots with nothing solid in between (never
+# the room on the other side of a wall).
+static func _free_spot(root: Node2D, at: Vector2, seen_from: Vector2 = Vector2.INF) -> Vector2:
 	var space := root.get_world_2d().direct_space_state
 	var ground := MapBounds.ground_layers(root)
 	var probe := PhysicsPointQueryParameters2D.new()
@@ -128,6 +131,8 @@ static func _free_spot(root: Node2D, at: Vector2) -> Vector2:
 				if not space.intersect_point(probe, 1).is_empty():
 					clear = false
 					break
+			if clear and seen_from != Vector2.INF:
+				clear = space.intersect_ray(PhysicsRayQueryParameters2D.create(seen_from, p, 1)).is_empty()
 			if clear:
 				return p
 	return at

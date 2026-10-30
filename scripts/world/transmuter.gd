@@ -154,7 +154,7 @@ func _spit(path: String) -> void:
 	var angle := randf_range(0.25, PI - 0.25)
 	var to := global_position + Vector2(cos(angle) * randf_range(14.0, 22.0), 8.0 + sin(angle) * 8.0)
 	if c and c.has_method("pop_out"):
-		c.pop_out(from, to, 0.0)
+		c.pop_out(from, to, 0.0, global_position + Vector2(0, 6)) # lands where its foot can reach
 	else:
 		item.global_position = to
 
