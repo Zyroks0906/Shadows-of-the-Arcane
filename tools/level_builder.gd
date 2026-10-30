@@ -176,7 +176,7 @@ const LEVELS := [
 	},
 ]
 
-const FLOORISH_EXCLUDE := " #Z" # Z: a cracked wall (drawn as wall, a floor under it)
+const FLOORISH_EXCLUDE := " #"
 const SOLID_CHARS := "~p" # pots ("o") block on their own as BreakablePots
 const WIND := {">": Vector2.RIGHT, "<": Vector2.LEFT, "A": Vector2.UP, "V": Vector2.DOWN}
 
@@ -484,19 +484,6 @@ func _build_level(def: Dictionary) -> void:
 			if not floorish(x, y):
 				_put_tile(background, x, y, SRC_THEME, Vector2i(8, 7))
 				var wt = _wall_tile(x, y)
-				if c == "Z":
-					# A cracked wall: wall over floor, its own breakable body, out of the wall
-					# collision (see _blocks). Breaking it erases the wall tile.
-					var zt := _floor_tile(theme, x, y)
-					_put_tile(floor_layer, x, y, zt[0], zt[1])
-					var cw := StaticBody2D.new()
-					cw.name = "CrackedWall"
-					cw.set_script(load("res://scripts/world/cracked_wall.gd"))
-					cw.position = cell_center(x, y)
-					cw.cell = Vector2i(x, y)
-					cw.brick = _wall_color(def["wall_tex"])
-					groups["Props"].add_child(cw, true)
-					continue # the block draws itself; no wall tile here
 				if wt != null:
 					_put_tile(walls, x, y, SRC_THEME, wt)
 					# Wall faces get torches and theme ornaments at a steady rhythm.
@@ -509,6 +496,18 @@ func _build_level(def: Dictionary) -> void:
 				continue
 			var ft := _floor_tile(theme, x, y)
 			_put_tile(floor_layer, x, y, ft[0], ft[1])
+			if c == "Z":
+				# A bricked-up doorway: floor like the passage it closes (so the walls on both
+				# sides run on unbroken), and a breakable block of bricks standing in it, which
+				# blocks with its own body until it falls (see _blocks).
+				var cw := StaticBody2D.new()
+				cw.name = "CrackedWall"
+				cw.set_script(load("res://scripts/world/cracked_wall.gd"))
+				cw.position = cell_center(x, y)
+				cw.cell = Vector2i(x, y)
+				cw.brick = _wall_color(def["wall_tex"])
+				groups["Props"].add_child(cw, true)
+				continue
 			_decorate_floor(theme, x, y, decor)
 
 			var pos := cell_center(x, y)

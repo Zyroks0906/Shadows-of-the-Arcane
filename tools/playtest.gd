@@ -1535,6 +1535,7 @@ func _secrets_session() -> void:
 	probe.collision_mask = 1
 	var blocked_before := not space.intersect_point(probe, 1).is_empty()
 	var zcell := cw.cell
+	var cw_pos := cw.global_position
 	player.global_position = cw.global_position + Vector2(0, 0) + (Vector2(18, 0) if walls.get_cell_source_id(cw.cell + Vector2i(1, 0)) == -1 else Vector2(-18, 0))
 	await _wait(3.0)
 	await _shot("secret_wall_before")
@@ -1545,6 +1546,12 @@ func _secrets_session() -> void:
 	await _shot("secret_wall_after")
 	var blocked_after := not space.intersect_point(probe, 1).is_empty()
 	_bot_say("cracked wall: blocked before=%s, wall tile left=%s, blocked after=%s" % [blocked_before, walls.get_cell_source_id(zcell) != -1, blocked_after])
+	# Nowhere to slip out: the cells above and below the opened doorway are solid wall.
+	var sides := []
+	for d in [Vector2(0, -16), Vector2(0, 16)]:
+		probe.position = cw_pos + d
+		sides.append(not space.intersect_point(probe, 1).is_empty())
+	_bot_say("  above/below the opened doorway solid: %s" % [sides])
 	var stones := level.find_children("*", "StaticBody2D", true, false).filter(func(n): return n is LoreStone)
 	var st: LoreStone = stones[0]
 	player.global_position = st.global_position + Vector2(0, 16)
