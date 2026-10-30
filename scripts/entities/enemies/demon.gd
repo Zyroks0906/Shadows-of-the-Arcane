@@ -57,7 +57,8 @@ func _pattern_blink_strike() -> void:
 	var player_back_dir = -player.last_direction.normalized()
 	if player_back_dir == Vector2.ZERO:
 		player_back_dir = Vector2.LEFT
-	var behind_pos = player.global_position + (player_back_dir * 45)
+	# Behind the player, but never inside a wall or past the edge of the map.
+	var behind_pos: Vector2 = BossMoves.safe_spot(get_world_2d(), player.global_position, player.global_position + player_back_dir * 45.0, [get_rid(), player.get_rid()], 8.0)
 	BossMoves.warn_circle(get_parent(), behind_pos, 14.0, 0.45) # where it will appear
 	await t.create_timer(0.45).timeout
 	if not is_alive or not is_instance_valid(player):
