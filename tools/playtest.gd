@@ -68,6 +68,7 @@ func _ready() -> void:
 			"stride": await _stride_session()
 			"pickups": await _pickups_session()
 			"relics": await _relics_session()
+			"props_reach": await _props_reach_session()
 			"decor_check": await _decor_check_session()
 			"bounds": await _bounds_session()
 			"tutorial": await _tutorial_session()
@@ -1509,6 +1510,50 @@ func _vault_exit_session() -> void:
 	await _wait(1.4)
 	_bot_say("after climbing: %s (near the hall stairs %s: %s)" % [player.global_position, down.global_position, player.global_position.distance_to(down.global_position) < 60.0])
 	await _unload()
+
+# Next to the back-wall props: the shrine's ambush spawns and the crucible's potions must
+# land on ground the player can reach (not behind the wall or in the void).
+func _props_reach_session() -> void:
+	for lv in ["level_1", "level_2", "level_3"]:
+		await _load_level("res://scenes/levels/%s.tscn" % lv, "knight")
+		player.god_mode = true
+		await _wait(0.5)
+		var space: PhysicsDirectSpaceState2D = level.get_world_2d().direct_space_state
+		var reach := func(from: Vector2, p: Vector2, ground: Array[TileMapLayer]) -> bool:
+			var q := PhysicsRayQueryParameters2D.create(from, p, 1, [player.get_rid()])
+			return MapBounds.on_map(ground, p) and space.intersect_ray(q).is_empty()
+		for n in level.find_children("*", "StaticBody2D", true, false):
+			var ground := MapBounds.ground_layers(n)
+			if n is FortuneShrine:
+				player.global_position = n.global_position + Vector2(0, 16)
+				var before: Array = get_tree().get_nodes_in_group("enemies")
+				n._ambush(player)
+				await _wait(0.1)
+				# The ambush: the foes that weren't there a moment ago and stand around the player.
+				var foes: Array = get_tree().get_nodes_in_group("enemies").filter(func(e): return not e in before and e.global_position.distance_to(player.global_position) < 70.0)
+				var bad := 0
+				for e in foes:
+					if not reach.call(player.global_position, e.global_position, ground):
+						bad += 1
+				_bot_say("%s shrine %s: ambush %d foes, %d off the map or behind a wall" % [lv, n.global_position, foes.size(), bad])
+				for e in foes:
+					e.queue_free()
+			elif n is Transmuter:
+				n.state = Transmuter.State.ACTIVE
+				n._set_active(true)
+				GameManager.total_coins = 100
+				GameManager.mana_potions = 20
+				var kids := n.get_parent().get_child_count()
+				for i in 20:
+					n.transmute(true)
+				await _wait(1.0)
+				var bad := 0
+				var foot: Vector2 = n.global_position + Vector2(0, 6)
+				for c in n.get_parent().get_children().slice(kids):
+					if c is Node2D and not reach.call(foot, c.global_position, ground):
+						bad += 1
+				_bot_say("%s crucible %s: 20 potions, %d behind a wall or off the map" % [lv, n.global_position, bad])
+		await _unload()
 
 # Relics: each hook measured, the HUD row and a synergy banner.
 func _relics_session() -> void:
