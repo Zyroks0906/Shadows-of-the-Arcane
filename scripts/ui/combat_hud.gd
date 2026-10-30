@@ -33,6 +33,7 @@ func _ready() -> void:
 	var boss_bar := BossBar.new()
 	boss_bar.player = player
 	add_child(boss_bar)
+	add_child(RelicBar.new())
 	_help = _build_help()
 	add_child(_help)
 

@@ -22,6 +22,7 @@ const WARES := [
 	{"id": "health", "name": "Health Potion", "info": "Into your bag.", "base": 5, "per_level": 2, "stock": 3},
 	{"id": "mana", "name": "Mana Potion", "info": "Into your bag.", "base": 4, "per_level": 2, "stock": 2},
 	{"id": "perk", "name": "Sealed Scroll", "info": "A random perk.", "base": 14, "per_level": 6, "stock": 1},
+	{"id": "relic", "name": "Curio", "info": "A random relic.", "base": 30, "per_level": 10, "stock": 1},
 ]
 
 var stock: Dictionary = {}
@@ -109,6 +110,9 @@ func buy(id: String) -> bool:
 		"mana":
 			GameManager.add_mana_potion(1)
 			AudioManager.play_bank("bottle", -6.0, 1.1)
+		"relic":
+			MerchantMenu.close_open()
+			Relics.grant(Relics.roll())
 		"perk":
 			# The scroll is opened outside the shop, so the perk reveal has the screen.
 			MerchantMenu.close_open()
@@ -203,7 +207,7 @@ class MerchantMenu extends CanvasLayer:
 		for i in Merchant.WARES.size():
 			_rows.append(_row(panel, TOP + ROW_H * i, i))
 		_coins = _text(panel, "", 22, GOLD, Vector2(0, h - 70), W, HORIZONTAL_ALIGNMENT_CENTER)
-		_text(panel, "[1] [2] [3] buy    Esc: leave", 22, DIM, Vector2(0, h - 38), W, HORIZONTAL_ALIGNMENT_CENTER)
+		_text(panel, "[1]-[4] buy    Esc: leave", 22, DIM, Vector2(0, h - 38), W, HORIZONTAL_ALIGNMENT_CENTER)
 		var leave := _button(panel, "LEAVE", Vector2(W - 112, 14), Vector2(92, 36))
 		leave.pressed.connect(_close)
 		_refresh()
@@ -230,6 +234,16 @@ class MerchantMenu extends CanvasLayer:
 
 	# Potions show their own sprite; the scroll gets a small drawn one.
 	func _icon(id: String) -> Texture2D:
+		if id == "relic":
+			# A cut violet gem: the curio is a relic, sight unseen.
+			var gem := Image.create(11, 11, false, Image.FORMAT_RGBA8)
+			var rows := ["...ddddd...", "..dlllmmd..", ".dllhlmmmd.", "dddddddddd.", ".dlmmmmmd..", "..dlmmmd...", "...dlmd....", "....dd.....", "...........", "...........", "..........."]
+			var cols := {"d": Color8(70, 40, 110), "l": Color8(190, 150, 250), "m": Color8(130, 90, 200), "h": Color8(255, 255, 255)}
+			for y in rows.size():
+				for x in rows[y].length():
+					if rows[y][x] != ".":
+						gem.set_pixel(x, y + 2, cols[rows[y][x]])
+			return ImageTexture.create_from_image(gem)
 		if id == "perk":
 			var img := Image.create(12, 12, false, Image.FORMAT_RGBA8)
 			var paper := Color8(226, 210, 168)
@@ -314,6 +328,7 @@ class MerchantMenu extends CanvasLayer:
 				KEY_1, KEY_KP_1: _buy(Merchant.WARES[0]["id"])
 				KEY_2, KEY_KP_2: _buy(Merchant.WARES[1]["id"])
 				KEY_3, KEY_KP_3: _buy(Merchant.WARES[2]["id"])
+				KEY_4, KEY_KP_4: _buy(Merchant.WARES[3]["id"])
 				KEY_ESCAPE: _close()
 			get_viewport().set_input_as_handled()
 
