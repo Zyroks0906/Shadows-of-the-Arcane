@@ -59,11 +59,19 @@ func _spit() -> void:
 	is_attacking = true
 	can_attack = false
 	velocity = Vector2.ZERO
+	if is_instance_valid(player):
+		animated_sprite.flip_h = player.global_position.x < global_position.x # spits facing the player
 	_telegraph(attack_delay, false)
 	_play_attack_anim("attack", attack_delay)
 	await get_tree().create_timer(attack_delay).timeout
 	if is_alive and not is_frozen and is_instance_valid(player):
-		var target := BossMoves.safe_spot(get_world_2d(), global_position, player.global_position, [get_rid(), player.get_rid()])
+		# Right at the player's feet. (safe_spot also backed off from the player's own body,
+		# so the pool fell short, beside them.) Only a wall in between shortens the throw.
+		var target := player.global_position
+		var q := PhysicsRayQueryParameters2D.create(global_position, target, 1, [get_rid(), player.get_rid()])
+		var hit := get_world_2d().direct_space_state.intersect_ray(q)
+		if hit:
+			target = global_position.lerp(hit["position"], 0.85)
 		AcidPool.lob(get_parent(), global_position + Vector2(0, -8), target, attack_damage, POOL_SECONDS, self)
 		AudioManager.play_bank_at("slime", global_position, -8.0, 1.4)
 	await get_tree().create_timer(0.3).timeout
