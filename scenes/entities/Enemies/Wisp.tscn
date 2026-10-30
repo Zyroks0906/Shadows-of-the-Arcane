@@ -191,17 +191,17 @@ animations = [{
 radius = 5.0
 height = 10.0
 
-[node name="Wisp" type="CharacterBody2D" unique_id=575157650]
+[node name="Wisp" type="CharacterBody2D" unique_id=319443086]
 collision_layer = 4
 collision_mask = 5
 script = ExtResource("1_bpkuy")
 random_element = true
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=201717836]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=742148753]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_72jo3")
 animation = &"idle"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=568244463]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=650372573]
 position = Vector2(0, 5)
 shape = SubResource("CapsuleShape2D_afljb")
