@@ -283,16 +283,16 @@ animations = [{
 radius = 5.0
 height = 12.0
 
-[node name="Orc" type="CharacterBody2D" unique_id=2049912547]
+[node name="Orc" type="CharacterBody2D" unique_id=1560176751]
 collision_layer = 4
 collision_mask = 5
 script = ExtResource("1_q2cn0")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2137363313]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=979557746]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_5esl2")
 animation = &"idle"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2132533437]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=665798363]
 position = Vector2(0, 3)
 shape = SubResource("CapsuleShape2D_m1eh1")
