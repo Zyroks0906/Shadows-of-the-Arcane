@@ -2006,11 +2006,12 @@ func _stride_session() -> void:
 		var spr := player.animated_sprite
 		var ss := player.get_node("StrideSync") as StrideSync
 		var anim := String(spr.animation)
-		var h := ss._height(anim) * absf(spr.global_scale.y)
 		var fr := spr.sprite_frames.get_frame_count(anim)
 		var fps := spr.sprite_frames.get_animation_speed(anim)
-		var cycle := float(fr) / (fps * spr.speed_scale)
-		_bot_say("%-11s anim %s h=%.1fpx speed=%.0f scale=%.2f -> %.2f cycles/s, %.1f px per cycle (was %.1f)" % [cls, anim, h, player.velocity.length(), spr.speed_scale, 1.0 / cycle, player.velocity.length() * cycle, player.velocity.length() * fr / fps])
+		var art := ss.cycle_px(anim) * absf(spr.global_scale.x)
+		var t_cycle := float(fr) / (fps * spr.speed_scale)
+		var travelled := player.velocity.length() * t_cycle
+		_bot_say("%-11s %s: feet cover %.1f px a cycle, body travels %.1f px (%.0f%% slide), played at %.0f fps (was %.0f px, %.0f fps)" % [cls, anim, art, travelled, maxf(travelled / maxf(art, 0.1) - 1.0, 0.0) * 100.0, fps * spr.speed_scale, player.velocity.length() * fr / fps, fps])
 		if cls == "knight":
 			for i in 4:
 				await _wait(0.12)

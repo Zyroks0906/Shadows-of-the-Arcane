@@ -29,7 +29,7 @@ func spawn_player() -> void:
 
 		var animated_sprite = player.find_child("AnimatedSprite2D")
 		if animated_sprite and FileAccess.file_exists(sprite_frames_path):
-			animated_sprite.sprite_frames = load(sprite_frames_path)
+			animated_sprite.sprite_frames = RunCycles.with_run(load(sprite_frames_path), c_name) # + its RUN cycle
 
 
 		add_child(player)
