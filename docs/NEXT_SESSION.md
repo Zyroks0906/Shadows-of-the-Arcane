@@ -3,6 +3,16 @@
 (Lo hecho el 28-10, sesión 2, está en HANDOFF §1c y en el historial de git.)
 
 ## Feedback del usuario tras jugar (28-10, tarde). Marca [x] lo que se termine.
+## HECHO (30-10, capturas del usuario en el nivel 3)
+- [x] Pociones del transmutador al otro lado del muro: `pop_out(..., ground)` sale del pie del crisol y
+      `_free_spot` solo acepta sitios con línea libre desde ahí.
+- [x] Enemigo fuera del mapa: era la emboscada de la tragaperras (3 enemigos en círculo de 46 px, uno tras el
+      muro). Ahora usa `BossMoves.safe_spot` + `MapBounds.nearest_on_map`, y el guardia lleva al suelo más
+      cercano a quien nace fuera (antes solo devolvía a "la última posición", que no tenía).
+      `playtest props_reach`: 0 enemigos y 0 pociones fuera en los 3 niveles.
+- [x] Sombra de la tragaperras más pequeña (0.95).
+- [x] Pantalla de victoria con las mismas estadísticas que la de muerte (`Progression.summary_rows`).
+
 ### Bugs
 - [x] Reliquias (fase 2): `Relics` + `RelicBar`; ganchos en Enemy.take_elemental_hit/die y Player.receive_damage/_try_dodge. `playtest relics` mide cada una.
 - [x] Objetos en muros: `collectible.gd` coloca cualquier objeto en suelo libre al aparecer y al caer (`_free_spot`). `playtest pickups` lanza 60 monedas contra muros por nivel: 0 fuera.

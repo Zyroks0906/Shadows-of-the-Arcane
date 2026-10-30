@@ -132,7 +132,7 @@ func _ready() -> void:
 	_light.texture_scale = 0.8
 	_light.position = Vector2(-2, -20)
 	add_child(_light)
-	GroundShadow.attach(self, 0.0, 1.4)
+	GroundShadow.attach(self, 0.0, 0.95) # about the plinth, not a pool around it
 
 func interact(_body: Node2D = null) -> void:
 	FortuneMenu.open(self)
@@ -225,7 +225,12 @@ func _ambush(pl: Player) -> void:
 	CombatFX.shake(4.0, 0.4)
 	AudioManager.play_bank("roar", -4.0, 0.9)
 	for i in 3:
-		var at := pl.global_position + Vector2.from_angle(TAU * i / 3.0 + 0.4) * 46.0
+		# Around the player, but short of any wall: next to a shrine against the back wall a
+		# plain circle put one of them behind it, out of the map.
+		var at := BossMoves.safe_spot(pl.get_world_2d(), pl.global_position, pl.global_position + Vector2.from_angle(TAU * i / 3.0 + 0.4) * 46.0, [pl.get_rid()])
+		var ground := MapBounds.ground_layers(self)
+		if not ground.is_empty() and not MapBounds.on_map(ground, at):
+			at = MapBounds.nearest_on_map(ground, at)
 		CombatFX.pvfx("rift-portal", at, 0.35)
 		var e: Node2D = kinds.pick_random().instantiate()
 		if e is Enemy:
