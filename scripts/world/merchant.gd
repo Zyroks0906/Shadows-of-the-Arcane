@@ -1,3 +1,4 @@
+@tool
 extends StaticBody2D
 class_name Merchant
 
@@ -7,6 +8,8 @@ class_name Merchant
 #
 # Art: assets/sprites/props/merchant.png (tools/gen_props_art.py), 30 x 22, origin at its
 # bottom centre. Drawn here on top: the lantern's flicker, the eyes glinting under the hood.
+# @tool so the editor shows him too: drag the node to move him (level_1: the "Merchant" node
+# in level_1.tscn; levels 2 and 3: Props/Merchant, kept by the level builder on rebuilds).
 
 const ART := "res://assets/sprites/props/merchant.png"
 const SIZE := Vector2(30, 22)
@@ -72,6 +75,8 @@ func _ready() -> void:
 	spr.offset = Vector2(-SIZE.x / 2.0, -SIZE.y)
 	spr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(spr)
+	if Engine.is_editor_hint():
+		return # in the editor: just the picture, nothing that needs the game running
 	_light = PointLight2D.new()
 	_light.texture = LevelAmbience.light_texture()
 	_light.color = LANTERN_COL
@@ -120,6 +125,8 @@ func buy(id: String) -> bool:
 	return true
 
 func _process(delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
 	_t += delta
 	_blink -= delta
 	if _blink < -0.12:

@@ -59,6 +59,7 @@
 [ext_resource type="PackedScene" uid="uid://bsjun8k8ubxmq" path="res://scenes/entities/Enemies/Rat.tscn" id="100_rat"]
 [ext_resource type="PackedScene" uid="uid://bx7umq3w1gbsn" path="res://scenes/entities/Enemies/Bat.tscn" id="101_bat"]
 [ext_resource type="Script" path="res://scripts/levels/level1_extras.gd" id="900_extras"]
+[ext_resource type="Script" uid="uid://caunrs3kgd421" path="res://scripts/world/merchant.gd" id="991_merchant"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r50bh"]
 texture = ExtResource("2_s6mhf")
@@ -4250,3 +4251,7 @@ position = Vector2(842, 286)
 
 [node name="Level1Extras" type="Node2D" parent="."]
 script = ExtResource("900_extras")
+
+[node name="Merchant" type="StaticBody2D" parent="."]
+position = Vector2(770, 340)
+script = ExtResource("991_merchant")

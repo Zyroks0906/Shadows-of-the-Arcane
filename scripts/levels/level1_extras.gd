@@ -66,11 +66,13 @@ func _setup() -> void:
 	if not TutorialStone.finished():
 		TutorialStone.TutorialPath.build(level, TUTORIAL_SPOTS)
 	_chest(level, Vector2(566, 100), {"coin_cost": 20})
-	# The peddler waits in the quiet west room, off the way to the Golem.
-	var peddler := Merchant.new()
-	peddler.name = "Merchant"
-	level.add_child(peddler)
-	peddler.global_position = MERCHANT_AT
+	# The peddler waits in the quiet west room, off the way to the Golem. He is a node of
+	# level_1.tscn (move him there in the editor); this only adds him if the node is missing.
+	if not level.has_node("Merchant"):
+		var peddler := Merchant.new()
+		peddler.name = "Merchant"
+		level.add_child(peddler)
+		peddler.global_position = MERCHANT_AT
 	var hatch := Node2D.new()
 	hatch.set_script(load("res://scripts/world/trapdoor.gd"))
 	level.add_child(hatch)
