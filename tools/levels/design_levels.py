@@ -97,8 +97,8 @@ def caverns():
     for x, y in [(23, 43), (35, 43), (29, 47)]:
         p.put(x, y, 'E')
     p.put(34, 39, 'k')
-    p.put(26, 45, 'T')                        # transmuter: rises once the arena is cleared
-    p.put(31, 38, 'J')                        # fortune shrine, found by those who fight for the key
+    p.put(25, 38, 'T')                        # transmuter: rises once the arena is cleared (back wall, left of the gate)
+    p.put(32, 38, 'J')                        # fortune shrine, found by those who fight for the key (back wall)
     # 4. Flooded Gallery: a deep river split by one shallow ford, wisps over the water.
     p.rect(20, 2, 18, 11)
     p.rect(20, 6, 18, 2, '~')
@@ -128,6 +128,7 @@ def caverns():
     p.rect(44, 22, 9, 8)
     p.put(48, 23, 'h')                        # one potion before the boss, not a stockpile
     p.put(51, 28, 'm')
+    p.put(45, 22, 'v')                        # the peddler, against the back wall: a last chance to spend before the boss
     p.door(48, 30, 'G')
     p.rect(48, 31, 1, 4)
     p.door(48, 33, 'd')
@@ -213,6 +214,7 @@ def skyhold():
     p.rect(44, 23, 9, 8)
     p.put(48, 24, 'h')
     p.put(51, 29, 'm')
+    p.put(45, 23, 'v')                        # the peddler, against the back wall: a last chance to spend before the boss
     p.door(48, 22, 'G')
     p.rect(48, 15, 1, 7)
     p.door(48, 19, 'd')
@@ -246,7 +248,7 @@ def skyhold():
     for x, y in [(48, 35), (60, 35), (60, 43)]:
         p.put(x, y, 'E')
     p.put(60, 40, 'k')
-    p.put(48, 43, 'T')                        # transmuter: rises once the arena is cleared
+    p.put(57, 34, 'T')                        # transmuter: rises once the arena is cleared
     p.put(52, 34, 'J')                        # fortune shrine in the barracks
     # 8. Sun Sanctum (optional, east of the vestibule): a shaft of sunlight falls through
     #    the broken roof. Turn the mirrors (F) to carry the beam onto the sun sigil; the
@@ -279,9 +281,9 @@ def vault():
     p.put(14, 18, 'L')
     for x, y in [(3, 5), (25, 5), (3, 15), (25, 15), (11, 2), (17, 2)]:
         p.put(x, y, 'i')
-    for x, y in [(6, 5), (22, 5), (6, 15), (22, 15)]:
+    for x, y in [(3, 7), (25, 7), (6, 15), (22, 15)]:
         p.put(x, y, 'o')
-    p.put(3, 10, 'J')                         # fortune shrine: the vault's other treasure
+    p.put(5, 4, 'J')                          # fortune shrine: the vault's other treasure (back wall)
     p.save('vault.txt')
 
 
@@ -294,7 +296,7 @@ def crypt():
     p.put(12, 13, 'P')
     p.put(12, 14, 'L')
     p.put(12, 7, 'R')
-    p.put(14, 9, 'T')                         # transmuter: rises once the dead are put down
+    p.put(16, 2, 'T')                         # transmuter: rises once the dead are put down (back wall)
     for x, y in [(3, 3), (21, 3), (3, 11), (21, 11)]:
         p.put(x, y, 'i')
     for x, y in [(6, 3), (18, 3), (6, 11), (18, 11)]:
