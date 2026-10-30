@@ -9,6 +9,11 @@
       Pools: cripta + escudero; nivel 2 + seta y goblin; nivel 3 + escudero, mago y goblin; nivel 1
       (escena a mano) + escudero y seta en sus 8 puntos de aparición.
       Se probó antes el pack 0x72 (16 px) y se descartó: al lado del héroe se veía pobre.
+- [x] Revisión de animaciones (`playtest anims`: reposo a ambos lados, andar, ataque, golpe y muerte
+      de los 5): pies alineados en todas; el cuerpo ya no salta al girarse (`SheetEnemy._anchor`).
+      Mago: su animación de fuego lanza ahora una bola de fuego real desde la mano; invoca con otra
+      pose (bastón y chispas violetas). Seta: escupe su propio proyectil rojo mirando al jugador y el
+      charco cae centrado en sus pies, más grande (36x16) y con borde irregular.
 
 ## HECHO (30-10, capturas del usuario en el nivel 3)
 - [x] Pociones del transmutador al otro lado del muro: `pop_out(..., ground)` sale del pie del crisol y

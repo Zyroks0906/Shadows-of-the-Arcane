@@ -71,6 +71,7 @@ func _ready() -> void:
 			"props_reach": await _props_reach_session()
 			"phase3": await _phase3_session()
 			"elites2": await _elites2_session()
+			"anims": await _anims_session()
 			"decor_check": await _decor_check_session()
 			"bounds": await _bounds_session()
 			"tutorial": await _tutorial_session()
@@ -1513,6 +1514,60 @@ func _vault_exit_session() -> void:
 	_bot_say("after climbing: %s (near the hall stairs %s: %s)" % [player.global_position, down.global_position, player.global_position.distance_to(down.global_position) < 60.0])
 	await _unload()
 
+# Every animation of every new creature, captured close up and named in the log.
+func _anims_session() -> void:
+	await _load_level("res://scenes/levels/level_2.tscn", "knight")
+	player.god_mode = true
+	for e in get_tree().get_nodes_in_group("enemies"):
+		e.queue_free()
+	await _wait(4.0)
+	var base := player.global_position
+	for kind in ["Shieldbearer", "Charger", "Summoner", "Spitter", "Eyeling"]:
+		var e := _phase3_spawn(kind, base + Vector2(20, 0))
+		e.set_physics_process(false)
+		e.player = player
+		await _wait(0.3)
+		var at := e.global_position + Vector2(0, -7)
+		var log := []
+		var snap := func(tag: String) -> void:
+			log.append("%s=%s:%d%s" % [tag, e.animated_sprite.animation, e.animated_sprite.frame, "L" if e.animated_sprite.flip_h else "R"])
+			await _shot("anim_%s_%s" % [kind, tag], at)
+		e.animated_sprite.flip_h = false
+		await snap.call("idleR")
+		e.animated_sprite.flip_h = true
+		await _wait(0.05)
+		await snap.call("idleL")
+		e.animated_sprite.flip_h = false
+		e._play_animation("walk")
+		await _wait(0.25)
+		await snap.call("walk")
+		e._play_animation("idle")
+		await _wait(0.1)
+		match kind:
+			"Spitter": e._spit()
+			"Summoner": e._cast_fire()
+			_: e._melee_attack(e.attack_delay, 1, 0.0, "attack")
+		await _wait(0.2)
+		await snap.call("windup")
+		await _wait(maxf(e.attack_delay, 0.5) - 0.1)
+		await snap.call("strike")
+		await _wait(1.0)
+		e.is_attacking = false
+		e._play_hurt_anim()
+		await _wait(0.12)
+		await snap.call("hurt")
+		await _wait(0.6)
+		e.die()
+		await _wait(0.2)
+		await snap.call("death1")
+		await _wait(0.35)
+		await snap.call("death2")
+		_bot_say("%s: %s" % [kind, " ".join(log)])
+		for x in get_tree().get_nodes_in_group("enemies"):
+			x.queue_free()
+		await _wait(0.6)
+	await _unload()
+
 # The two new elite kinds, measured.
 func _elites2_session() -> void:
 	await _load_level("res://scenes/levels/level_2.tscn", "knight")
@@ -1611,11 +1666,29 @@ func _phase3_session() -> void:
 	await _wait(0.5)
 	var left := get_tree().get_nodes_in_group("enemies").filter(func(e): return e is Eyeling and e.is_alive).size()
 	_bot_say("shaman: raised %d flying eyes; after it dies %d still stand" % [raised, left])
+	# Evil wizard: a fireball from its hand, aimed at the player.
+	var wz := _phase3_spawn("Summoner", base + Vector2(70, 0))
+	wz.set_physics_process(false)
+	wz.player = player
+	player.god_mode = false
+	player.current_health = 999
+	player._invulnerable_until_ms = 0
+	await _wait(0.2)
+	wz._cast_fire()
+	await _wait(0.75)
+	await _shot("phase3_fireball")
+	await _wait(0.8)
+	_bot_say("wizard fireball from 70 px: player lost %d" % (999 - player.current_health))
+	player.god_mode = true
+	wz.queue_free()
 	# Chort: spits, the pool burns the player standing in it.
 	var ch := _phase3_spawn("Spitter", base + Vector2(70, 0))
 	player.god_mode = false
 	player.current_health = 999
-	await _wait(1.2)
+	for k in 4:
+		await _wait(0.18)
+		await _shot("phase3_spore_%d" % k)
+	await _wait(0.48)
 	await _shot("phase3_acid")
 	await _wait(2.0)
 	_bot_say("chort acid: player lost %d standing still for ~3 s; pools %d" % [999 - player.current_health, level.find_children("*", "Node2D", false, false).filter(func(n): return n is AcidPool).size()])
