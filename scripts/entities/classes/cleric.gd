@@ -11,7 +11,7 @@ func _init() -> void:
 	intelligence = 10
 	resistance = 8
 	wisdom = 12
-	speed = 78.0
+	speed = 72.0 # walks (its pack has no run): a steadier pace
 	base_scale = Vector2(0.09, 0.09)
 	skill_name = "Sanctuary"
 	skill_cooldown = 8.0

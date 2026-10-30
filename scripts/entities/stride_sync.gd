@@ -14,7 +14,7 @@ class_name StrideSync
 # and the hero would rather slide a little than strobe.
 
 const MAX_FPS := 40.0
-const MIN_SCALE := 0.35
+const MIN_SCALE := 0.15
 const STILL := 3.0            # px/s: below this the animation is left alone
 const FALLBACK_STRIDE := 2.2  # body heights per cycle, when the feet cannot be measured
 const WALK_NAMES := ["walk", "run", "Walk", "Run", "Walk_Right", "Run_Right"]
@@ -40,8 +40,17 @@ func _process(_delta: float) -> void:
 		return
 	var body := get_parent() as CharacterBody2D
 	var anim := String(_sprite.animation)
-	var speed := body.velocity.length() if body else 0.0
-	if not (anim in WALK_NAMES and _sprite.is_playing()) or speed < STILL:
+	# The body's own pace (a hero's _move_vel), not what a wind or a current adds to it.
+	var own = body.get("_move_vel") if body else null
+	var speed: float = (own as Vector2).length() if own is Vector2 else (body.velocity.length() if body else 0.0)
+	# A creature that floats (the necromancer's robe hovers) glides: nothing to plant.
+	if body and body.get_meta("hovers", false):
+		return
+	if anim in WALK_NAMES and _sprite.is_playing() and speed < STILL:
+		_sprite.speed_scale = MIN_SCALE # just starting or stopping: barely moving legs
+		_touched = true
+		return
+	if not (anim in WALK_NAMES and _sprite.is_playing()):
 		if _touched:
 			_sprite.speed_scale = 1.0
 			_touched = false

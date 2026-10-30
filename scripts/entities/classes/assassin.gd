@@ -11,7 +11,7 @@ func _init() -> void:
 	intelligence = 10
 	resistance = 4
 	wisdom = 12
-	speed = 100.0
+	speed = 90.0 # the fastest, though its short steps can only keep up so far
 	base_scale = Vector2(0.42, 0.42)
 	skill_name = "Shuriken Volley"
 	skill_cooldown = 5.0
