@@ -1,4 +1,4 @@
-"""Seeded level variants: maps 2 and 3 assembled from a library of hand-designed rooms.
+"""Seeded level variants: maps 1, 2 and 3 assembled from a library of hand-designed rooms.
 
 `python tools/levels/assemble.py` writes, for each themed map, the layouts of seeds 2..5
 (whispering_caverns_s2.txt ... skyhold_ruins_s5.txt) plus a .json beside each with its arena
@@ -61,10 +61,11 @@ EXTRA = {'echo': (0, 4, 0, 0), 'mirror': (0, 0, 6, 0)}
 ENTRY = {'sluice': ('E', 7), 'echo': ('W', 3), 'mirror': ('W', 5)}
 
 ARENA_NAMES = {
+    'crypt': ['THE OSSUARY', 'BONE HALL', 'CHAPEL OF ASH', 'THE CATACOMB', 'WARDENS REST', 'THE CHARNEL PIT'],
     'caverns': ['SLIME POOLS', 'WISP SHRINE', 'DROWNED HALL', 'GLOWWORM DEN', 'THE UNDERTOW', 'MOSS CATHEDRAL'],
     'skyhold': ['BARRACKS', 'SANCTUM GUARD', 'WIND ROOST', 'BROKEN CHAPEL', 'THE GALE YARD', 'WATCHERS RING'],
 }
-AMBUSH_NAMES = {'caverns': ['FORGOTTEN CELLAR', 'SUNKEN STORE'], 'skyhold': ['OLD ARMOURY', 'COLLAPSED CRYPT']}
+AMBUSH_NAMES = {'crypt': ['FORGOTTEN CELLAR', 'SEALED TOMB'], 'caverns': ['FORGOTTEN CELLAR', 'SUNKEN STORE'], 'skyhold': ['OLD ARMOURY', 'COLLAPSED CRYPT']}
 
 
 def paint(p, r, theme, rng, role=None):
@@ -80,6 +81,11 @@ def paint(p, r, theme, rng, role=None):
     elif k == 'hub':
         if theme == 'caverns':
             area(6, 4, 5, 4, ',')
+        elif theme == 'crypt':
+            for dx, dy in [(2, 2), (14, 2), (2, 9), (14, 9)]:
+                put(dx, dy, 'p')
+            for dx, dy in [(7, 1), (9, 1)]:
+                put(dx, dy, 'o')
         else:
             area(6, 4, 5, 5, '*')
             for dx, dy in [(2, 2), (14, 2), (2, 9), (14, 9)]:
@@ -94,6 +100,10 @@ def paint(p, r, theme, rng, role=None):
             area(10, 7, 3, 3, ',')
             put(7, 2, 'z' if role == 'k' else 'c')
             first = ['s', 's', 'e', 'w'] if role == 'k' else ['w', 'w', 's', 'e']
+        elif theme == 'crypt':
+            for dx, dy in [(3, 2), (11, 2), (3, 8), (11, 8)]:
+                put(dx, dy, 'p')
+            first = ['e', 'e', 'e', 'e']
         else:
             area(5, 3, 5, 5, '*')
             for dx, dy in [(3, 2), (11, 2), (3, 8), (11, 8)]:
@@ -120,6 +130,18 @@ def paint(p, r, theme, rng, role=None):
             put(13, 1, 'e')
             put(1, 9, 'c')
             put(16, 1, 'm')
+        elif theme == 'crypt':
+            for dx in range(1, 17, 2):    # a floor of spike traps across the hall, two gaps
+                if dx not in (7, 13):
+                    put(dx, 4, 'x')
+                    put(dx + 1, 6, 'x')
+            for dx, dy in [(0, 0), (17, 0), (0, 10), (17, 10)]:
+                put(dx, dy, 'o')
+            put(2, 1, 'e')
+            put(15, 9, 'e')
+            put(13, 1, 'e')
+            put(16, 1, 'm')
+            put(8, 9, 'Y')
         else:
             area(0, 4, 18, 2, '>')    # a crosswind towards the spikes
             for dx in range(1, 17, 3):
@@ -144,6 +166,9 @@ def paint(p, r, theme, rng, role=None):
                 put(dx, dy, 'c')
             for dx, dy in [(2, 11), (17, 11)]:
                 put(dx, dy, 'z')
+        elif theme == 'crypt':
+            for dx, dy in [(3, 2), (16, 2), (3, 11), (16, 11), (6, 6), (13, 6)]:
+                put(dx, dy, 'p')
         else:
             area(5, 4, 10, 6, '*')
             for dx, dy in [(3, 2), (16, 2), (3, 12), (16, 12)]:
@@ -328,7 +353,7 @@ def carve_link(p, a, b, door=None, gates=()):
 
 
 def build(theme, seed):
-    rng = random.Random(seed * 7919 + (1 if theme == 'caverns' else 2))
+    rng = random.Random(seed * 7919 + {'caverns': 1, 'skyhold': 2, 'crypt': 3}[theme])
     p = Plan(MARGIN * 2 + COLS * CW, MARGIN * 2 + ROWS * CH)
     path = main_path(rng)
     rooms = {}
@@ -339,7 +364,7 @@ def build(theme, seed):
         rooms[name] = r
     # Optional rooms: a puzzle or two and an ambush / shrine, in free cells next to the
     # quieter rooms of the route.
-    puzzles = ['sluice', 'echo'] if theme == 'caverns' else ['mirror', 'echo']
+    puzzles = ['sluice', 'echo'] if theme in ('caverns', 'crypt') else ['mirror', 'echo']
     rng.shuffle(puzzles)
     wanted = puzzles[: rng.choice([1, 2])] + [rng.choice(['cellar', 'shrine'])]
     if 'shrine' not in wanted and rng.random() < 0.5:
@@ -456,7 +481,7 @@ def check(p):
 
 
 def main():
-    for theme, base in [('caverns', 'whispering_caverns'), ('skyhold', 'skyhold_ruins')]:
+    for theme, base in [('crypt', 'forgotten_crypt'), ('caverns', 'whispering_caverns'), ('skyhold', 'skyhold_ruins')]:
         for seed in SEEDS:
             for attempt in range(50):
                 try:

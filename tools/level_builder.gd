@@ -99,6 +99,32 @@ const LEVELS := [
 		"boss_name": "",
 	},
 	{
+		# Map 1's seeded layouts (level_1_s2 ... _s5) in the crypt's style. Its first layout is
+		# the hand-made level_1.tscn, which this builder never touches ("variants_only").
+		"theme": "crypt",
+		"variants_only": true,
+		"room_names": [],
+		"sealed_cost": 20,
+		"layout": "res://tools/levels/forgotten_crypt.txt",
+		"out": "res://scenes/levels/level_1.tscn",
+		"root_name": "Level1",
+		"wall_tex": "res://assets/tilesets/character and tileset/Dungeon_Tileset.png",
+		"title": "THE FORGOTTEN CRYPT",
+		"subtitle": "Where the old dead still keep watch",
+		"music": MUSIC + "04 - Silent Forest.mp3",
+		"darkness": Color(0.42, 0.36, 0.5),
+		"player_light": Color(1.0, 0.86, 0.7),
+		"motes": Color(0.9, 0.75, 0.55, 0.45),
+		"mote_gravity": Vector2(0, -4),
+		"torch_light": Color(1.0, 0.62, 0.3),
+		"pool": ["skeleton", "rat", "bat", "shieldbearer", "spitter"],
+		"elements": [ElementalSystem.Element.PYRO, ElementalSystem.Element.HYDRO],
+		"boss": "golem",
+		"boss_name": "Golem",
+		"unlocks": 2,
+		"exit_glow": Color(1.0, 0.7, 0.4),
+	},
+	{
 		"theme": "caverns",
 		"room_names": ["WISP SHRINE", "FORGOTTEN CELLAR", "SLIME POOLS"], # in plan order (top to bottom)
 		"sealed_cost": 25,
@@ -163,7 +189,8 @@ func _ready() -> void:
 	rng.seed = GENERATED_SEED
 	_build_enemy_scenes()
 	for def in LEVELS:
-		_build_level(def)
+		if not def.get("variants_only", false):
+			_build_level(def)
 		for v in _variants(def):
 			_build_level(v)
 	get_tree().quit()
