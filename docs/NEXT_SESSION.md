@@ -4,6 +4,11 @@
 
 ## Feedback del usuario tras jugar (28-10, tarde). Marca [x] lo que se termine.
 ### Bugs
+- [x] Puerta del Gólem (nivel 1): solo baja con el jugador dos casillas dentro de la sala (`GOLEM_ROOM`) y el Gólem en combate; si el jugador acaba fuera con las rejas bajadas, se suben. `playtest golem_gate`. También `BreakablePot.is_pot` ya no consulta celdas vacías (300 errores por carga).
+- [x] Personajes que "patinaban": el ciclo de andar se reproducía a fps fijos (el caballero recorría ~115 px por zancada). `StrideSync` (scripts/entities/stride_sync.gd, en jugador y enemigos) ajusta la velocidad de la animación a la velocidad real: una zancada = 2,2 alturas del cuerpo (~30 px). `playtest stride`.
+- [x] Tragaperras: probabilidades y premios nuevos (tabla en la cabecera de fortune_shrine.gd). Antes 59 % de tiradas sin nada y 1 % de jackpot; ahora ~1 de cada 5 es trío, 3 % jackpot, 56 % gana algo. Premios nuevos: 3 lunas (perk a elegir), 2 estrellas (perk al azar), 2 pociones, x2 y x5.
+- [x] Mercader (scripts/world/merchant.gd, arte en gen_props_art.py): pociones de vida y maná y un pergamino con una perk al azar; precios suben por nivel; en el nivel 1 en la sala oeste, en los niveles 2 y 3 en el vestíbulo del jefe (carácter `v` del builder). `playtest merchant`.
+- [x] Colocación con perspectiva: lo que "mira a cámara" (tragaperras, transmutador, mercader) va contra la pared del fondo, nunca en mitad del suelo ni en paredes laterales. Movidos los de nivel 2, 3, cámara y cripta.
 - [x] J. Al volver al menú principal o cambiar de personaje se conservan monedas, llaves y
       pociones. Solo NEXT LEVEL conserva; salir al menú pierde la partida.
 - [x] D. Perk picker: al spamear el clic se elige una carta sin querer. Ignorar clics los
@@ -276,3 +281,11 @@
 - Suelo en llamas v2: llamas pintadas (spike "Fire") brotando escalonadas, brasas en motas, mancha chamuscada irregular; sin rectángulos ni anillo.
 - Suelo en llamas v3: pixel art propio (tools/gen_burn_art.py → assets/VFX/Burn: mancha calcinada, grietas de brasa aditivas, llama 6 frames), brasas y ceniza con motas; sin círculos. Test de zona: el jugador entra andando (Area2D no detectaba el teletransporte a veces).
 - Suelo en llamas v4: hollín suave sin tramado, sin motas de ceniza, chispas en estela, llamas que nacen/se apagan en sitios aleatorios (_rekindle). Meteorito: warm-explosion a radius/55 sin anillo. Sangre de golpes (CombatFX.blood) y motas ambientales con textura: ya no hay cuadrados.
+
+### Sesión 6 (cierre)
+- Salón del este (nivel 1) rehecho con las baldosas del propio mapa (`_open_east_rooms`): las 3 columnas entre las dos salas pasan a suelo con el patrón de las salas y la pared de arriba/abajo sigue continua. Sin copias de filas ni colisiones invisibles; la sala de los esqueletos queda intacta. `playtest leaks` = 0 fugas.
+- Nada sale del mapa: `MapBounds.Guard` (scripts/world/map_bounds.gd) en cada enemigo devuelve al último punto con suelo/agua/pared bajo los pies; `BossMoves.safe_spot` para el blink del Demonio, el salto del Campeón y el botín de los jarrones. `playtest bounds`.
+- Jarrones altos (2 baldosas): se rompen con la boquilla (`BreakablePot.is_pot_neck`), no los agrupa `_shrink_tile_props`; DecorPhysics corre al final de `_setup` (cripta incluida). Huesos: todos los del tileset dungeon (y sus recolores) por imagen, sin colisión y con crujido (también los grupos). `playtest decor_check`.
+- Test de zona: se limpia el elemento del jugador antes (una reacción lo dejaba en None).
+- Bóveda: una sola escalera (la del plano); el Passage de subida va encima, invisible (`Passage.draw_art = false`). `playtest vault_exit` lo comprueba.
+- Tragaperras: F no hace nada con la ventana abierta (Esc/LEAVE cierran) y el jugador no interactúa mientras haya una ventana de interacción abierta.
