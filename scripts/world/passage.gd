@@ -8,6 +8,7 @@ var target: Node2D
 var going_down := true
 var locked := false
 var locked_text := "A heavy grate seals the stairway."
+var draw_art := true # false: the passage sits on art the level already has (a ladder)
 var _t := 0.0
 var _busy := false
 
@@ -71,6 +72,8 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
+	if not draw_art:
+		return
 	var stone := Color(0.36, 0.33, 0.4)
 	if going_down:
 		# A stone frame around steps going down into the dark.

@@ -25,20 +25,36 @@ var cracked := false # already broken open: its leftovers are worth less
 var _shake := 0.0
 
 static func is_pot(layer: TileMapLayer, cell: Vector2i) -> bool:
-	var src := layer.tile_set.get_source(layer.get_cell_source_id(cell)) as TileSetAtlasSource
+	var id := layer.get_cell_source_id(cell)
+	if id == -1 or not layer.tile_set.has_source(id):
+		return false
+	var src := layer.tile_set.get_source(id) as TileSetAtlasSource
 	if not src or not src.texture:
 		return false
 	var cells: Array = POT_TILES.get(src.texture.resource_path.get_file(), [])
 	return layer.get_cell_atlas_coords(cell) in cells
+
+# The neck of a two-tile pot (the pot itself is the tile below): it goes with the pot.
+static func is_pot_neck(layer: TileMapLayer, cell: Vector2i) -> bool:
+	var below := cell + Vector2i.DOWN
+	return is_pot(layer, below) and layer.get_cell_source_id(below) == layer.get_cell_source_id(cell) 		and layer.get_cell_atlas_coords(cell) == layer.get_cell_atlas_coords(below) + Vector2i.UP
 
 # Swap a pot tile for a breakable pot standing in the same place.
 static func from_tile(layer: TileMapLayer, cell: Vector2i) -> BreakablePot:
 	var src := layer.tile_set.get_source(layer.get_cell_source_id(cell)) as TileSetAtlasSource
 	var p := BreakablePot.new()
 	p.texture = src.texture
-	p.region = src.get_tile_texture_region(layer.get_cell_atlas_coords(cell))
-	p.cracked = layer.get_cell_atlas_coords(cell).y == 9 # both tilesets: row 9 holds the broken ones
+	var atlas := layer.get_cell_atlas_coords(cell)
+	p.region = src.get_tile_texture_region(atlas)
+	p.cracked = atlas.y == 9 # both tilesets: row 9 holds the broken ones
 	var center := layer.to_global(layer.map_to_local(cell))
+	# Tall pots are two tiles: the neck sits in the tile above, drawn from the row above in
+	# the tileset. Take it along, or it is left hanging in the air once the pot breaks.
+	var above := cell + Vector2i.UP
+	if layer.get_cell_source_id(above) == layer.get_cell_source_id(cell) and layer.get_cell_atlas_coords(above) == atlas + Vector2i.UP:
+		var top := src.get_tile_texture_region(atlas + Vector2i.UP)
+		p.region = Rect2(top.position, Vector2(p.region.size.x, p.region.size.y + top.size.y))
+		layer.erase_cell(above)
 	layer.erase_cell(cell)
 	layer.add_child(p)
 	p.global_position = center
@@ -62,7 +78,8 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	var off := Vector2(sin(_shake * 90.0) * 1.0, 0.0) if _shake > 0.0 else Vector2.ZERO
-	draw_texture_rect_region(texture, Rect2(-region.size / 2.0 + off, region.size), region)
+	# Bottom-aligned on its own tile (a two-tile pot rises into the tile above).
+	draw_texture_rect_region(texture, Rect2(Vector2(-region.size.x / 2.0, 8.0 - region.size.y) + off, region.size), region)
 
 # Any hit breaks it; melee, projectiles and skills all call this.
 func receive_damage(_amount: int = 0) -> void:
@@ -101,7 +118,7 @@ func _drop_loot(at: Vector2) -> void:
 		return
 	var item: Node2D = load(path).instantiate()
 	get_tree().current_scene.add_child.call_deferred(item)
-	item.set_deferred("global_position", at + Vector2(randf_range(-4, 4), 4))
+	item.set_deferred("global_position", BossMoves.safe_spot(get_world_2d(), at, at + Vector2(randf_range(-4, 4), 6), [get_rid()], 3.0))
 
 # Dark, mid and light tones of the pot's own pixels, so the sherds match it.
 func _palette() -> Array[Color]:
