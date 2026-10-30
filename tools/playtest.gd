@@ -69,6 +69,8 @@ func _ready() -> void:
 			"pickups": await _pickups_session()
 			"relics": await _relics_session()
 			"props_reach": await _props_reach_session()
+			"phase3": await _phase3_session()
+			"elites2": await _elites2_session()
 			"decor_check": await _decor_check_session()
 			"bounds": await _bounds_session()
 			"tutorial": await _tutorial_session()
@@ -1509,6 +1511,116 @@ func _vault_exit_session() -> void:
 	player.interact()
 	await _wait(1.4)
 	_bot_say("after climbing: %s (near the hall stairs %s: %s)" % [player.global_position, down.global_position, player.global_position.distance_to(down.global_position) < 60.0])
+	await _unload()
+
+# The two new elite kinds, measured.
+func _elites2_session() -> void:
+	await _load_level("res://scenes/levels/level_2.tscn", "knight")
+	player.god_mode = true
+	for e in get_tree().get_nodes_in_group("enemies"):
+		e.queue_free()
+	await _wait(0.5)
+	var base := player.global_position
+	EliteAffix.enabled = true
+	EliteAffix.forced = EliteAffix.Kind.PHANTOM
+	var ph := _phase3_spawn("Spitter", base + Vector2(40, 0))
+	ph.set_physics_process(false)
+	var landed := 0
+	var phased := 0
+	for i in 25:
+		var h := ph.current_health
+		ph.receive_damage(1)
+		if ph.current_health < h:
+			landed += 1
+		else:
+			phased += 1
+		await _wait(0.2)
+	_bot_say("phantom over 5 s: %d blows landed, %d passed through; alpha now %.2f" % [landed, phased, ph.modulate.a])
+	ph.queue_free()
+	EliteAffix.forced = EliteAffix.Kind.ELEMENTAL
+	var el := _phase3_spawn("Shieldbearer", base + Vector2(40, 0))
+	el.set_physics_process(false)
+	await _wait(0.3)
+	var h0 := el.current_health
+	el.receive_damage(20)
+	var plain := h0 - el.current_health
+	h0 = el.current_health
+	Reactions._hit(el, 20, Color.WHITE)
+	_bot_say("elemental: a plain 20 hit deals %d, a reaction's 20 deals %d; carries element %d" % [plain, h0 - el.current_health, el.current_imbued_element])
+	await _shot("elites2_elemental")
+	EliteAffix.forced = -1
+	EliteAffix.enabled = false
+	el.queue_free()
+	await _unload()
+
+# Phase 3 archetypes: a line-up next to the hero, then each behaviour measured.
+func _phase3_spawn(scene: String, at: Vector2) -> Enemy:
+	var e: Enemy = load("res://scenes/entities/Enemies/%s.tscn" % scene).instantiate()
+	level.add_child(e)
+	e.global_position = at
+	return e
+
+func _phase3_session() -> void:
+	await _load_level("res://scenes/levels/level_2.tscn", "knight")
+	player.god_mode = true
+	for e in get_tree().get_nodes_in_group("enemies"):
+		e.queue_free()
+	await _wait(4.0)
+	var base := player.global_position
+	var line := []
+	for k in ["Shieldbearer", "Charger", "Summoner", "Spitter", "Eyeling"].size():
+		var e := _phase3_spawn(["Shieldbearer", "Charger", "Summoner", "Spitter", "Eyeling"][k], base + Vector2(-48 + k * 22, -26))
+		e.set_physics_process(false)
+		line.append(e)
+	await _wait(0.4)
+	await _shot("phase3_lineup")
+	for e in line:
+		e.queue_free()
+	await _wait(0.2)
+	# Shield: same blow from the front and from behind.
+	var sb := _phase3_spawn("Shieldbearer", base + Vector2(30, 0))
+	sb.set_physics_process(false)
+	sb.facing = Vector2.LEFT
+	var h0 := sb.current_health
+	sb.take_elemental_hit(20, ElementalSystem.Element.NONE, player)
+	var front := h0 - sb.current_health
+	sb.facing = Vector2.RIGHT
+	h0 = sb.current_health
+	sb.take_elemental_hit(20, ElementalSystem.Element.NONE, player)
+	_bot_say("shieldbearer: a 20 blow from the front deals %d, from behind %d" % [front, h0 - sb.current_health])
+	sb.queue_free()
+	# Ogre: charges from middle range; then a charge into a wall stuns it.
+	var og := _phase3_spawn("Charger", base + Vector2(90, 0))
+	var hp0 := player.current_health
+	player.god_mode = false
+	player.max_health = 999
+	player.current_health = 999
+	hp0 = player.current_health
+	await _wait(0.5)
+	await _shot("phase3_charge_tell")
+	await _wait(1.0)
+	_bot_say("ogre charge: player hit for %d (charging=%s)" % [hp0 - player.current_health, og._charging])
+	player.god_mode = true
+	og.queue_free()
+	# Shaman: raises skeletons while it sees the player.
+	var sh := _phase3_spawn("Summoner", base + Vector2(70, 0))
+	await _wait(2.0)
+	var raised := get_tree().get_nodes_in_group("enemies").filter(func(e): return e is Eyeling).size()
+	await _shot("phase3_summon")
+	sh.die()
+	await _wait(0.5)
+	var left := get_tree().get_nodes_in_group("enemies").filter(func(e): return e is Eyeling and e.is_alive).size()
+	_bot_say("shaman: raised %d flying eyes; after it dies %d still stand" % [raised, left])
+	# Chort: spits, the pool burns the player standing in it.
+	var ch := _phase3_spawn("Spitter", base + Vector2(70, 0))
+	player.god_mode = false
+	player.current_health = 999
+	await _wait(1.2)
+	await _shot("phase3_acid")
+	await _wait(2.0)
+	_bot_say("chort acid: player lost %d standing still for ~3 s; pools %d" % [999 - player.current_health, level.find_children("*", "Node2D", false, false).filter(func(n): return n is AcidPool).size()])
+	player.god_mode = true
+	ch.queue_free()
 	await _unload()
 
 # Next to the back-wall props: the shrine's ambush spawns and the crucible's potions must

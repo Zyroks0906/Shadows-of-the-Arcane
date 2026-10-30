@@ -3,6 +3,13 @@
 (Lo hecho el 28-10, sesión 2, está en HANDOFF §1c y en el historial de git.)
 
 ## Feedback del usuario tras jugar (28-10, tarde). Marca [x] lo que se termine.
+## HECHO (30-10) — Fase 3
+- [x] 4 arquetipos con sprites de LuizMelo (CC0) y 2 élites nuevas; ver ROADMAP fase 3.
+      `playtest phase3` (escudo frente 1/detrás 17, carga, ojos invocados, charco) y `playtest elites2`.
+      Pools: cripta + escudero; nivel 2 + seta y goblin; nivel 3 + escudero, mago y goblin; nivel 1
+      (escena a mano) + escudero y seta en sus 8 puntos de aparición.
+      Se probó antes el pack 0x72 (16 px) y se descartó: al lado del héroe se veía pobre.
+
 ## HECHO (30-10, capturas del usuario en el nivel 3)
 - [x] Pociones del transmutador al otro lado del muro: `pop_out(..., ground)` sale del pie del crisol y
       `_free_spot` solo acepta sitios con línea libre desde ahí.

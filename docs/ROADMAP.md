@@ -22,11 +22,15 @@ la fase 1.
 - [ ] Mercader: "cambiar las mejoras ofrecidas" (reroll).
 
 ## Fase 3 — Enemigos y élites
-- [ ] Arquetipos: Escudero (bloqueo frontal), Invocador (llama esqueletos y huye), Embestidor
-      (carga en línea avisada), Escupidor (charcos de veneno).
-- [ ] Élites con comportamiento: Vengativo (explota al morir), Fantasmal (invisible a ratos),
-      Elemental (solo cae con una reacción).
-- [ ] Icono del elemento aplicado sobre cada enemigo (estilo Genshin).
+- [x] Arquetipos (sprites de LuizMelo, CC0; base `SheetEnemy`):
+      Escudero = esqueleto con escudo (`Shieldbearer`: bloquea de frente, gira despacio),
+      Embestidor = goblin (`Charger`: carril de flechas rojas y carga; contra un muro queda aturdido),
+      Invocador = mago oscuro (`Summoner`: guarda distancia y abre grietas de ojos voladores, `Eyeling`),
+      Escupidor = seta (`Spitter`: lanza esporas que dejan un charco tóxico, `AcidPool`).
+- [x] Élites nuevas: Fantasmal (se desvanece y los golpes la atraviesan) y Elemental (solo las
+      reacciones le hacen daño completo). La Vengativa ya existía como "Volátil".
+- [x] Icono del elemento sobre cada enemigo (ya existía: `ElementBadge`).
+- [ ] Animaciones de ataque propias para el goblin cargando (usa la de correr acelerada).
 
 ## Fase 4 — Exploración
 - [ ] Minimapa en la esquina + mapa completo con TAB; salas descubiertas al pisarlas; cofres y
