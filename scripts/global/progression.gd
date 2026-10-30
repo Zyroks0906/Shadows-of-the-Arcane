@@ -161,6 +161,22 @@ func stat(key: String, amount: int = 1) -> void:
 		reset_stats()
 	stats[key] = int(stats.get(key, 0)) + amount
 
+# The run summary shown on the death and the victory screens: [label, value] pairs.
+func summary_rows() -> Array:
+	if stats.is_empty():
+		reset_stats()
+	var s := stats
+	return [
+		["Time", run_time_text()],
+		["Level reached", str(s.get("level", level))],
+		["Monsters slain", str(s.get("kills", 0))],
+		["Elites slain", str(s.get("elites", 0))],
+		["Damage dealt", str(s.get("damage", 0))],
+		["Damage taken", str(s.get("taken", 0))],
+		["Coins found", str(s.get("coins", 0))],
+		["Deaths this run", str(s.get("deaths", 0))],
+	]
+
 func run_time_text() -> String:
 	if stats.is_empty():
 		reset_stats()

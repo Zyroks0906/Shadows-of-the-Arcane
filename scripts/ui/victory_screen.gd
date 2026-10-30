@@ -16,6 +16,7 @@ func _ready() -> void:
 	_add_next_map_button()
 	_set_initial_state()
 	coins_label.text = "COINS: %d" % GameManager.total_coins
+	_add_run_summary()
 	await _setup_hero_display()
 
 	var mm = get_node_or_null("/root/MusicManager")
@@ -23,6 +24,33 @@ func _ready() -> void:
 		mm.play_track("res://assets/audio/music/xDeviruchi - 16 bit Fantasy & Adventure (2025)/mp3/06 - Victory!.mp3", false)
 
 	_run_entrance()
+
+# The same run summary as the death screen, as two columns of label and value.
+const SUMMARY_FONT: FontFile = preload("res://assets/fonts/PixelifySans.ttf")
+const GOLD := Color(0.95, 0.78, 0.35)
+
+func _add_run_summary() -> void:
+	var grid := GridContainer.new()
+	grid.columns = 4
+	grid.add_theme_constant_override("h_separation", 18)
+	grid.add_theme_constant_override("v_separation", 4)
+	grid.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	var f: FontFile = SUMMARY_FONT
+	f.antialiasing = TextServer.FONT_ANTIALIASING_NONE
+	f.hinting = TextServer.HINTING_NONE
+	for r in Progression.summary_rows():
+		for k in 2:
+			var l := Label.new()
+			l.text = r[k]
+			l.add_theme_font_override("font", f)
+			l.add_theme_font_size_override("font_size", 22)
+			l.add_theme_color_override("font_color", GOLD if k == 1 else Color(0.78, 0.74, 0.7))
+			l.add_theme_color_override("font_outline_color", Color(0, 0, 0))
+			l.add_theme_constant_override("outline_size", 4)
+			l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT if k == 1 else HORIZONTAL_ALIGNMENT_LEFT
+			l.custom_minimum_size = Vector2(70 if k == 1 else 170, 0)
+			grid.add_child(l)
+	stats_container.add_child(grid)
 
 func _set_initial_state() -> void:
 	dark_overlay.color.a = 0.0

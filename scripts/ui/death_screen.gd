@@ -67,16 +67,7 @@ func _ready() -> void:
 	content.add_child(sub)
 
 	# Run summary: two columns of label + value on a dark plate with a gold rule.
-	var rows := [
-		["Time", Progression.run_time_text()],
-		["Level reached", str(s.get("level", Progression.level))],
-		["Monsters slain", str(s.get("kills", 0))],
-		["Elites slain", str(s.get("elites", 0))],
-		["Damage dealt", str(s.get("damage", 0))],
-		["Damage taken", str(s.get("taken", 0))],
-		["Coins found", str(s.get("coins", 0))],
-		["Deaths this run", str(s.get("deaths", 0))],
-	]
+	var rows := Progression.summary_rows()
 	var panel := Panel.new()
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.06, 0.03, 0.05, 0.92)
