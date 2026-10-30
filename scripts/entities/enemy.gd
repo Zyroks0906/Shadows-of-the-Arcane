@@ -126,6 +126,8 @@ var elite: EliteAffix = null
 var force_elite := false # set by a spawner that always brings an elite (ambush rooms)
 
 func _ready() -> void:
+	MapBounds.Guard.attach(self) # nothing leaves the map
+	StrideSync.attach(self) # feet planted: the walk cycle keeps pace with the body
 	_init_stats()
 	_resolve_sound_set()
 	elite = EliteAffix.roll(self)

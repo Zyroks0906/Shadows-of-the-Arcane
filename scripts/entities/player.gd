@@ -146,6 +146,7 @@ var _mana_regen_acc: float = 0.0
 func _ready() -> void:
 	_apply_class_stats()
 	add_to_group("player")
+	StrideSync.attach(self) # feet planted: the walk cycle keeps pace with the body
 	_capture_base_stats()
 	apply_perks()
 	super._ready()
@@ -1104,6 +1105,8 @@ func _spawn_blood_vfx() -> void:
 
 func interact() -> void:
 	if _is_interacting or interactables_in_range.is_empty(): return
+	# Already inside an interaction window: F must not reach the object again.
+	if FortuneShrine.FortuneMenu.is_open() or Transmuter.TransmuteMenu.is_open() or Merchant.MerchantMenu.is_open(): return
 	_is_interacting = true
 
 	var closest = null
