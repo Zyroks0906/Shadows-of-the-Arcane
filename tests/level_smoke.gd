@@ -43,13 +43,18 @@ func _run(path: String) -> void:
 		for b in get_tree().get_nodes_in_group("bosses"):
 			b.queue_free() # bosses now attack from range; their element would muddle this check
 		if zone and player:
+			# Clean slate: an element already on the player would react with the zone's and
+			# clear both (correct in game, but it made this check read "None" now and then).
+			player.limpiar_elemento()
 			# Walk in rather than teleport: an Area2D can miss a body that just appears inside it.
 			player.global_position = zone.global_position + zone.size / 2.0 + Vector2(0, -6)
 			await get_tree().physics_frame
 			for i in 6:
 				player.global_position += Vector2(0, 1)
 				await get_tree().physics_frame
-			await get_tree().create_timer(1.0).timeout
+			# Checked soon after entering: the imbue is short and only refreshed on the zone's
+			# tick, so a fixed 1 s wait sometimes landed between two refreshes.
+			await get_tree().create_timer(0.3).timeout
 			check(player.current_imbued_element != ElementalSystem.Element.NONE, "%s: zone imbues player (%s) zone=%s size=%s style=%s player=%s" % [path.get_file(), ElementalSystem.get_element_name(player.current_imbued_element), zone.global_position, zone.size, zone.style, player.global_position])
 		await _check_arenas(level, player, path.get_file())
 	level.queue_free()
