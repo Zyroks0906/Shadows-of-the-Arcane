@@ -19,15 +19,36 @@ var sheets := {
 	"hurt": ["TakeHit", 12.0, false], "death": ["Death", 9.0, false],
 }
 
+var _body_x := FRAME / 2.0   # the body's centre column in the art (measured on the idle pose)
+
 func _ready() -> void:
 	_init_stats() # each creature names its folder and strips there (Enemy._ready runs it again)
 	animated_sprite.sprite_frames = _build()
 	animated_sprite.centered = false
-	animated_sprite.offset = Vector2(-FRAME / 2.0, -FEET_Y)
+	_body_x = _measure_body_x()
+	_anchor()
 	animated_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	animated_sprite.scale = Vector2.ONE * (body_px / art_px)
 	super._ready()
 	animated_sprite.play("idle")
+
+# The artist did not centre every creature in its frame (the skeleton stands 7 px right of
+# the middle). Mirroring a sprite mirrors the art inside the same rectangle, so the body
+# would jump sideways each time it turns: keep its centre column on the origin either way.
+func _process(delta: float) -> void:
+	super._process(delta)
+	_anchor()
+
+func _anchor() -> void:
+	var x := (FRAME - _body_x) if animated_sprite.flip_h else _body_x
+	animated_sprite.offset = Vector2(-x, -FEET_Y)
+
+func _measure_body_x() -> float:
+	var tex := animated_sprite.sprite_frames.get_frame_texture("idle", 0)
+	if not tex:
+		return FRAME / 2.0
+	var r := tex.get_image().get_used_rect()
+	return r.position.x + r.size.x / 2.0
 
 func _build() -> SpriteFrames:
 	var sf := SpriteFrames.new()
