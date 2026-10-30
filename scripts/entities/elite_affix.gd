@@ -13,7 +13,7 @@ class_name EliteAffix
 #   WARDED    a ward soaks up the first three hits
 #   GILDED    no special power, but carries a pile of gold
 
-enum Kind { SWIFT, HULKING, VAMPIRIC, VOLATILE, WARDED, GILDED }
+enum Kind { SWIFT, HULKING, VAMPIRIC, VOLATILE, WARDED, GILDED, PHANTOM, ELEMENTAL }
 
 const INFO := {
 	Kind.SWIFT: {"name": "Swift", "color": Color(0.4, 0.95, 1.0), "desc": "Faster, and quicker to strike."},
@@ -22,6 +22,8 @@ const INFO := {
 	Kind.VOLATILE: {"name": "Volatile", "color": Color(1.0, 0.6, 0.15), "desc": "Explodes a moment after dying: step away, or lure others in."},
 	Kind.WARDED: {"name": "Warded", "color": Color(0.6, 0.75, 1.0), "desc": "A magic ward blocks its first three hits."},
 	Kind.GILDED: {"name": "Gilded", "color": Color(1.0, 0.85, 0.3), "desc": "No special power, but it carries a pile of gold."},
+	Kind.PHANTOM: {"name": "Phantom", "color": Color(0.75, 0.8, 1.0), "desc": "Fades out now and then: while faded, blows pass right through it."},
+	Kind.ELEMENTAL: {"name": "Elemental", "color": Color(0.55, 1.0, 0.75), "desc": "Wreathed in an element that keeps coming back. Plain blows barely hurt it: make it react."},
 }
 const CHANCE_BY_LEVEL := [0.08, 0.12, 0.16]
 const FONT: FontFile = preload("res://assets/fonts/PressStart2P-Regular.ttf")
@@ -40,6 +42,12 @@ var _t := 0.0
 var _top := -16.0 # nameplate height above the enemy's origin (unscaled px)
 var _foot := 0.0
 var _width := 14.0
+var _phased := false         # Phantom: faded out, blows pass through
+var _reimbue := 0.0          # Elemental: time until its element returns
+
+const PHANTOM_CYCLE := 5.0   # seconds per cycle, the last PHANTOM_FADED of them faded
+const PHANTOM_FADED := 2.0
+const ELEMENTAL_TAKES := 0.4 # share of a plain (non-reaction) blow it feels
 
 # Rolls for an elite; called from Enemy._ready after its stats are set and before health is
 # filled, so the bonuses below are the real numbers.
@@ -101,8 +109,19 @@ func setup() -> void:
 
 # --- Hooks called by Enemy -----------------------------------------------------------------
 
-# True if the ward ate the hit.
+# Elemental: plain blows are blunted; a reaction (Reactions marks its hits) lands in full.
+func scale_damage(amount: int) -> int:
+	if kind != Kind.ELEMENTAL or amount <= 0 or enemy.get_meta("reaction_hit", false):
+		return amount
+	if randf() < 0.35:
+		CombatFX.floating_label(enemy.global_position + Vector2(0, _top - 4), "REACT!", color, 0.7)
+	return maxi(1, roundi(amount * ELEMENTAL_TAKES))
+
+# True if the ward ate the hit (or a faded Phantom let it through).
 func absorb(amount: int) -> bool:
+	if kind == Kind.PHANTOM and _phased and amount > 0:
+		CombatFX.floating_label(enemy.global_position + Vector2(0, _top - 4), "PHASED", color, 0.6)
+		return true
 	if ward <= 0 or amount <= 0:
 		return false
 	ward -= 1
@@ -200,6 +219,26 @@ static func _explode(at: Vector2, parent: Node) -> void:
 func _process(delta: float) -> void:
 	_t += delta
 	queue_redraw()
+	if kind == Kind.PHANTOM and enemy.is_alive:
+		var c := fmod(_t, PHANTOM_CYCLE)
+		var fade := PHANTOM_CYCLE - PHANTOM_FADED
+		# Fades out over 0.3 s, stays faded, fades back in over 0.3 s.
+		var a := 1.0
+		if c > fade:
+			a = lerpf(1.0, 0.12, clampf((c - fade) / 0.3, 0.0, 1.0))
+			a = lerpf(a, 1.0, clampf((c - PHANTOM_CYCLE + 0.3) / 0.3, 0.0, 1.0))
+		var was := _phased
+		_phased = c > fade + 0.15 and c < PHANTOM_CYCLE - 0.15
+		enemy.modulate.a = a
+		if _phased != was:
+			AudioManager.play_bank_at("teleport", enemy.global_position, -14.0, 1.6 if _phased else 1.2)
+	if kind == Kind.ELEMENTAL and enemy.is_alive:
+		_reimbue -= delta
+		if _reimbue <= 0.0 and enemy.current_imbued_element == ElementalSystem.Element.NONE:
+			_reimbue = 3.0
+			var el: int = [ElementalSystem.Element.PYRO, ElementalSystem.Element.HYDRO, ElementalSystem.Element.ELECTRO, ElementalSystem.Element.CRYO].pick_random()
+			enemy.current_imbued_element = el
+			enemy._on_element_applied()
 	# The first time the player meets each kind, a banner says what it does.
 	if not _announced.has(kind) and enemy.is_alive and is_instance_valid(enemy.player) 			and enemy.player.global_position.distance_to(enemy.global_position) < 120.0:
 		_announced[kind] = true
