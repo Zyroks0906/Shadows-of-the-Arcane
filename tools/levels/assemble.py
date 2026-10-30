@@ -15,6 +15,9 @@ How a layout is put together (same logic as the hand-made maps):
   room, and the puzzle rooms (sluices, echo crystals, sun mirrors) copied cell for cell from
   the hand-made maps so they stay solvable. Puzzle rooms keep their entrance side.
 - Arena entrances get gates; corridors are short and straight.
+- A secret room, when a free cell sits beside a quiet room: a short passage behind a cracked
+  wall ('Z', three blows) in that room's side wall, with a chest, coins and a story tablet.
+  A second tablet ('?') stands against the hub's back wall.
 - Every layout is checked before it is written: the boss and the exit can be reached, each
   key before its door, health potions outnumber mana potions, nothing stands on rock.
 """
@@ -225,7 +228,7 @@ def paint(p, r, theme, rng, role=None):
 # room's back (top) wall: never in front of a doorway, never boxed in by a column, never
 # narrowing a way through. These are the rules, used both to place them and to check maps.
 
-CLUTTER = set('pczKMSNQWl~TJv')
+CLUTTER = set('pczKMSNQWl~TJv?')
 
 
 def wall_ok(g, x, y):
@@ -402,6 +405,22 @@ def build(theme, seed):
                 break
             if done:
                 break
+    # The secret room: a free cell beside a quiet room, reached through its side wall.
+    secret = None
+    for host in rng.sample(['hub', 'gallery', 'vestibule', 'entrance'], 4):
+        h = rooms[host]
+        for dx in rng.sample([-1, 1], 2):
+            cell = (h.cell[0] + dx, h.cell[1])
+            if cell in used or not (0 <= cell[0] < COLS):
+                continue
+            r = Room('secret', 6, 5, cell)
+            if not place(r, rng, lambda y, hh=h: hh.y + 2 <= y + 2 <= hh.y + hh.h - 3):
+                continue
+            used.add(cell)
+            secret = (r, h)
+            break
+        if secret:
+            break
     # Carve rooms, then corridors, then contents (contents last: corridors may not cover them).
     allrooms = list(rooms.values()) + [r for r, _ in sides]
     for r in allrooms:
@@ -414,11 +433,32 @@ def build(theme, seed):
         carve_link(p, a, b, door, gates)
     for r, h in sides:
         carve_link(p, h, r, None, [r] if r.kind == 'cellar' else [])
+    if secret:
+        r, h = secret
+        p.rect(r.x, r.y, r.w, r.h)
+        row = r.y + 2
+        left, right = (h, r) if h.x < r.x else (r, h)
+        for xx in range(left.x + left.w, right.x):
+            p.g[row][xx] = '.'
+        # The cracked wall is the host's side wall itself.
+        zx = h.x + h.w if h is left else h.x - 1
+        p.g[row][zx] = 'Z'
+        allrooms.append(r)
     for name, r in rooms.items():
         role = 'k' if name == 'arena_k' else 'g' if name == 'arena_g' else None
         paint(p, r, theme, rng, role)
     for r, _ in sides:
         paint(p, r, theme, rng)
+    if secret:
+        r = secret[0]
+        wall_put(p, r, '?', rng)
+        p.put(r.x + 1, r.y + 3, 'C')
+        p.put(r.x + 4, r.y + 3, '$')
+        p.put(r.x + 3, r.y + 4, 'h')
+    try:
+        wall_put(p, rooms['hub'], '?', rng)
+    except AssertionError:
+        pass
     # Arena names in the builder's scan order (rows top to bottom, then left to right).
     arenas = sorted([r for r in allrooms if r.kind in ('arena', 'cellar')], key=lambda r: (r.y + (5 if r.kind == 'arena' else 3), r.x))
     names = []
@@ -428,7 +468,7 @@ def build(theme, seed):
     rng.shuffle(amb)
     for r in arenas:
         names.append(amb.pop() if r.kind == 'cellar' else pool.pop())
-    return p, names, [r.kind for r, _ in sides]
+    return p, names, [r.kind for r, _ in sides] + (['secret'] if secret else [])
 
 
 # --- Checks -----------------------------------------------------------------------------------
@@ -483,10 +523,11 @@ def check(p):
 def main():
     for theme, base in [('crypt', 'forgotten_crypt'), ('caverns', 'whispering_caverns'), ('skyhold', 'skyhold_ruins')]:
         for seed in SEEDS:
-            for attempt in range(50):
+            for attempt in range(400):
                 try:
                     p, names, sides = build(theme, seed * 100 + attempt)
                     assert any(k in ('sluice', 'echo', 'mirror') for k in sides), 'no puzzle room'
+                    assert 'secret' in sides, 'no secret room'
                     cells = check(p)
                     break
                 except (AssertionError, RuntimeError, IndexError) as e:

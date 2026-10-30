@@ -13,6 +13,8 @@ extends Node
 #   entities  'P' player start   'X' exit portal   'B' boss   'e' random enemy   's' slime   'w' wisp   'O' orc
 #             'c' Cryo crystal   'z' Electro crystal   'p' pillar / dormant crystal   'o' pot
 #             '1' silver key   '2' golden key   'D' silver door   'G' golden door   'd' boss door
+#             '?' lore tablet (scripts/world/lore_stone.gd: a page of the story for the Journal)
+#             'Z' cracked wall (scripts/world/cracked_wall.gd: three blows open a secret passage)
 #             'v' wandering peddler (scripts/world/merchant.gd: potions and a random perk for coins)
 #             'h' health potion   'm' mana potion   '$' coin   'C' chest   'x' spike trap
 #   arenas    'R' combat room (the floor region around it, bounded by gates/doors)
@@ -174,7 +176,7 @@ const LEVELS := [
 	},
 ]
 
-const FLOORISH_EXCLUDE := " #"
+const FLOORISH_EXCLUDE := " #Z" # Z: a cracked wall (drawn as wall, a floor under it)
 const SOLID_CHARS := "~p" # pots ("o") block on their own as BreakablePots
 const WIND := {">": Vector2.RIGHT, "<": Vector2.LEFT, "A": Vector2.UP, "V": Vector2.DOWN}
 
@@ -400,6 +402,12 @@ func _wall_tile(x: int, y: int) -> Variant:
 		return Vector2i(5, 4)
 	return null
 
+# The colour of the theme's wall bricks (a front wall tile's middle), so a cracked wall
+# drawn in code matches the walls around it.
+func _wall_color(path: String) -> Color:
+	var img := (load(path) as Texture2D).get_image()
+	return img.get_pixel(2 * T + T / 2, T / 2 + 2)
+
 func _floor_tile(theme: String, x: int, y: int) -> Array:
 	var c := ch(x, y)
 	if theme == "skyhold":
@@ -476,6 +484,19 @@ func _build_level(def: Dictionary) -> void:
 			if not floorish(x, y):
 				_put_tile(background, x, y, SRC_THEME, Vector2i(8, 7))
 				var wt = _wall_tile(x, y)
+				if c == "Z":
+					# A cracked wall: wall over floor, its own breakable body, out of the wall
+					# collision (see _blocks). Breaking it erases the wall tile.
+					var zt := _floor_tile(theme, x, y)
+					_put_tile(floor_layer, x, y, zt[0], zt[1])
+					var cw := StaticBody2D.new()
+					cw.name = "CrackedWall"
+					cw.set_script(load("res://scripts/world/cracked_wall.gd"))
+					cw.position = cell_center(x, y)
+					cw.cell = Vector2i(x, y)
+					cw.brick = _wall_color(def["wall_tex"])
+					groups["Props"].add_child(cw, true)
+					continue # the block draws itself; no wall tile here
 				if wt != null:
 					_put_tile(walls, x, y, SRC_THEME, wt)
 					# Wall faces get torches and theme ornaments at a steady rhythm.
@@ -536,6 +557,12 @@ func _build_level(def: Dictionary) -> void:
 					shrine.set_script(load("res://scripts/world/fortune_shrine.gd"))
 					shrine.position = pos + Vector2(0, 6)
 					groups["Props"].add_child(shrine, true)
+				"?":
+					var tablet := StaticBody2D.new()
+					tablet.name = "LoreStone"
+					tablet.set_script(load("res://scripts/world/lore_stone.gd"))
+					tablet.position = pos + Vector2(0, 6)
+					groups["Props"].add_child(tablet, true)
 				"v":
 					var peddler := StaticBody2D.new()
 					peddler.name = "Merchant"
@@ -894,6 +921,8 @@ func _build_collision() -> StaticBody2D:
 	return body
 
 func _blocks(x: int, y: int) -> bool:
+	if ch(x, y) == "Z":
+		return false # a cracked wall blocks with its own body until it falls
 	if not solid(x, y):
 		return false
 	if floorish(x, y):
