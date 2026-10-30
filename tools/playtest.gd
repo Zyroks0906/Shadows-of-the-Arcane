@@ -72,6 +72,8 @@ func _ready() -> void:
 			"phase3": await _phase3_session()
 			"elites2": await _elites2_session()
 			"anims": await _anims_session()
+			"variants": await _variants_session()
+			"wallprops": await _wallprops_session()
 			"decor_check": await _decor_check_session()
 			"bounds": await _bounds_session()
 			"tutorial": await _tutorial_session()
@@ -1513,6 +1515,60 @@ func _vault_exit_session() -> void:
 	await _wait(1.4)
 	_bot_say("after climbing: %s (near the hall stairs %s: %s)" % [player.global_position, down.global_position, player.global_position.distance_to(down.global_position) < 60.0])
 	await _unload()
+
+# Every fortune shrine, transmuter and peddler of every map, close up against its wall.
+func _wallprops_session() -> void:
+	var maps := GameManager.variants(1) + GameManager.variants(2) + [GameManager.MAPS[0]]
+	var k := 0
+	for path in maps:
+		await _load_level(path, "knight")
+		player.god_mode = true
+		for e in get_tree().get_nodes_in_group("enemies"):
+			e.queue_free()
+		await _wait(0.4)
+		for n in level.find_children("*", "StaticBody2D", true, false):
+			if not (n is FortuneShrine or n is Transmuter or n is Merchant):
+				continue
+			if n is Transmuter and n.state != Transmuter.State.ACTIVE:
+				n.state = Transmuter.State.ACTIVE
+				n._set_active(true)
+			player.global_position = n.global_position + Vector2(-26, 22)
+			await _wait(1.2)
+			await _shot("wall_%02d_%s_%s" % [k, path.get_file().get_basename(), n.get_script().get_global_name()])
+			k += 1
+		await _unload()
+
+# Every seeded layout of maps 2 and 3: it loads, it has what a level needs, its puzzles are
+# built and wired, and no pickup sits in a wall.
+func _variants_session() -> void:
+	for lv in [1, 2]:
+		for path in GameManager.variants(lv):
+			await _load_level(path, "knight")
+			player.god_mode = true
+			await _wait(0.5)
+			var count := func(f: Callable) -> int: return level.find_children("*", "", true, false).filter(f).size()
+			var puzzles: int = count.call(func(n): return n is SluicePuzzle or n is EchoPuzzle or n is MirrorPuzzle)
+			var gates_wired := get_tree().get_nodes_in_group("puzzle_gates").size()
+			var space: PhysicsDirectSpaceState2D = level.get_world_2d().direct_space_state
+			var probe := PhysicsPointQueryParameters2D.new()
+			probe.collision_mask = 1
+			var stuck := 0
+			for c in get_tree().get_nodes_in_group("interactable"):
+				if c.has_method("pop_out"):
+					probe.position = c._item_root().global_position
+					if not space.intersect_point(probe, 1).is_empty():
+						stuck += 1
+			var arenas := level.get_node_or_null("Arenas")
+			var names := []
+			if arenas:
+				for a in arenas.get_children():
+					names.append(a.get("room_name") if a.get("room_name") else a.name)
+			_bot_say("%s: player=%s boss=%s exit=%s merchant=%s arenas=%d %s puzzles=%d puzzle_gates=%d enemies=%d pickups_in_walls=%d" % [
+				path.get_file(), player != null, count.call(func(n): return n is BossBase) > 0,
+				count.call(func(n): return n is LevelExit) > 0, count.call(func(n): return n is Merchant) > 0,
+				arenas.get_child_count() if arenas else 0, names, puzzles, gates_wired,
+				get_tree().get_nodes_in_group("enemies").size(), stuck])
+			await _unload()
 
 # Every animation of every new creature, captured close up and named in the log.
 func _anims_session() -> void:

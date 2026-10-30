@@ -3,6 +3,15 @@
 (Lo hecho el 28-10, sesión 2, está en HANDOFF §1c y en el historial de git.)
 
 ## Feedback del usuario tras jugar (28-10, tarde). Marca [x] lo que se termine.
+## HECHO (30-10) — Seeds y variantes de mapa (fase 4, primera parte)
+- [x] `GameManager.start_run(seed)` / `variants(level)` / `level_index(path)`; las variantes se
+      descubren solas (`level_N_s2..s5.tscn`). `tools/levels/assemble.py` genera los planos
+      (`python tools/levels/assemble.py`, luego el builder). Plan acordado con el usuario: nivel 1
+      = original + 4 generadas; el Diario de historia se guarda entre partidas.
+- [x] Tragaperras/transmutador/mercader: regla `wall_ok` (pared del fondo, a 2+ casillas de
+      cualquier abertura, sin columnas al lado). Revisado con capturas en los 11 mapas.
+- [ ] Siguiente: variantes del nivel 1, semilla visible/editable, salas secretas, historia + Diario.
+
 ## HECHO (30-10) — Fase 3
 - [x] 4 arquetipos con sprites de LuizMelo (CC0) y 2 élites nuevas; ver ROADMAP fase 3.
       `playtest phase3` (escudo frente 1/detrás 17, carga, ojos invocados, charco) y `playtest elites2`.

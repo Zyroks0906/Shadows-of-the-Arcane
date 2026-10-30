@@ -32,12 +32,20 @@ la fase 1.
 - [x] Icono del elemento sobre cada enemigo (ya existía: `ElementBadge`).
 - [ ] Animaciones de ataque propias para el goblin cargando (usa la de correr acelerada).
 
-## Fase 4 — Exploración
-- [ ] Minimapa en la esquina + mapa completo con TAB; salas descubiertas al pisarlas; cofres y
-      puzzles marcados.
+## Fase 4 — Exploración y partidas distintas (idea del amigo: seeds)
+- [x] Semilla por partida (`GameManager.start_run`): cada run elige una variante de cada mapa;
+      la primera partida siempre abre en el nivel 1 hecho a mano (tutorial).
+- [x] Ensamblador de salas por semilla (`tools/levels/assemble.py`): 4 variantes nuevas de los
+      mapas 2 y 3 (`level_N_sK.tscn`), con su validación (llaves antes que puertas, jefe y salida
+      alcanzables, pociones) y su prueba en juego (`playtest variants`).
+- [x] Regla de pared del fondo para tragaperras, transmutador y mercader (`assemble.wall_ok`),
+      aplicada también a los mapas hechos a mano (`playtest wallprops`).
+- [ ] 4 variantes del nivel 1 con su estilo (Gólem, cripta).
+- [ ] Mostrar la semilla en pausa/victoria y poder escribir una para repetirla.
 - [ ] Paredes agrietadas con salas secretas.
+- [ ] Historia: tablillas y páginas por los mapas, Diario que se guarda entre partidas.
+- [ ] Minimapa en la esquina + mapa completo con TAB.
 - [ ] Altares de elección (p. ej. -20 % vida máxima por una reliquia).
-- [ ] Salas variantes al azar entre partidas.
 
 ## Fase 5 — Sonido
 - [ ] Pasos según superficie (piedra, agua, hueso).
