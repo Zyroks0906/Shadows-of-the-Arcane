@@ -9,8 +9,11 @@ class_name DecorPhysics
 # Bones are the Dungeon tileset's (8,6) and (7,7) in source 1 (also what the level builder
 # scatters on levels 2 and 3).
 
-const BONES := [Vector2i(8, 6), Vector2i(7, 7)]
-const BONE_SOURCE := 1
+# Bone tiles (piles, shards, skull and bone) in the dungeon tileset and its generated
+# recolours; matched by image, since the source id differs from level to level.
+const BONES := [Vector2i(4, 6), Vector2i(5, 6), Vector2i(5, 7), Vector2i(7, 7), Vector2i(8, 6)]
+const BONE_SHEETS := ["Dungeon_Tileset.png", "dungeon_caverns.png", "dungeon_skyhold.png"]
+const BONE_SOURCE := 1 # level_1's dungeon source (kept for the extras that still use it)
 const CRUNCH_COOLDOWN_MS := 350
 
 static var _last_crunch_ms := 0
@@ -31,12 +34,14 @@ static func apply(level: Node, solid_props: bool) -> void:
 			if not layer.tile_set.has_source(src):
 				layer.erase_cell(c) # stale cells pointing at a tileset that no longer exists
 				continue
+			if BreakablePot.is_pot_neck(layer, c):
+				continue # handled with the pot below it
 			if BreakablePot.is_pot(layer, c):
 				BreakablePot.from_tile(layer, c) # pots break; they block on their own
 				continue
 			var atlas: Vector2i = layer.get_cell_atlas_coords(c)
 			var center: Vector2 = layer.to_global(layer.map_to_local(c))
-			if src == BONE_SOURCE and atlas in BONES:
+			if is_bone(layer, c):
 				if do_crunch:
 					_add_crunch(layer, center)
 			elif do_solid and not _hung(walls, layer, c) and not _has_physics(layer, c):
@@ -90,3 +95,11 @@ static func _add_crunch(layer: TileMapLayer, center: Vector2) -> void:
 			if now - _last_crunch_ms > CRUNCH_COOLDOWN_MS:
 				_last_crunch_ms = now
 				AudioManager.play_bank_at("bones", center, -14.0, randf_range(1.2, 1.5)))
+
+
+# Bones lie on the floor: walked over (never solid), they crunch underfoot.
+static func is_bone(layer: TileMapLayer, cell: Vector2i) -> bool:
+	var src := layer.tile_set.get_source(layer.get_cell_source_id(cell)) as TileSetAtlasSource
+	if not src or not src.texture:
+		return false
+	return src.texture.resource_path.get_file() in BONE_SHEETS and layer.get_cell_atlas_coords(cell) in BONES

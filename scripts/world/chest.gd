@@ -97,6 +97,9 @@ func open_chest(body: Node2D) -> void:
 			Progression.take(Progression.roll(3, perk_min_rarity)[0])
 		else:
 			PerkPicker.offer("SEALED CHEST" if coin_cost > 0 else "TREASURE", Progression.roll(3, perk_min_rarity))
+		# Sealed chests sometimes hold a relic too.
+		if coin_cost > 0 and randf() < 0.35:
+			Relics.grant(Relics.roll())
 
 var _opener: Node2D
 # Set by puzzles: while not empty the chest won't open and says why.

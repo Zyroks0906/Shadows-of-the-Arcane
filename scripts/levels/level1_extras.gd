@@ -52,7 +52,6 @@ func _setup() -> void:
 	_demon_stairs(level)
 	_golem_gates(level)
 	_trapped_floor(level)
-	DecorPhysics.apply(level, true) # again: the crypt and the vault are added above; their pots break too
 	# A gentler start: only the slow slime waits in the first room (the skeleton and the
 	# spawner right on top of the spawn point are removed before they wake up, 1 s in).
 	for n in ["EnemySpawners/RandomSpawner", "EnemySpawners/Skeleton"]:
@@ -63,7 +62,17 @@ func _setup() -> void:
 	# offset, so convert them to the root's local space.
 	# (The transmuter is no longer by the spawn: it rises in the Undercroft once it is
 	# cleared, see crypt.txt.)
+	# First run: the starting room teaches the controls with a row of carved stones.
+	if not TutorialStone.finished():
+		TutorialStone.TutorialPath.build(level, TUTORIAL_SPOTS)
 	_chest(level, Vector2(566, 100), {"coin_cost": 20})
+	# The peddler waits in the quiet west room, off the way to the Golem. He is a node of
+	# level_1.tscn (move him there in the editor); this only adds him if the node is missing.
+	if not level.has_node("Merchant"):
+		var peddler := Merchant.new()
+		peddler.name = "Merchant"
+		level.add_child(peddler)
+		peddler.global_position = MERCHANT_AT
 	var hatch := Node2D.new()
 	hatch.set_script(load("res://scripts/world/trapdoor.gd"))
 	level.add_child(hatch)
@@ -77,6 +86,8 @@ func _setup() -> void:
 	level.add_child(crypt)
 	crypt.global_position = Vector2(1700, 0)
 	hatch.crypt = crypt
+	# Last, once the vault and the crypt are in: their pots break and their bones crunch too.
+	DecorPhysics.apply(level, true)
 
 # Config is applied before the chest enters the tree: a sealed chest builds its price tag
 # in _ready.
@@ -158,7 +169,11 @@ func _shrink_tile_props(layer: TileMapLayer, walls: TileMapLayer) -> void:
 				if cells.has(n) and not seen.has(n):
 					seen[n] = true
 					queue.append(n)
-		if group.size() >= 2:
+		# Pots stay tiles: DecorPhysics turns them (and a tall pot's neck) into breakables.
+		var has_pot := false
+		for c in group:
+			has_pot = has_pot or BreakablePot.is_pot(layer, c) or BreakablePot.is_pot_neck(layer, c)
+		if group.size() >= 2 and not has_pot:
 			_group_to_sprites(layer, walls, group)
 
 func _group_to_sprites(layer: TileMapLayer, walls: TileMapLayer, group: Array[Vector2i]) -> void:
@@ -188,7 +203,7 @@ func _group_to_sprites(layer: TileMapLayer, walls: TileMapLayer, group: Array[Ve
 		if not src:
 			continue
 		var atlas := layer.get_cell_atlas_coords(c)
-		if not (layer.get_cell_source_id(c) == DecorPhysics.BONE_SOURCE and atlas in DecorPhysics.BONES):
+		if not DecorPhysics.is_bone(layer, c):
 			bone_group = false
 		var at := AtlasTexture.new()
 		at.atlas = src.texture
@@ -201,7 +216,9 @@ func _group_to_sprites(layer: TileMapLayer, walls: TileMapLayer, group: Array[Ve
 		layer.erase_cell(c)
 	# Anything standing on the floor blocks (pots, pillars, sarcophagi), whatever the tile
 	# data said; bones and things hung on a wall never do.
-	if not hung and not bone_group:
+	if bone_group:
+		DecorPhysics._add_crunch(layer, layer.to_global(anchor + Vector2(0, -4))) # walked over, crunches
+	elif not hung:
 		var body := StaticBody2D.new()
 		body.collision_layer = 1
 		var shape := CollisionShape2D.new()
@@ -248,6 +265,8 @@ func _focus_mode(level: Node) -> void:
 # Its only way in is the 3-tile corridor at the top. Portcullises drop there the moment the
 # Golem joins the fight and rise again only when it falls: no running away from this one.
 const GOLEM_GATE_CELLS := [Vector2(830, 462), Vector2(846, 462), Vector2(862, 462)]
+const GOLEM_ROOM := Rect2(726, 470, 240, 128) # the chamber's floor, below the gate line
+const GATE_CLEAR := 32.0
 
 func _golem_gates(level: Node) -> void:
 	var golem := level.get_node_or_null("Golem") as BossBase
@@ -281,8 +300,21 @@ class _GateWatcher extends Node:
 				AudioManager.play_bank("door_open", 0.0, 0.8)
 			queue_free()
 			return
-		# Close once the player is inside and the golem has engaged (never on the player).
-		if not _closed and golem.is_engaged() and is_instance_valid(golem.player) and golem.player.global_position.y > 480.0:
+		if not is_instance_valid(golem.player):
+			return
+		var at: Vector2 = golem.player.global_position
+		# Safety net: the gates never keep the player out. If they somehow end up outside the
+		# chamber with the gates down (a shove, a dodge back through), they rise again.
+		if _closed and not GOLEM_ROOM.has_point(at):
+			_closed = false
+			for g in gates:
+				g.is_locked = false
+				g.open()
+			return
+		# Close only once the player is well inside the chamber (two tiles past the gate line,
+		# so the bars never drop on them or behind a step they are still taking) and the
+		# Golem is fighting.
+		if not _closed and golem.is_engaged() and GOLEM_ROOM.grow_individual(0, -GATE_CLEAR, 0, 0).has_point(at):
 			_closed = true
 			for g in gates:
 				g.close()
@@ -340,9 +372,14 @@ func _rune_vault(level: Node, chests: Array) -> void:
 	var up := Passage.new()
 	up.going_down = false
 	up.target = up_target
+	# The way out is the very ladder you came down: the vault's own ladder sprite, with
+	# the passage sitting invisibly on it (it used to draw a second ladder next to it).
+	up.draw_art = false
 	vault.add_child(up)
-	up.global_position = cell.call(14, 18)
-	_open_east_rooms(level)
+	var ladder := vault.get_node_or_null("Ladder") as Node2D
+	up.global_position = ladder.global_position if ladder else cell.call(14, 18)
+	if not skip_east_open:
+		_open_east_rooms(level)
 	# Push the two rune blocks onto the two plates to lift the grate.
 	var pushes := PushPuzzle.build(level, [Vector2(936, 378), Vector2(1000, 378)], [Vector2(936, 330), Vector2(968, 394)]) # block 1: up x3; block 2: left x2, down x1
 	pushes.solved.connect(down.unlock)
@@ -370,54 +407,43 @@ func _rune_vault(level: Node, chests: Array) -> void:
 	RunePuzzle.build(vault, [cell.call(8, 8), cell.call(20, 8), cell.call(8, 13), cell.call(20, 13)], cell.call(14, 11), chests)
 
 # The two small east rooms used to be split by a wall with a spike corridor through it: the
-# wall and the trap go, leaving one hall for the block puzzle. Floor goes where the wall was.
-const EAST_OPEN := Rect2(926, 318, 66, 80)
-const WALL_DONOR_X := 905.0 # a column of the west room: its wall rows are copied across
+# wall and the trap go, leaving one hall for the block puzzle. Rebuilt with the map's own
+# tiles (the Tileset layer holds both the walls and the floor): the dividing columns become
+# floor in the rooms' pattern, and the top and bottom walls run on unbroken across them, so
+# there is no seam, no stray wall end and no gap to the void.
+const MERCHANT_AT := Vector2(570, 326) # against the back wall, between the stairs and the torch
+const TUTORIAL_SPOTS := [Vector2(615, 124), Vector2(642, 124), Vector2(669, 124), Vector2(696, 124), Vector2(723, 124)] # the starting room, below the spawn
+const EAST_OPEN := Rect2(926, 318, 66, 80) # what the hall clears (decor and traps)
+const EAST_SEAM_X := [942.0, 958.0, 974.0] # world x of the three columns between the rooms
+const EAST_TOP_WALL_Y := 294.0
+const EAST_FLOOR_Y := [310.0, 326.0, 342.0, 358.0, 374.0, 390.0]
+const EAST_BOTTOM_WALL_Y := 406.0
+const EAST_PATTERN_X0 := 894.0 # the west room's first floor column: floor atlas x = 6 + col % 3
+static var skip_east_open := false # playtest: compare the map before the east rooms were opened
 
 func _open_east_rooms(level: Node) -> void:
 	var walls := level.find_child("Tileset", true, false) as TileMapLayer
-	var floor := level.find_child("Background", true, false) as TileMapLayer
-	if walls and floor:
-		var floor_src := -1
-		var floor_atlas := Vector2i.ZERO
-		for c in floor.get_used_cells():
-			floor_src = floor.get_cell_source_id(c)
-			floor_atlas = floor.get_cell_atlas_coords(c)
-			break
-		var tl := walls.local_to_map(walls.to_local(EAST_OPEN.position))
-		var br := walls.local_to_map(walls.to_local(EAST_OPEN.end))
-		var donor_x := walls.local_to_map(walls.to_local(Vector2(WALL_DONOR_X, EAST_OPEN.position.y))).x
-		for x in range(tl.x, br.x + 1):
-			# Interior: no wall, floor everywhere.
-			for y in range(tl.y, br.y + 1):
-				walls.erase_cell(Vector2i(x, y))
-				var at: Vector2 = walls.to_global(walls.map_to_local(Vector2i(x, y)))
-				if floor_src != -1:
-					floor.set_cell(floor.local_to_map(floor.to_local(at)), floor_src, floor_atlas)
-			# Top and bottom: the same wall rows as the west room (closes the merged hall).
-			for y in range(tl.y - 4, tl.y) + range(br.y + 1, br.y + 5):
-				var donor := Vector2i(donor_x, y)
-				if walls.get_cell_source_id(donor) != -1:
-					walls.set_cell(Vector2i(x, y), walls.get_cell_source_id(donor), walls.get_cell_atlas_coords(donor))
+	if walls:
+		var src := walls.get_cell_source_id(walls.local_to_map(walls.to_local(Vector2(EAST_PATTERN_X0, EAST_FLOOR_Y[0]))))
+		for x in EAST_SEAM_X:
+			var col := int(roundf((x - EAST_PATTERN_X0) / 16.0))
+			walls.set_cell(_cell_at(walls, x, EAST_TOP_WALL_Y), src, Vector2i(4, 0))
+			walls.set_cell(_cell_at(walls, x, EAST_BOTTOM_WALL_Y), src, Vector2i(4, 4))
+			for k in EAST_FLOOR_Y.size():
+				walls.set_cell(_cell_at(walls, x, EAST_FLOOR_Y[k]), src, Vector2i(6 + posmod(col, 3), k % 2))
 		var deco := level.find_child("Decorations", true, false) as TileMapLayer
 		if deco:
 			for c in deco.get_used_cells():
 				if EAST_OPEN.has_point(deco.to_global(deco.map_to_local(c))):
 					deco.erase_cell(c)
-		# The floor tile is translucent; the void here had a red backdrop showing through.
-		var base := ColorRect.new()
-		base.color = Color(0.05, 0.035, 0.07)
-		base.size = EAST_OPEN.size + Vector2(8, 8)
-		base.z_index = -1
-		base.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		floor.add_child(base)
-		floor.move_child(base, 0)
-		base.global_position = EAST_OPEN.position - Vector2(4, 4)
 	var traps := level.get_node_or_null("Traps")
 	if traps:
 		for t in traps.get_children():
 			if t is Node2D and EAST_OPEN.grow(8.0).has_point(t.global_position):
 				t.queue_free()
+
+static func _cell_at(layer: TileMapLayer, x: float, y: float) -> Vector2i:
+	return layer.local_to_map(layer.to_local(Vector2(x, y)))
 
 # The stairway in the Demon's hall is the way on to level 2 (no portal on this level): it
 # stays sealed while the Demon lives, then lights up with the exit glow; F goes down.

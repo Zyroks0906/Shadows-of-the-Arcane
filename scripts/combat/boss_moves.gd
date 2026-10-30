@@ -263,3 +263,29 @@ class _Beam extends Node2D:
 		draw_line(Vector2.ZERO, _end, Color(1, 1, 1, 0.95), w * 0.35)
 		draw_circle(Vector2.ZERO, w * 0.9, Color(1, 1, 1, 0.9))
 		draw_circle(_end, w * 1.2, Color(color, 0.6))
+
+
+# Where something may appear or land: the line from a place known to be inside the map
+# (`from`) to the wanted spot (`to`) is traced against the walls; if a wall is in the way it
+# stops short of it, and it backs off until a small circle fits there. Nothing can be sent
+# into a wall or out past the map's edge this way.
+static func safe_spot(world: World2D, from: Vector2, to: Vector2, exclude: Array = [], radius: float = 6.0) -> Vector2:
+	var space := world.direct_space_state
+	var dir := (to - from).normalized() if to != from else Vector2.ZERO
+	var q := PhysicsRayQueryParameters2D.create(from, to, 1, exclude)
+	var hit := space.intersect_ray(q)
+	var at := to
+	if hit:
+		at = (hit["position"] as Vector2) - dir * (radius + 2.0)
+	var probe := CircleShape2D.new()
+	probe.radius = radius
+	var sq := PhysicsShapeQueryParameters2D.new()
+	sq.shape = probe
+	sq.collision_mask = 1
+	sq.exclude = exclude
+	for i in 8:
+		sq.transform = Transform2D(0.0, at)
+		if space.intersect_shape(sq, 1).is_empty():
+			return at
+		at = at.move_toward(from, 4.0)
+	return from

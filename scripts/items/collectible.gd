@@ -15,6 +15,7 @@ const INFO := {
 
 var is_collected: bool = false
 var _pickup_after_ms: int = 0
+var _thrown := false # pop_out picks its own landing
 
 func _ready() -> void:
 	add_to_group("interactable")
@@ -27,6 +28,7 @@ func _ready() -> void:
 	monitoring = true
 	monitorable = true
 	_attach_shadow.call_deferred()
+	_settle_on_floor.call_deferred()
 	# Harder difficulties find fewer potions (Extreme: none). Decided once, when it appears.
 	if type in [ItemType.HEALTH_POTION, ItemType.MANA_POTION] and randf() >= SettingsManager.diff("potions"):
 		_item_root().queue_free.call_deferred()
@@ -72,6 +74,7 @@ func _item_root() -> Node2D:
 # picked up a moment after it settles, so the player sees what dropped.
 func pop_out(from: Vector2, to: Vector2, delay: float = 0.0) -> void:
 	var root := _item_root()
+	_thrown = true
 	to = _safe_landing(root, from, to)
 	set_deferred("monitoring", false)
 	root.global_position = from
@@ -104,15 +107,42 @@ func _safe_landing(root: Node2D, from: Vector2, to: Vector2) -> Vector2:
 	var hit := space.intersect_ray(PhysicsRayQueryParameters2D.create(from, to, 1))
 	if hit:
 		to = from.lerp(hit["position"], 0.75)
+	return _free_spot(root, to)
+
+# A spot the player can stand on and reach: on the map's ground and not inside anything
+# solid (walls, crystals, props on physics layer 1). The spot itself, else the nearest of
+# a few rings around it.
+static func _free_spot(root: Node2D, at: Vector2) -> Vector2:
+	var space := root.get_world_2d().direct_space_state
+	var ground := MapBounds.ground_layers(root)
 	var probe := PhysicsPointQueryParameters2D.new()
 	probe.collision_mask = 1
-	# Try the spot, then rings around it until one is free.
-	for r in [0.0, 8.0, 14.0, 20.0, 28.0]:
-		for k in (1 if r == 0.0 else 8):
-			probe.position = to + Vector2.RIGHT.rotated(TAU * k / 8.0) * r
-			if space.intersect_point(probe, 1).is_empty():
-				return probe.position
-	return to
+	for r in [0.0, 6.0, 10.0, 14.0, 20.0, 28.0, 36.0, 48.0]:
+		for k in (1 if r == 0.0 else 12):
+			var p: Vector2 = at + Vector2.RIGHT.rotated(TAU * k / 12.0) * r
+			if not ground.is_empty() and not MapBounds.on_map(ground, p):
+				continue
+			var clear := true
+			for d in [Vector2.ZERO, Vector2(-3, 0), Vector2(3, 0), Vector2(0, -3)]:
+				probe.position = p + d
+				if not space.intersect_point(probe, 1).is_empty():
+					clear = false
+					break
+			if clear:
+				return p
+	return at
+
+# Placed by hand or by a generator, an item can end up in a wall or past the edge of the
+# floor (the coins on level 2's west wall). Once physics is up it steps onto open ground.
+func _settle_on_floor() -> void:
+	var root := _item_root()
+	if not is_inside_tree() or not root.visible or _thrown:
+		return
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	if not is_instance_valid(root) or not root.visible or is_collected or _thrown:
+		return
+	root.global_position = _free_spot(root, root.global_position)
 
 func _icon() -> Texture2D:
 	var spr := _item_root().get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D

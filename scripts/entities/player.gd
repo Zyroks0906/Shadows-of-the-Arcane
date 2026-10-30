@@ -146,6 +146,7 @@ var _mana_regen_acc: float = 0.0
 func _ready() -> void:
 	_apply_class_stats()
 	add_to_group("player")
+	StrideSync.attach(self) # feet planted: the walk cycle keeps pace with the body
 	_capture_base_stats()
 	apply_perks()
 	super._ready()
@@ -947,6 +948,7 @@ func _try_dodge(move_dir: Vector2) -> bool:
 		animated_sprite.flip_h = _dodge_dir.x < 0
 	AudioManager.play_bank("fist_swing", -4.0, 1.15)
 	AudioManager.play_bank("footstep", -10.0, 0.9)
+	Relics.on_dodge(self)
 	return true
 
 # Front-loaded burst: fast at the start, easing out (the speed curve integrates to exactly
@@ -992,6 +994,11 @@ func _cancel_actions() -> void:
 func receive_damage(amount: int) -> void:
 	if not is_alive or _is_invulnerable():
 		return
+	if amount > 0 and not god_mode:
+		amount = Relics.incoming(self, amount)
+		if amount <= 0:
+			_start_invulnerability(INVULNERABILITY_TIME * 0.5)
+			return
 	if shield_hp > 0 and amount > 0:
 		var absorbed := mini(shield_hp, amount)
 		shield_hp -= absorbed
@@ -1104,6 +1111,8 @@ func _spawn_blood_vfx() -> void:
 
 func interact() -> void:
 	if _is_interacting or interactables_in_range.is_empty(): return
+	# Already inside an interaction window: F must not reach the object again.
+	if FortuneShrine.FortuneMenu.is_open() or Transmuter.TransmuteMenu.is_open() or Merchant.MerchantMenu.is_open(): return
 	_is_interacting = true
 
 	var closest = null

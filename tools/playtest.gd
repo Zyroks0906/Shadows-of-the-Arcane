@@ -61,6 +61,20 @@ func _ready() -> void:
 			"fortune": await _fortune_session()
 			"bolts": await _bolts_session()
 			"ult_aim": await _ult_aim_session()
+			"leaks": await _leaks_session()
+			"vault_exit": await _vault_exit_session()
+			"golem_gate": await _golem_gate_session()
+			"merchant": await _merchant_session()
+			"stride": await _stride_session()
+			"pickups": await _pickups_session()
+			"relics": await _relics_session()
+			"decor_check": await _decor_check_session()
+			"bounds": await _bounds_session()
+			"tutorial": await _tutorial_session()
+			"leaks_orig":
+				get_script() # the original map, before the east rooms were opened
+				load("res://scripts/levels/level1_extras.gd").skip_east_open = true
+				await _leaks_session()
 			"torches": await _torches()
 			"wind":
 				await _wind_session("knight")
@@ -1319,7 +1333,8 @@ func _fortune_session() -> void:
 			await _wait(0.5)
 			await _shot("fortune_effect_%d" % i)
 			if PerkPicker.is_open():
-				Progression.take(Progression.roll(3, Progression.Rarity.RARE)[0])
+				PerkPicker._open._choose(0)
+				await _wait(0.6)
 	_bot_say("12 pulls, coins 200 -> %d; %s" % [GameManager.total_coins, tally])
 	if FortuneShrine.FortuneMenu.is_open():
 		menu._close()
@@ -1372,3 +1387,440 @@ func _ult_aim_session() -> void:
 			await _shot("mage_glacial_off_aim")
 			_bot_say("mage Glacial Path aimed 20 px off: enemy hp 500 -> %d (%s)" % [d.current_health, "HIT" if d.current_health < 500 else "MISSED"])
 		await _unload()
+
+# Walk the whole of level_1 from the spawn (flood fill over free 6 px cells) and report every
+# reachable spot with no floor tile under it: a hole in the walls lets the player off the map.
+func _leaks_session() -> void:
+	await _load_level("res://scenes/levels/level_1.tscn", "knight")
+	for e in get_tree().get_nodes_in_group("enemies"):
+		e.queue_free()
+	# Every door and gate open: the whole map must still be sealed by its walls.
+	for n in level.find_children("*", "StaticBody2D", true, false):
+		if n is Door or "Gate" in String(n.name) or "Portcullis" in String(n.name) or n.get_script() and String(n.get_script().resource_path).contains("gate"):
+			n.queue_free()
+	await _wait(1.0)
+	var floor := level.get_node("Background") as TileMapLayer
+	var space := player.get_world_2d().direct_space_state
+	var probe := CircleShape2D.new()
+	probe.radius = 3.0
+	var q := PhysicsShapeQueryParameters2D.new()
+	q.shape = probe
+	q.collision_mask = 1
+	q.exclude = [player.get_rid()]
+	const STEP := 6.0
+	var start := player.global_position
+	var seen := {Vector2i.ZERO: true}
+	var parent := {}
+	var queue: Array[Vector2i] = [Vector2i.ZERO]
+	var leaks: Array[Vector2] = []
+	while not queue.is_empty() and seen.size() < 60000:
+		var c: Vector2i = queue.pop_front()
+		var at := start + Vector2(c) * STEP
+		if floor.get_cell_source_id(floor.local_to_map(floor.to_local(at))) == -1:
+			leaks.append(at)
+			if leaks.size() > 400:
+				break
+			continue # off the floor: don't walk further out into the void
+		for d in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+			var n: Vector2i = c + d
+			if seen.has(n):
+				continue
+			seen[n] = true
+			parent[n] = c
+			q.transform = Transform2D(0.0, start + Vector2(n) * STEP)
+			if space.intersect_shape(q, 1).is_empty():
+				queue.append(n)
+	_bot_say("leak check: %d cells reached, %d off the floor" % [seen.size(), leaks.size()])
+	# The bounds guard must agree: every reachable cell counts as "on the map" for it.
+	var ground := MapBounds.ground_layers(player)
+	var disagree := 0
+	var first := Vector2.ZERO
+	for c in seen:
+		var at2 := start + Vector2(c) * STEP
+		q.transform = Transform2D(0.0, at2)
+		if space.intersect_shape(q, 1).is_empty() and not MapBounds.on_map(ground, at2):
+			disagree += 1
+			if first == Vector2.ZERO:
+				first = at2
+	_bot_say("walkable cells the bounds guard would call off-map: %d (first at %s)" % [disagree, first])
+	var walls := level.find_child("Tileset", true, false) as TileMapLayer
+	for yy in range(230, 440, 16):
+		var line := ""
+		for xx in range(862, 1046, 16):
+			var c := walls.local_to_map(walls.to_local(Vector2(xx, yy)))
+			var src := walls.get_cell_source_id(c)
+			line += ("   .   " if src == -1 else "%d:%2d,%2d" % [src, walls.get_cell_atlas_coords(c).x, walls.get_cell_atlas_coords(c).y]) + " "
+		_bot_say("y=%3d %s" % [yy, line])
+	# Which stretches of the east edge of the map's rooms are open (free of walls)?
+	for x in [990.0, 996.0, 1002.0]:
+		var open := []
+		var run_start := -1.0
+		for yy in range(0, 700, 3):
+			q.transform = Transform2D(0.0, Vector2(x, yy))
+			var free := space.intersect_shape(q, 1).is_empty()
+			if free and run_start < 0.0:
+				run_start = yy
+			elif not free and run_start >= 0.0:
+				open.append("%d-%d" % [run_start, yy])
+				run_start = -1.0
+		_bot_say("free at x=%d: %s" % [x, open])
+	if not leaks.is_empty():
+		# The way out: walk back from the first leak to the spawn and print the route.
+		var cell := Vector2i(((leaks[0] - start) / STEP).round())
+		var route: Array[Vector2] = []
+		while parent.has(cell):
+			route.push_front(start + Vector2(cell) * STEP)
+			cell = parent[cell]
+		_bot_say("route to the first leak (%d steps), every 4th point:" % route.size())
+		for k in range(0, route.size(), 4):
+			_bot_say("   %s" % route[k])
+	var shown := {}
+	for l in leaks:
+		var key := Vector2i(l / 48.0)
+		if not shown.has(key):
+			shown[key] = true
+			_bot_say("  off-floor at %s" % l)
+	await _unload()
+
+# Down into the vault, then out again by the same ladder.
+func _vault_exit_session() -> void:
+	await _load_level("res://scenes/levels/level_1.tscn", "knight")
+	player.god_mode = true
+	await _wait(0.5)
+	var down: Passage = null
+	var up: Passage = null
+	for n in level.find_children("*", "Node2D", true, false):
+		if n is Passage:
+			if n.going_down:
+				down = n
+			else:
+				up = n
+	down.unlock()
+	player.global_position = down.global_position + Vector2(0, 8)
+	await _wait(0.3)
+	down.interact(player)
+	await _wait(1.4)
+	var ladder := level.find_child("Vault", true, false).get_node("Ladder") as Node2D
+	_bot_say("in the vault at %s; ladder %s; exit passage %s" % [player.global_position, ladder.global_position, up.global_position])
+	await _shot("vault_arrive", player.global_position + Vector2(0, -10))
+	player.global_position = up.global_position + Vector2(0, -6)
+	await _wait(0.3)
+	player.interact()
+	await _wait(1.4)
+	_bot_say("after climbing: %s (near the hall stairs %s: %s)" % [player.global_position, down.global_position, player.global_position.distance_to(down.global_position) < 60.0])
+	await _unload()
+
+# Relics: each hook measured, the HUD row and a synergy banner.
+func _relics_session() -> void:
+	await _load_level("res://scenes/levels/level_2.tscn", "knight")
+	await _wait(0.5)
+	var foes: Array = get_tree().get_nodes_in_group("enemies").filter(func(e): return e is Enemy and not (e is BossBase))
+	for e in foes:
+		e.set_physics_process(false)
+	var e: Enemy = foes[0]
+	e.max_health = 100000
+	e.current_health = 100000
+	e.resistance = 0
+	# No relics: a 10 hit deals 10.
+	var h0 := e.current_health
+	e.take_elemental_hit(10, ElementalSystem.Element.NONE, player)
+	_bot_say("no relics: hit 10 -> %d" % (h0 - e.current_health))
+	Progression.relics = ["wolf_fang"]
+	Relics.reset()
+	var dealt := []
+	for i in 8:
+		h0 = e.current_health
+		e.take_elemental_hit(10, ElementalSystem.Element.NONE, player)
+		dealt.append(h0 - e.current_health)
+	_bot_say("wolf fang, 8 hits of 10: %s" % [dealt])
+	Progression.relics = ["glass_cannon"]
+	h0 = e.current_health
+	e.take_elemental_hit(10, ElementalSystem.Element.NONE, player)
+	var hp0 := player.current_health
+	player._invulnerable_until_ms = 0
+	player.receive_damage(20)
+	_bot_say("glass cannon: deals %d, takes %d of 20" % [h0 - e.current_health, hp0 - player.current_health])
+	Progression.relics = ["stone_heart"]
+	Relics.reset()
+	hp0 = player.current_health
+	player._invulnerable_until_ms = 0
+	player.receive_damage(20)
+	var first := hp0 - player.current_health
+	player._invulnerable_until_ms = 0
+	player.receive_damage(20)
+	_bot_say("stone heart: first hit takes %d, second %d" % [first, hp0 - first - player.current_health])
+	Progression.relics = ["phoenix_feather"]
+	player._invulnerable_until_ms = 0
+	player.receive_damage(99999)
+	_bot_say("phoenix: alive=%s hp %d/%d, feather left=%s" % [player.is_alive, player.current_health, player.max_health, Relics.has("phoenix_feather")])
+	Progression.relics = ["bloodstone", "loaded_die"]
+	player.current_health = 50
+	var coins := GameManager.total_coins
+	var k: Enemy = foes[1]
+	k.take_elemental_hit(99999, ElementalSystem.Element.NONE, player)
+	await _wait(0.2)
+	_bot_say("bloodstone + die on a kill: hp 50 -> %d, coins +%d" % [player.current_health, GameManager.total_coins - coins])
+	Progression.relics = ["frost_heels"]
+	var f: Enemy = foes[2]
+	f.set_physics_process(true)
+	f.global_position = player.global_position + Vector2(16, 0)
+	player._dodge_ready_ms = 0
+	player._try_dodge(Vector2.LEFT)
+	await _wait(0.1)
+	_bot_say("frost heels: foe beside the dodge frozen=%s" % f.is_frozen)
+	# The HUD row and the banners: two relics, then the one that completes a synergy.
+	Progression.relics = []
+	Progression.relics_changed.emit()
+	Relics.grant("ember_heart")
+	Relics.grant("bloodstone")
+	await _wait(0.4)
+	Relics.grant("storm_ring")
+	await _wait(0.6)
+	await _shot("relics_banner")
+	await _wait(3.0)
+	await _shot("relics_synergy")
+	_bot_say("owned %s, plasma=%s" % [Progression.relics, Relics.has_synergy("plasma")])
+	await _unload()
+
+# No pickup (coin, potion, key) may sit in a wall or past the edge of the floor.
+func _pickups_session() -> void:
+	for lv in ["level_1", "level_2", "level_3"]:
+		await _load_level("res://scenes/levels/%s.tscn" % lv, "knight")
+		player.god_mode = true
+		await _wait(1.0)
+		var space: PhysicsDirectSpaceState2D = level.get_world_2d().direct_space_state
+		var probe := PhysicsPointQueryParameters2D.new()
+		probe.collision_mask = 1
+		var bad := []
+		var n := 0
+		for c in get_tree().get_nodes_in_group("interactable"):
+			if not c.has_method("pop_out"):
+				continue
+			n += 1
+			var root: Node2D = c._item_root()
+			probe.position = root.global_position
+			var ground := MapBounds.ground_layers(root)
+			if not space.intersect_point(probe, 1).is_empty() or (not ground.is_empty() and not MapBounds.on_map(ground, root.global_position)):
+				bad.append(root.global_position)
+		_bot_say("%s: %d pickups, %d in a wall or off the floor %s" % [lv, n, bad.size(), bad.slice(0, 5)])
+		# Throw coins from floor cells hugging a wall, straight at the wall, like a kill there.
+		var floor_l := level.get_node_or_null("Floor") as TileMapLayer
+		if floor_l:
+			var edge := []
+			for cell in floor_l.get_used_cells():
+				if floor_l.get_cell_source_id(cell + Vector2i.LEFT) == -1 or floor_l.get_cell_source_id(cell + Vector2i.UP) == -1:
+					edge.append(cell)
+			edge.shuffle()
+			var coins := []
+			for k in mini(60, edge.size()):
+				var cell: Vector2i = edge[k]
+				var from := floor_l.to_global(floor_l.map_to_local(cell))
+				var away := Vector2.LEFT if floor_l.get_cell_source_id(cell + Vector2i.LEFT) == -1 else Vector2.UP
+				var coin: Node2D = load("res://assets/sprites/sprite_frames/Coin.tscn").instantiate()
+				level.add_child(coin)
+				var c: Node = coin if coin.has_method("pop_out") else coin.get_node("Area2D")
+				c.pop_out(from, from + away * 18.0)
+				coins.append(coin)
+			await _wait(1.2)
+			var off := []
+			for coin in coins:
+				probe.position = coin.global_position
+				if not space.intersect_point(probe, 1).is_empty() or not MapBounds.on_map(MapBounds.ground_layers(coin), coin.global_position):
+					off.append(coin.global_position)
+			_bot_say("  %d coins thrown at walls: %d landed in a wall or off the floor %s" % [coins.size(), off.size(), off.slice(0, 4)])
+		if lv == "level_2":
+			await _wait(3.5)
+			await _shot("pickups_level_2_start")
+		await _unload()
+
+# Every class walks: body height, real speed and the walk cycle's playback rate (the feet
+# should cover about StrideSync.STRIDE body heights per cycle, not glide).
+func _stride_session() -> void:
+	for cls in ["knight", "archer", "assassin", "cleric", "mage", "necromancer", "samurai"]:
+		await _load_level("res://scenes/levels/level_2.tscn", cls)
+		player.god_mode = true
+		for e in get_tree().get_nodes_in_group("enemies"):
+			e.set_physics_process(false)
+		await _wait(0.5)
+		var x0 := player.global_position.x
+		Input.action_press("move_right")
+		await _wait(1.0)
+		var spr := player.animated_sprite
+		var ss := player.get_node("StrideSync") as StrideSync
+		var anim := String(spr.animation)
+		var h := ss._height(anim) * absf(spr.global_scale.y)
+		var fr := spr.sprite_frames.get_frame_count(anim)
+		var fps := spr.sprite_frames.get_animation_speed(anim)
+		var cycle := float(fr) / (fps * spr.speed_scale)
+		_bot_say("%-11s anim %s h=%.1fpx speed=%.0f scale=%.2f -> %.2f cycles/s, %.1f px per cycle (was %.1f)" % [cls, anim, h, player.velocity.length(), spr.speed_scale, 1.0 / cycle, player.velocity.length() * cycle, player.velocity.length() * fr / fps])
+		if cls == "knight":
+			for i in 4:
+				await _wait(0.12)
+				await _shot("stride_knight_%d" % i, player.global_position + Vector2(0, -8))
+		Input.action_release("move_right")
+		await _unload()
+
+# The peddler on every level: how he sits in his room, the shop, prices per level, buying
+# until the purse or the stock runs out, and the scroll's perk reveal.
+func _merchant_session() -> void:
+	for lv in ["level_1", "level_2", "level_3"]:
+		await _load_level("res://scenes/levels/%s.tscn" % lv, "knight")
+		player.god_mode = true
+		for e in get_tree().get_nodes_in_group("enemies"):
+			e.set_physics_process(false)
+		var m := level.find_child("Merchant", true, false) as Merchant
+		if not m:
+			_bot_say("%s: NO MERCHANT" % lv)
+			await _unload()
+			continue
+		player.global_position = m.global_position + Vector2(-14, 16)
+		await _wait(4.5) # past the level's title card
+		await _shot("merchant_%s_world" % lv)
+		GameManager.total_coins = 30
+		var hp := GameManager.health_potions
+		m.interact(player)
+		await _wait(0.4)
+		if lv == "level_1":
+			await _shot("merchant_menu")
+		var bought := 0
+		for i in 6:
+			if m.buy("health"):
+				bought += 1
+		_bot_say("%s at %s: prices %s; 30 coins bought %d health (bag %d -> %d), coins left %d, stock %s" % [lv, m.global_position,
+			Merchant.WARES.map(func(w): return m.price(w)), bought, hp, GameManager.health_potions, GameManager.total_coins, m.stock])
+		GameManager.total_coins = 100
+		m.buy("perk")
+		await _wait(0.6)
+		_bot_say("  scroll: menu open=%s picker open=%s; second scroll allowed=%s" % [Merchant.MerchantMenu.is_open(), PerkPicker.is_open(), m.buy("perk")])
+		if lv == "level_1":
+			await _shot("merchant_scroll")
+		if Merchant.MerchantMenu.is_open():
+			Merchant.MerchantMenu.close_open()
+		if PerkPicker.is_open():
+			PerkPicker._open._choose(0)
+			await _wait(0.6)
+		get_tree().paused = false
+		await _unload()
+
+# The Golem's gates: open while the player is still in the corridor (even with the Golem
+# fighting), shut once they are inside, and rise again if the player ends up outside.
+func _golem_gate_session() -> void:
+	await _load_level("res://scenes/levels/level_1.tscn", "knight")
+	player.god_mode = true
+	var golem := level.get_node("Golem") as BossBase
+	var gates: Array = []
+	for n in level.get_children():
+		if n is Door and n.gate_style and n.global_position.y == 462.0:
+			gates.append(n)
+	var shut := func() -> String: return str(gates.map(func(g): return not g.is_open))
+	for step in [["corridor", Vector2(846, 446)], ["doorway", Vector2(846, 478)], ["inside", Vector2(846, 520)], ["pushed out", Vector2(846, 440)], ["back in", Vector2(846, 530)]]:
+		player.global_position = step[1]
+		golem.receive_damage(1)
+		await _wait(0.4)
+		_bot_say("%s %s: engaged=%s gates shut=%s" % [step[0], player.global_position, golem.is_engaged(), shut.call()])
+	await _shot("golem_gate_inside", Vector2(846, 500))
+	await _unload()
+
+# Every level: each pot breaks and leaves no tile behind (neck included); no bone is solid.
+func _decor_check_session() -> void:
+	for lv in ["level_1", "level_2", "level_3"]:
+		await _load_level("res://scenes/levels/%s.tscn" % lv, "knight")
+		for e in get_tree().get_nodes_in_group("enemies"):
+			e.queue_free()
+		await _wait(0.6)
+		var pots := get_tree().get_nodes_in_group("breakables")
+		for p in pots:
+			if p.region.position.y < 140.0 and p.region.position.y >= 112.0 or p.region.size.y > 16.0:
+				_bot_say("  pot region %s at %s" % [p.region, p.global_position])
+		for spr in level.find_children("*", "Sprite2D", true, false):
+			if spr.texture is AtlasTexture and spr.texture.atlas and spr.texture.atlas.resource_path.get_file() == "decorative.png" and int(spr.texture.region.position.y / 16) == 7:
+				_bot_say("  prop sprite with a row-7 decorative tile %s at %s" % [spr.texture.region, spr.global_position])
+		var tall: Node2D = null
+		for p in pots:
+			if p.region.size.y > 16.0:
+				tall = p
+		if tall:
+			player.global_position = tall.global_position + Vector2(-18, 4)
+			await _wait(0.4)
+			await _shot("decor_%s_tall_before" % lv, tall.global_position + Vector2(0, -8))
+		var had_tall := tall != null
+		var at := tall.global_position if tall else Vector2.ZERO
+		for p in pots:
+			if is_instance_valid(p):
+				p.break_open(Vector2.ZERO)
+		await _wait(0.6)
+		if had_tall:
+			await _shot("decor_%s_tall_after" % lv, at + Vector2(0, -8))
+		var left_pots := 0
+		var solid_bones := 0
+		var bones := 0
+		var space := player.get_world_2d().direct_space_state
+		for layer in level.find_children("*", "TileMapLayer", true, false):
+			if String(layer.name) not in ["Decorations", "Decor"]:
+				continue
+			for c in layer.get_used_cells():
+				if BreakablePot.is_pot(layer, c) or BreakablePot.is_pot_neck(layer, c):
+					left_pots += 1
+					_bot_say("  left: %s %s atlas %s above %s below %s at %s" % [layer.name, c, layer.get_cell_atlas_coords(c), layer.get_cell_atlas_coords(c + Vector2i.UP), layer.get_cell_atlas_coords(c + Vector2i.DOWN), layer.to_global(layer.map_to_local(c))])
+				var src := layer.tile_set.get_source(layer.get_cell_source_id(c)) as TileSetAtlasSource
+				if src and src.texture and src.texture.resource_path.get_file() == "decorative.png" and layer.get_cell_atlas_coords(c).y == 7 and layer.get_cell_atlas_coords(c).x >= 9:
+					_bot_say("  neck tile still there: %s %s" % [layer.get_cell_atlas_coords(c), layer.to_global(layer.map_to_local(c))])
+				if DecorPhysics.is_bone(layer, c):
+					bones += 1
+					var q := PhysicsPointQueryParameters2D.new()
+					q.position = layer.to_global(layer.map_to_local(c))
+					q.collision_mask = 1
+					for r in space.intersect_point(q, 4):
+						if r["collider"] is StaticBody2D and r["collider"].get_parent() == layer:
+							solid_bones += 1
+		_bot_say("%s: %d pots broken (tall one: %s), pot tiles left %d, bones %d, solid bones %d" % [lv, pots.size(), had_tall, left_pots, bones, solid_bones])
+		await _unload()
+
+# The bounds safety net: an enemy pushed off the map comes back; enemies on the map (also in
+# the crypt, and wisps over the river) are left alone.
+func _bounds_session() -> void:
+	for lv in ["level_1", "level_2"]:
+		await _load_level("res://scenes/levels/%s.tscn" % lv, "knight")
+		player.god_mode = true
+		await _wait(1.5)
+		var moved := 0
+		var before := {}
+		for e in get_tree().get_nodes_in_group("enemies"):
+			before[e] = e.global_position
+		await _wait(1.0)
+		var e0: Node2D = null
+		for e in get_tree().get_nodes_in_group("enemies"):
+			if e.is_alive and not (e is BossBase):
+				e0 = e
+				break
+		var home: Vector2 = e0.global_position
+		e0.global_position = Vector2(-4000, -4000) # thrown off the map
+		await _wait(0.6)
+		_bot_say("%s: enemy thrown off the map came back=%s (%s -> %s)" % [lv, e0.global_position.distance_to(home) < 40.0, home, e0.global_position])
+		await _unload()
+
+# Walk the first-room lessons: each stone's plaque, then do what it asks.
+func _tutorial_session() -> void:
+	await _load_level("res://scenes/levels/level_1.tscn", "knight")
+	player.god_mode = true
+	await _wait(3.5)
+	var tp: Node = level.find_child("TutorialPath", true, false)
+	if not tp:
+		_bot_say("tutorial: none (already finished on this machine)")
+		await _unload()
+		return
+	var acts := ["", "attack_1", "dodge", "block", "skill"]
+	for i in tp.stones.size():
+		var st: Node2D = tp.stones[i]
+		await _walk_to(st.global_position + Vector2(0, 14), 5.0)
+		await _wait(0.5)
+		await _shot("tutorial_%d" % i)
+		if i == 0:
+			await _walk_to(st.global_position + Vector2(16, 24), 1.5)
+		else:
+			_aim_at(st.global_position + Vector2(40, 0))
+			_tap(acts[i])
+		await _wait(0.6)
+		_bot_say("tutorial lesson %d done=%s" % [i, st.done])
+	await _shot("tutorial_end")
+	await _unload()

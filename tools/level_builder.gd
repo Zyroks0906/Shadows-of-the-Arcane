@@ -13,6 +13,7 @@ extends Node
 #   entities  'P' player start   'X' exit portal   'B' boss   'e' random enemy   's' slime   'w' wisp   'O' orc
 #             'c' Cryo crystal   'z' Electro crystal   'p' pillar / dormant crystal   'o' pot
 #             '1' silver key   '2' golden key   'D' silver door   'G' golden door   'd' boss door
+#             'v' wandering peddler (scripts/world/merchant.gd: potions and a random perk for coins)
 #             'h' health potion   'm' mana potion   '$' coin   'C' chest   'x' spike trap
 #   arenas    'R' combat room (the floor region around it, bounded by gates/doors)
 #             '=' arena gate (open until the player walks in, closes during the fight)
@@ -481,6 +482,12 @@ func _build_level(def: Dictionary) -> void:
 					shrine.set_script(load("res://scripts/world/fortune_shrine.gd"))
 					shrine.position = pos + Vector2(0, 6)
 					groups["Props"].add_child(shrine, true)
+				"v":
+					var peddler := StaticBody2D.new()
+					peddler.name = "Merchant"
+					peddler.set_script(load("res://scripts/world/merchant.gd"))
+					peddler.position = pos + Vector2(0, 6)
+					groups["Props"].add_child(peddler, true)
 				"Y": _add_sealed_chest(def, groups["Items"], pos)
 				"x": _add_instance(groups["Traps"], SCN["spikes"], pos)
 				"D": _add_door(groups["Doors"], x, y, Door.KeyType.SILVER, "")
@@ -885,7 +892,32 @@ func _add_zones(parent: Node2D) -> void:
 func _light_tex() -> GradientTexture2D:
 	return LevelAmbience.light_texture()
 
+# Props that are often nudged by hand in the editor. Each remembers where the builder put
+# it ("built_at"); if the saved scene has it somewhere else, someone moved it on purpose and
+# a rebuild keeps that spot instead of undoing it.
+const HAND_PLACED := ["Merchant", "FortuneShrine", "Transmuter"]
+
+func _keep_hand_placed(root: Node, path: String) -> void:
+	var old: Node = null
+	if ResourceLoader.exists(path):
+		var packed := load(path) as PackedScene
+		if packed:
+			old = packed.instantiate()
+	for n in HAND_PLACED:
+		var now := root.get_node_or_null("Props/" + n) as Node2D
+		if not now:
+			continue
+		var built := now.position
+		now.set_meta("built_at", built)
+		var before := old.get_node_or_null("Props/" + n) as Node2D if old else null
+		if before and before.position != before.get_meta("built_at", before.position):
+			now.position = before.position
+			print("  kept the hand-placed ", n, " at ", before.position, " (built at ", built, ")")
+	if old:
+		old.free()
+
 func _save(root: Node, path: String) -> void:
+	_keep_hand_placed(root, path)
 	_own(root, root)
 	var packed := PackedScene.new()
 	var err := packed.pack(root)

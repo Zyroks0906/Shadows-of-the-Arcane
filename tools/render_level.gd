@@ -25,6 +25,10 @@ func _ready() -> void:
 	vp.add_child(cam)
 	add_child(vp)
 	for i in 30: await get_tree().process_frame
+	# Screen overlays (the level's title card, prompts) hide the map: leave them out.
+	for c in level.find_children("*", "CanvasLayer", true, false):
+		c.visible = false
+	await get_tree().process_frame
 	await RenderingServer.frame_post_draw
 	vp.get_texture().get_image().save_png(args[1])
 	print("saved ", args[1])

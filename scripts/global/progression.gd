@@ -8,6 +8,7 @@ extends Node
 signal xp_changed(xp: int, needed: int, level: int)
 signal leveled_up(level: int)
 signal perks_changed
+signal relics_changed
 
 enum Rarity { COMMON, UNCOMMON, RARE, EPIC, LEGENDARY }
 const RARITY_NAMES := ["Common", "Uncommon", "Rare", "Epic", "Legendary"]
@@ -36,10 +37,18 @@ var level: int = 1
 var xp: int = 0
 # perk id -> summed value
 var perks: Dictionary = {}
+# relic ids owned this run (scripts/global/relics.gd)
+var relics: Array = []
 var _snapshot: Dictionary = {}
 var _pending_levels: int = 0
 # Tests and scripted play sessions: take the first card instead of opening the picker.
 var auto_pick: bool = false
+
+func _ready() -> void:
+	# Every boss leaves a relic behind (after its reward chests have risen).
+	GameManager.boss_defeated.connect(func(_n: String):
+		await get_tree().create_timer(2.4).timeout
+		Relics.grant(Relics.roll()))
 
 func xp_needed() -> int:
 	return 20 + (level - 1) * 14
@@ -124,7 +133,7 @@ func take(card: Dictionary) -> void:
 
 # Called when a map starts / when the player dies.
 func snapshot() -> void:
-	_snapshot = {"level": level, "xp": xp, "perks": perks.duplicate()}
+	_snapshot = {"level": level, "xp": xp, "perks": perks.duplicate(), "relics": relics.duplicate()}
 	_pending_levels = 0
 
 func restore() -> void:
@@ -133,6 +142,8 @@ func restore() -> void:
 	level = _snapshot["level"]
 	xp = _snapshot["xp"]
 	perks = _snapshot["perks"].duplicate()
+	relics = _snapshot.get("relics", []).duplicate()
+	relics_changed.emit()
 	_pending_levels = 0
 
 # Run statistics for the end-of-run screens. Kept across deaths and levels; a new run (class
@@ -161,5 +172,7 @@ func reset_run() -> void:
 	level = 1
 	xp = 0
 	perks.clear()
+	relics.clear()
+	Relics.reset()
 	_snapshot.clear()
 	_pending_levels = 0

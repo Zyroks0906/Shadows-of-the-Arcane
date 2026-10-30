@@ -289,3 +289,111 @@ big = fs.resize((fs.width * 8, fs.height * 8), Image.NEAREST)
 bg = Image.new('RGBA', big.size, (34, 26, 40, 255)); bg.alpha_composite(big)
 bg.save(os.path.join(os.environ.get('TEMP', OUT), 'fortune_preview.png'))
 print('fortune shrine ok')
+
+# --- Tutorial stone (scripts/world/tutorial_stone.gd), 14 x 18 -----------------------------
+# A small standing slab, rounded top, a carved rune socket the game lights up, moss at the foot.
+ts = _img(14, 18); p = ts.load()
+for y in range(18):
+    for x in range(14):
+        top_round = y < 3 and (x < 3 - y or x > 10 + y)
+        if top_round:
+            continue
+        if x in (0, 13) or y == 17 or (y == 0 and 3 <= x <= 10) or (y < 3 and (x == 3 - y or x == 10 + y)):
+            p[x, y] = O
+        elif x <= 2:
+            p[x, y] = ST_L
+        elif x >= 11:
+            p[x, y] = ST_D
+        else:
+            p[x, y] = ST_M
+for x in range(3, 11):
+    p[x, 1] = ST_H
+# The rune socket: a dark recess the glow is drawn into.
+for y in range(5, 12):
+    for x in range(4, 10):
+        p[x, y] = RUNE_D
+for x in range(4, 10):
+    p[x, 12] = ST_L
+for (x, y) in [(1, 16), (2, 16), (3, 15), (11, 16), (12, 15)]:
+    p[x, y] = MOSS
+_save(ts, 'tutorial_stone.png')
+print('tutorial stone ok')
+
+# --- Wandering peddler (scripts/world/merchant.gd), 30 x 22 -------------------------------
+# A hooded trader sitting beside a big pack (bedroll on top, a pot tied to the side), a
+# lantern on a pole at the left and a rug with his wares in front. Sized to the hero (about
+# a tile tall): the hood is as tall as the knight, the pack a little taller. The game draws
+# the lantern's flame and the eyes' glint under the hood on top.
+CL_D, CL_M, CL_L = (36, 46, 40, 255), (58, 74, 60, 255), (84, 104, 82, 255)      # cloak
+LE_D, LE_M, LE_L = (70, 42, 26, 255), (108, 68, 38, 255), (146, 98, 56, 255)      # leather
+WO_D, WO_M = (60, 40, 28, 255), (94, 64, 40, 255)                               # wood
+RUG_D, RUG_M = (92, 24, 34, 255), (138, 40, 48, 255)
+SKIN = (196, 150, 112, 255)
+MW, MH = 30, 22
+mp = _img(MW, MH); p = mp.load()
+def box(x0, y0, x1, y1, c):
+    for yy in range(y0, y1 + 1):
+        for xx in range(x0, x1 + 1):
+            p[xx, yy] = c
+def outline():
+    src = mp.copy().load()
+    for yy in range(MH):
+        for xx in range(MW):
+            if src[xx, yy][3]:
+                continue
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                nx, ny = xx + dx, yy + dy
+                if 0 <= nx < MW and 0 <= ny < MH and src[nx, ny][3] and src[nx, ny] != O:
+                    p[xx, yy] = O
+                    break
+# Rug in perspective (wider at the front), gold fringe along the front edge.
+for y in range(16, 21):
+    inset = (20 - y) // 2
+    for x in range(2 + inset, 28 - inset):
+        p[x, y] = RUG_M if (x + y) % 5 else RUG_D
+for x in range(5, 25):
+    p[x, 17] = GOLD_D if x % 2 else RUG_D
+for x in range(2, 28, 2):
+    p[x, 21] = GOLD_M
+# Lantern pole (left) with the lantern hanging from a crossbar.
+for y in range(2, 19):
+    p[2, y] = WO_M if y % 3 else WO_D
+box(2, 2, 5, 2, WO_D)
+box(4, 3, 6, 6, IRON); box(5, 4, 5, 5, GOLD_H)
+# Pack behind the trader: a bulging leather sack, a flap with a brass buckle, a rolled
+# bedroll on top and a pot tied to its side.
+for y in range(3, 16):
+    for x in range(14, 25):
+        if ((x - 19.0) / 5.4) ** 2 + ((y - 9.5) / 6.6) ** 4 <= 1.0:
+            p[x, y] = LE_L if x < 16 else (LE_D if x > 22 else LE_M)
+box(15, 4, 23, 6, LE_D); box(15, 4, 21, 5, LE_M)
+p[19, 7] = GOLD_L
+for x in range(13, 26):
+    p[x, 1] = (156, 128, 96, 255); p[x, 2] = (122, 96, 70, 255); p[x, 3] = (92, 72, 52, 255)
+p[13, 2] = (176, 148, 112, 255)
+p[17, 2] = LE_D; p[22, 2] = LE_D
+box(24, 8, 26, 11, (120, 74, 48, 255)); p[25, 7] = (120, 74, 48, 255); p[24, 8] = (156, 104, 68, 255)
+# The trader: a pointed hood bent forward, a shadowed face, a cloak spreading out as he
+# sits, both hands turning a coin.
+rows = {2: (10, 11), 3: (9, 12), 4: (8, 13), 5: (7, 14), 6: (7, 14), 7: (7, 14), 8: (7, 15), 9: (6, 15),
+        10: (6, 15), 11: (6, 16), 12: (5, 16), 13: (5, 16), 14: (5, 17), 15: (4, 17), 16: (4, 17)}
+for y, (x0, x1) in rows.items():
+    for x in range(x0, x1 + 1):
+        p[x, y] = CL_L if x < x0 + 2 else (CL_D if x > x1 - 2 else CL_M)
+p[12, 1] = CL_D                                              # the hood's tip
+box(9, 5, 13, 7, (16, 14, 18, 255)); p[9, 5] = CL_M; p[13, 5] = CL_D   # face in the shadow
+for y in range(9, 17):
+    p[11, y] = CL_D                                          # cloak opening
+box(9, 11, 13, 11, SKIN); p[10, 11] = (226, 186, 150, 255); p[11, 10] = GOLD_H
+# Wares on the rug: a red and a blue flask and a sealed scroll.
+def flask(x, col, hi):
+    box(x, 16, x + 1, 18, col); p[x, 16] = hi; p[x, 15] = (190, 186, 200, 255)
+flask(17, (186, 30, 46, 255), (240, 120, 120, 255))
+flask(21, (40, 84, 200, 255), (130, 170, 250, 255))
+box(24, 17, 26, 18, (226, 210, 168, 255)); p[25, 18] = RED_L
+outline()
+_save(mp, 'merchant.png')
+big = mp.resize((MW * 10, MH * 10), Image.NEAREST)
+bg = Image.new('RGBA', big.size, (34, 26, 40, 255)); bg.alpha_composite(big)
+bg.save(os.path.join(os.environ.get('TEMP', OUT), 'merchant_preview.png'))
+print('merchant ok')

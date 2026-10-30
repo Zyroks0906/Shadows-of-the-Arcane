@@ -154,7 +154,7 @@ func _lunge() -> void:
 	AudioManager.play_bank_at("dagger_swing", global_position, 0.0, 0.7)
 
 func _leap() -> void:
-	var land := player.global_position
+	var land: Vector2 = BossMoves.safe_spot(get_world_2d(), global_position, player.global_position, [get_rid(), player.get_rid()], 7.0)
 	_play_animation("jump")
 	BossMoves.warn_circle(get_parent(), land, 28.0, 0.8)
 	CombatFX.pvfx("landing-dust", global_position, 0.4)

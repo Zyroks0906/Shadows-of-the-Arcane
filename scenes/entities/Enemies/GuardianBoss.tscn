@@ -55,7 +55,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/walk/walk_9.png" id="53_6tc7h"]
 [ext_resource type="Texture2D" path="res://assets/sprites/enemies/Bosses/Guardian/PNG files/walk/walk_10.png" id="54_14nuq"]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_18fde"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_l2nl7"]
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -242,21 +242,21 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8ur0m"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rdqk5"]
 radius = 9.0
 height = 26.0
 
-[node name="Guardian" type="CharacterBody2D" unique_id=545822599]
+[node name="Guardian" type="CharacterBody2D" unique_id=2075018098]
 collision_layer = 4
 collision_mask = 5
 script = ExtResource("1_l2nl7")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1153063615]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1156084421]
 texture_filter = 1
 scale = Vector2(0.55, 0.55)
-sprite_frames = SubResource("SpriteFrames_18fde")
+sprite_frames = SubResource("SpriteFrames_l2nl7")
 animation = &"idle"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1955600151]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1071117752]
 position = Vector2(0, 14)
-shape = SubResource("CapsuleShape2D_8ur0m")
+shape = SubResource("CapsuleShape2D_rdqk5")
