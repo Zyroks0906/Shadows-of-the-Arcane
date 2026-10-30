@@ -948,6 +948,7 @@ func _try_dodge(move_dir: Vector2) -> bool:
 		animated_sprite.flip_h = _dodge_dir.x < 0
 	AudioManager.play_bank("fist_swing", -4.0, 1.15)
 	AudioManager.play_bank("footstep", -10.0, 0.9)
+	Relics.on_dodge(self)
 	return true
 
 # Front-loaded burst: fast at the start, easing out (the speed curve integrates to exactly
@@ -993,6 +994,11 @@ func _cancel_actions() -> void:
 func receive_damage(amount: int) -> void:
 	if not is_alive or _is_invulnerable():
 		return
+	if amount > 0 and not god_mode:
+		amount = Relics.incoming(self, amount)
+		if amount <= 0:
+			_start_invulnerability(INVULNERABILITY_TIME * 0.5)
+			return
 	if shield_hp > 0 and amount > 0:
 		var absorbed := mini(shield_hp, amount)
 		shield_hp -= absorbed

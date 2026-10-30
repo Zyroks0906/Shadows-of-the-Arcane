@@ -240,8 +240,10 @@ func take_elemental_hit(damage: int, element: ElementalSystem.Element, source: N
 	var by_player := source is Player
 	if by_player:
 		Progression.player_hit_depth += 1
+		damage = Relics.outgoing(self, damage)
 	_take_hit(damage, element, source)
 	if by_player:
+		Relics.after_hit(self, damage)
 		Progression.player_hit_depth -= 1
 
 func _take_hit(damage: int, element: ElementalSystem.Element, source: Node) -> void:
@@ -532,6 +534,7 @@ func die() -> void:
 	if elite:
 		elite.on_death()
 	Progression.stat("kills")
+	Relics.on_kill(self, elite != null)
 	_drop_coins()
 	if elite:
 		Progression.stat("elites")
