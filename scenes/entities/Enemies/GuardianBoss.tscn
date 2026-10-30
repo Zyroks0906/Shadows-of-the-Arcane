@@ -246,17 +246,17 @@ animations = [{
 radius = 9.0
 height = 26.0
 
-[node name="Guardian" type="CharacterBody2D" unique_id=553871496]
+[node name="Guardian" type="CharacterBody2D" unique_id=1604175718]
 collision_layer = 4
 collision_mask = 5
 script = ExtResource("1_l2nl7")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=149523331]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=634876914]
 texture_filter = 1
 scale = Vector2(0.55, 0.55)
 sprite_frames = SubResource("SpriteFrames_l2nl7")
 animation = &"idle"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1953470550]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1892639948]
 position = Vector2(0, 14)
 shape = SubResource("CapsuleShape2D_rdqk5")
