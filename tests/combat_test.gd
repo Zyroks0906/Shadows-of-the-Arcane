@@ -206,7 +206,11 @@ func _run_progression() -> void:
 	GameManager.total_coins = 5
 	check(t.transmute_all(true) == 2 and GameManager.mana_potions == 1 and GameManager.total_coins == 1, "TRANSMUTE ALL makes as many as you can pay for")
 	GameManager.current_map = GameManager.MAPS[0]
-	check(GameManager.next_map() == GameManager.MAPS[1], "map 1 leads to map 2")
+	check(GameManager.level_index(GameManager.next_map()) == 1, "map 1 leads to a layout of map 2")
+	GameManager.start_run(424242)
+	var first := GameManager.run_maps.duplicate()
+	GameManager.start_run(424242)
+	check(GameManager.run_maps == first, "the same seed always draws the same layouts")
 	GameManager.current_map = GameManager.MAPS[2]
 	check(GameManager.next_map() == "", "map 3 is the last one")
 	kn.queue_free()

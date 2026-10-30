@@ -54,11 +54,9 @@ func _on_map_3_pressed() -> void:
 		popup.popup_centered()
 
 func _load_level(id: int) -> void:
-	var path = ""
-	if id == 1:
-		path = "res://scenes/levels/level_1.tscn"
-	else:
-		path = "res://scenes/levels/level_" + str(id) + ".tscn"
+	# Every run from here is a new seed: its own layout for each level.
+	GameManager.start_run()
+	var path := GameManager.map_for(id - 1)
 
 	if ResourceLoader.exists(path):
 		DifficultyPopup.ask(func(): SceneManager.load_scene(path)) # each run picks its difficulty

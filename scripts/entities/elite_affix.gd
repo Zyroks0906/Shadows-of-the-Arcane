@@ -55,7 +55,7 @@ static func roll(e: Enemy) -> EliteAffix:
 	if not enabled or e is BossBase or e.max_health >= 300: # no elite bosses or minibosses
 		return null
 	if forced < 0 and not e.force_elite:
-		var lvl := maxi(GameManager.MAPS.find(GameManager.current_map), 0)
+		var lvl := maxi(GameManager.level_index(GameManager.current_map), 0)
 		if randf() >= CHANCE_BY_LEVEL[mini(lvl, CHANCE_BY_LEVEL.size() - 1)]:
 			return null
 	var a := EliteAffix.new()

@@ -44,11 +44,11 @@ var _glass: Node2D
 
 # The chamber it stands in sets the price (the level scene above it, else the current map).
 func cost() -> int:
-	var lvl := GameManager.MAPS.find(GameManager.current_map)
+	var lvl := GameManager.level_index(GameManager.current_map)
 	var n: Node = self
 	while n:
-		if n.scene_file_path in GameManager.MAPS:
-			lvl = GameManager.MAPS.find(n.scene_file_path)
+		if GameManager.level_index(n.scene_file_path) >= 0:
+			lvl = GameManager.level_index(n.scene_file_path)
 			break
 		n = n.get_parent()
 	lvl = maxi(lvl, 0)
