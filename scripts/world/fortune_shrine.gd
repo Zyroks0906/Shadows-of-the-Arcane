@@ -3,17 +3,21 @@ class_name FortuneShrine
 
 # The Fortune Shrine: a stone one-armed bandit, somewhere to spend the coins a run piles up.
 # F opens it; each pull costs coins (more in later chambers) and spins three reels:
-#   3 stars   -> a rare perk (the jackpot)        3 potions -> a health potion
-#   3 coins   -> four times the stake back         2 coins   -> the stake back
-#   2 skulls  -> a curse: you lose 15% health      3 skulls  -> a curse: an ambush, one elite
+#   3 stars   -> jackpot: pick one of three rare+ perks     2 stars   -> a random perk
+#   3 moons   -> pick one of three uncommon+ perks          2 moons   -> the stake back
+#   3 coins   -> five times the stake                       2 coins   -> twice the stake
+#   3 potions -> two health potions and a mana potion       2 potions -> a health potion
+#   3 skulls  -> a curse: an ambush, one elite              2 skulls  -> you lose 10% health
 #   anything else -> the shrine keeps your coins.
+# Odds (200k simulated pulls): a triple about one pull in five, the jackpot 3%; something
+# won on ~56%, the stake back on 10%, nothing on 23%, a curse on 11%. It used to be 59%
+# nothing at all and a 1% jackpot, and players stopped pulling.
 # Art: assets/sprites/props/fortune_shrine.png (tools/gen_props_art.py); reels drawn here.
 
 enum Sym { COIN, POTION, STAR, SKULL, MOON }
-const WEIGHTS := {Sym.COIN: 30, Sym.POTION: 20, Sym.STAR: 16, Sym.SKULL: 20, Sym.MOON: 14}
+const WEIGHTS := {Sym.COIN: 26, Sym.POTION: 22, Sym.STAR: 18, Sym.SKULL: 16, Sym.MOON: 18}
 const COST_BY_LEVEL := [10, 15, 20]
 const ART := "res://assets/sprites/props/fortune_shrine.png"
-const HEALTH := "res://scenes/world/HealthPotion.tscn"
 const SIZE := Vector2(32, 40)
 const WINDOWS := [Vector2(7.5, 21), Vector2(14.5, 21), Vector2(21.5, 21)] # reel centres in the art
 
@@ -50,7 +54,7 @@ func cost() -> int:
 	lvl = maxi(lvl, 0)
 	return COST_BY_LEVEL[mini(lvl, COST_BY_LEVEL.size() - 1)]
 
-const STICKY := 0.15 # chance a reel lands on the same symbol as the one before it
+const STICKY := 0.3 # chance a reel lands on the same symbol as the one before it
 
 static func roll_symbol() -> int:
 	var total := 0
@@ -64,14 +68,15 @@ static func roll_symbol() -> int:
 	return Sym.MOON
 
 # Three reels; each may "stick" to the previous symbol, so lines come up a bit more often
-# (about one pull in nine is a three-of-a-kind) while most pulls still lose.
+# (about one pull in five is a three-of-a-kind).
 static func pull() -> Array[int]:
 	var out: Array[int] = []
 	for i in 3:
 		out.append(out[i - 1] if i > 0 and randf() < STICKY else roll_symbol())
 	return out
 
-# What a line pays: [kind, text]. kind: jackpot | potion | coins4 | refund | hurt | ambush | none
+# What a line pays: [kind, text]. kind: jackpot | moonlit | coins5 | potions | perk | double |
+# flask | refund | hurt | ambush | none
 static func judge(line: Array[int]) -> Array:
 	var n := {}
 	for s in line:
@@ -80,14 +85,22 @@ static func judge(line: Array[int]) -> Array:
 		return ["jackpot", "JACKPOT! The stars align: a rare blessing."]
 	if n.get(Sym.SKULL, 0) == 3:
 		return ["ambush", "CURSED! The dead answer the shrine's call."]
-	if n.get(Sym.POTION, 0) == 3:
-		return ["potion", "Three flasks: a health potion is yours."]
+	if n.get(Sym.MOON, 0) == 3:
+		return ["moonlit", "Three moons: a blessing of your choice."]
 	if n.get(Sym.COIN, 0) == 3:
-		return ["coins4", "Three coins: the shrine pays four times over!"]
+		return ["coins5", "Three coins: the shrine pays five times over!"]
+	if n.get(Sym.POTION, 0) == 3:
+		return ["potions", "Three flasks: two health potions and a mana potion."]
+	if n.get(Sym.STAR, 0) == 2:
+		return ["perk", "Two stars: a blessing, sight unseen."]
 	if n.get(Sym.SKULL, 0) == 2:
 		return ["hurt", "Two skulls: the shrine drinks some of your life."]
 	if n.get(Sym.COIN, 0) == 2:
-		return ["refund", "Two coins: your stake comes back."]
+		return ["double", "Two coins: your stake comes back doubled."]
+	if n.get(Sym.POTION, 0) == 2:
+		return ["flask", "Two flasks: a health potion."]
+	if n.get(Sym.MOON, 0) == 2:
+		return ["refund", "Two moons: your stake comes back."]
 	return ["none", "Nothing. The shrine keeps your coins."]
 
 func _ready() -> void:
@@ -170,16 +183,29 @@ func reward(kind: String, stake: int) -> void:
 				Progression.take(Progression.roll(3, Progression.Rarity.RARE)[0])
 			else:
 				PerkPicker.offer("FORTUNE'S FAVOUR", Progression.roll(3, Progression.Rarity.RARE))
-		"potion":
-			var pot: Node2D = load(HEALTH).instantiate()
-			get_parent().add_child(pot)
-			pot.global_position = global_position + Vector2(0, 14)
-		"coins4", "refund":
-			GameManager.total_coins += stake * (4 if kind == "coins4" else 1)
+		"moonlit":
+			flash()
+			AudioManager.play_bank("gem", -2.0, 1.0)
+			if Progression.auto_pick:
+				Progression.take(Progression.roll(3, Progression.Rarity.UNCOMMON)[0])
+			else:
+				PerkPicker.offer("MOONLIT BLESSING", Progression.roll(3, Progression.Rarity.UNCOMMON))
+		"perk":
+			if Progression.auto_pick:
+				Progression.take(Progression.roll(1)[0])
+			else:
+				PerkPicker.offer("TWO STARS", Progression.roll(1))
+		"potions", "flask":
+			GameManager.add_health_potion(2 if kind == "potions" else 1)
+			if kind == "potions":
+				GameManager.add_mana_potion(1)
+			AudioManager.play_bank("bottle", -4.0, 1.0)
+		"coins5", "double", "refund":
+			GameManager.total_coins += stake * {"coins5": 5, "double": 2, "refund": 1}[kind]
 			AudioManager.play_bank("coin", -2.0, 1.1)
 		"hurt":
 			if pl:
-				pl.receive_damage(maxi(5, roundi(pl.max_health * 0.15)))
+				pl.receive_damage(maxi(4, roundi(pl.max_health * 0.10)))
 		"ambush":
 			_ambush(pl)
 
@@ -215,7 +241,7 @@ class FortuneMenu extends CanvasLayer:
 	const TEXT := Color(0.92, 0.88, 0.8)
 	const DIM := Color(0.62, 0.58, 0.54)
 	const W := 760.0
-	const H := 476.0
+	const H := 516.0
 
 	static var _open: CanvasLayer
 
@@ -288,22 +314,25 @@ class FortuneMenu extends CanvasLayer:
 		var col := ColorRect.new()
 		col.color = Color(VIOLET, 0.25)
 		col.position = Vector2(424, 108)
-		col.size = Vector2(2, 210)
+		col.size = Vector2(2, 286)
 		panel.add_child(col)
-		var rows := [[[2, 2, 2], "Rare perk", GOLD], [[1, 1, 1], "Health potion", TEXT], [[0, 0, 0], "Stake x4", TEXT],
-			[[0, 0, -1], "Stake back", TEXT], [[3, 3, -1], "Lose 15% health", Color(1.0, 0.5, 0.5)], [[3, 3, 3], "Ambush!", Color(1.0, 0.5, 0.5)]]
+		var bad := Color(1.0, 0.5, 0.5)
+		var rows := [[[2, 2, 2], "Pick a rare perk", GOLD], [[4, 4, 4], "Pick a perk", GOLD],
+			[[0, 0, 0], "Stake x5", TEXT], [[1, 1, 1], "2 health + 1 mana", TEXT], [[2, 2, -1], "Random perk", TEXT],
+			[[0, 0, -1], "Stake x2", TEXT], [[1, 1, -1], "Health potion", TEXT], [[4, 4, -1], "Stake back", TEXT],
+			[[3, 3, -1], "Lose 10% health", bad], [[3, 3, 3], "Ambush!", bad]]
 		for k in rows.size():
-			var y := 112.0 + k * 34.0
+			var y := 110.0 + k * 29.0
 			var icons := _Line.new()
 			icons.syms = rows[k][0]
 			icons.position = Vector2(446, y)
 			icons.size = Vector2(96, 26)
 			panel.add_child(icons)
 			_text(panel, rows[k][1], 22, rows[k][2], Vector2(556, y - 1), 180, HORIZONTAL_ALIGNMENT_LEFT)
-		_coins = _text(panel, "", 22, GOLD, Vector2(0, 372), W, HORIZONTAL_ALIGNMENT_CENTER)
-		_spin = _button(panel, "PULL", Vector2(W / 2.0 - 110, 410), Vector2(104, 44))
+		_coins = _text(panel, "", 22, GOLD, Vector2(0, 412), W, HORIZONTAL_ALIGNMENT_CENTER)
+		_spin = _button(panel, "PULL", Vector2(W / 2.0 - 110, 450), Vector2(104, 44))
 		_spin.pressed.connect(_pull)
-		var leave := _button(panel, "LEAVE", Vector2(W / 2.0 + 6, 410), Vector2(104, 44))
+		var leave := _button(panel, "LEAVE", Vector2(W / 2.0 + 6, 450), Vector2(104, 44))
 		leave.pressed.connect(_close)
 		_refresh()
 
@@ -335,15 +364,15 @@ class FortuneMenu extends CanvasLayer:
 		var verdict := FortuneShrine.judge(line)
 		_result.text = verdict[1]
 		var kind: String = verdict[0]
-		var good := kind in ["jackpot", "potion", "coins4", "refund"]
-		AudioManager.play_bank("gem" if good else ("ui_error" if kind != "none" else "ui_back"), -4.0, 1.2 if kind == "jackpot" else 0.9)
+		var good := kind in ["jackpot", "moonlit", "coins5", "potions", "perk", "double", "flask", "refund"]
+		AudioManager.play_bank("gem" if good else ("ui_error" if kind != "none" else "ui_back"), -4.0, 1.2 if kind in ["jackpot", "moonlit"] else 0.9)
 		for r in _reels:
 			r.glow = Color(1.0, 0.85, 0.4) if good else (Color(1.0, 0.35, 0.4) if kind in ["hurt", "ambush"] else Color(0, 0, 0, 0))
 		if is_instance_valid(_shrine):
 			_shrine.flash()
 		_spinning = false
 		# Effects that need the world (a perk card, an ambush, a hit) happen after leaving.
-		if kind in ["jackpot", "ambush", "hurt", "potion"]:
+		if kind in ["jackpot", "moonlit", "perk", "ambush", "hurt"]:
 			_pending = kind
 			await get_tree().create_timer(1.1, true, false, true).timeout
 			_close()
@@ -356,9 +385,10 @@ class FortuneMenu extends CanvasLayer:
 		if event is InputEventKey and event.pressed and not event.echo:
 			match event.keycode:
 				KEY_SPACE, KEY_1, KEY_KP_1: _pull()
-				KEY_ESCAPE, KEY_F:
+				KEY_ESCAPE:
 					if not _spinning:
 						_close()
+				# F does nothing while the window is open (it used to close and reopen it).
 			get_viewport().set_input_as_handled()
 
 	func _close() -> void:
