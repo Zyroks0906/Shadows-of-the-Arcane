@@ -1531,7 +1531,7 @@ func _chamber_session() -> void:
 
 # Every fortune shrine, transmuter and peddler of every map, close up against its wall.
 func _wallprops_session() -> void:
-	var maps := GameManager.variants(1) + GameManager.variants(2) + [GameManager.MAPS[0]]
+	var maps := GameManager.variants(0) + GameManager.variants(1) + GameManager.variants(2)
 	var k := 0
 	for path in maps:
 		await _load_level(path, "knight")
@@ -1554,8 +1554,10 @@ func _wallprops_session() -> void:
 # Every seeded layout of maps 2 and 3: it loads, it has what a level needs, its puzzles are
 # built and wired, and no pickup sits in a wall.
 func _variants_session() -> void:
-	for lv in [1, 2]:
+	for lv in [0, 1, 2]:
 		for path in GameManager.variants(lv):
+			if path == GameManager.MAPS[0]:
+				continue # the hand-made map 1 has its own checks
 			await _load_level(path, "knight")
 			player.god_mode = true
 			await _wait(0.5)
