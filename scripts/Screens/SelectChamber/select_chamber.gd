@@ -53,9 +53,13 @@ func _on_map_3_pressed() -> void:
 	else:
 		popup.popup_centered()
 
+var _seed_edit: LineEdit
+
 func _load_level(id: int) -> void:
-	# Every run from here is a new seed: its own layout for each level.
-	GameManager.start_run()
+	# Every run from here has its own seed (typed in to replay one, else rolled): its own
+	# layout for each level.
+	var typed := int(_seed_edit.text) if _seed_edit and _seed_edit.text.is_valid_int() else 0
+	GameManager.start_run(typed)
 	var path := GameManager.map_for(id - 1)
 
 	if ResourceLoader.exists(path):
@@ -87,3 +91,26 @@ func _add_nav_buttons() -> void:
 		var path: String = specs[i][1]
 		b.pressed.connect(func(): SceneManager.load_scene(path))
 		layer.add_child(b)
+	# A seed to replay (or share) a run's layouts; empty rolls a new one.
+	_seed_edit = LineEdit.new()
+	_seed_edit.placeholder_text = "SEED (optional)"
+	_seed_edit.max_length = 9
+	_seed_edit.size = Vector2(220, 40)
+	_seed_edit.position = Vector2(vp.x - 236, vp.y - 56)
+	_seed_edit.add_theme_font_size_override("font_size", 16)
+	var box := StyleBoxFlat.new()
+	box.bg_color = Color(0.07, 0.04, 0.08, 0.92)
+	box.border_color = Color(gold, 0.6)
+	box.set_border_width_all(2)
+	box.content_margin_left = 10
+	_seed_edit.add_theme_stylebox_override("normal", box)
+	_seed_edit.add_theme_stylebox_override("focus", box)
+	_seed_edit.text_changed.connect(func(t: String):
+		var digits := ""
+		for c in t:
+			if c >= "0" and c <= "9":
+				digits += c
+		if digits != t:
+			_seed_edit.text = digits
+			_seed_edit.caret_column = digits.length())
+	layer.add_child(_seed_edit)

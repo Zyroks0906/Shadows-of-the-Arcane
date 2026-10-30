@@ -51,6 +51,13 @@ func _add_run_summary() -> void:
 			l.custom_minimum_size = Vector2(70 if k == 1 else 170, 0)
 			grid.add_child(l)
 	stats_container.add_child(grid)
+	var seed_l := Label.new()
+	seed_l.text = GameManager.variant_text()
+	seed_l.add_theme_font_override("font", f)
+	seed_l.add_theme_font_size_override("font_size", 22)
+	seed_l.add_theme_color_override("font_color", Color(0.62, 0.58, 0.54))
+	seed_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	stats_container.add_child(seed_l)
 
 func _set_initial_state() -> void:
 	dark_overlay.color.a = 0.0

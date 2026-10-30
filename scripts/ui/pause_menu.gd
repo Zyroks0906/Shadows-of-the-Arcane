@@ -30,9 +30,32 @@ func toggle_pause() -> void:
 	_arm_restart(false)
 	get_tree().paused = new_state
 	visible = new_state
+	if new_state:
+		_show_seed()
 	if not new_state:
 		var uic = get_node_or_null("/root/UIController")
 		if uic: uic.hide_options()
+
+# The run's seed and which layout of this map it drew, so a run can be told apart and
+# shared (it can be typed in on the chamber screen to play the same layouts).
+var _seed_label: Label
+
+func _show_seed() -> void:
+	if not _seed_label:
+		_seed_label = Label.new()
+		var f: FontFile = load("res://assets/fonts/PixelifySans.ttf")
+		f.antialiasing = TextServer.FONT_ANTIALIASING_NONE
+		_seed_label.add_theme_font_override("font", f)
+		_seed_label.add_theme_font_size_override("font_size", 22)
+		_seed_label.add_theme_color_override("font_color", Color(0.75, 0.7, 0.62))
+		_seed_label.add_theme_color_override("font_outline_color", Color(0, 0, 0))
+		_seed_label.add_theme_constant_override("outline_size", 4)
+		_seed_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		add_child(_seed_label)
+	var vp := get_viewport().get_visible_rect().size
+	_seed_label.text = GameManager.variant_text()
+	_seed_label.size = Vector2(vp.x, 30)
+	_seed_label.position = Vector2(0, vp.y - 44)
 
 func resume_game() -> void:
 	get_tree().paused = false

@@ -74,6 +74,7 @@ func _ready() -> void:
 			"anims": await _anims_session()
 			"variants": await _variants_session()
 			"wallprops": await _wallprops_session()
+			"chamber": await _chamber_session()
 			"decor_check": await _decor_check_session()
 			"bounds": await _bounds_session()
 			"tutorial": await _tutorial_session()
@@ -1515,6 +1516,18 @@ func _vault_exit_session() -> void:
 	await _wait(1.4)
 	_bot_say("after climbing: %s (near the hall stairs %s: %s)" % [player.global_position, down.global_position, player.global_position.distance_to(down.global_position) < 60.0])
 	await _unload()
+
+# The chamber screen (seed field) and a seed shown in a level.
+func _chamber_session() -> void:
+	var ch: Node = load("res://scenes/Screens/SelectChamber.tscn").instantiate()
+	add_child(ch)
+	await _wait(1.0)
+	ch._seed_edit.text = "123456"
+	await _wait(0.2)
+	await _shot("chamber_seed")
+	ch.queue_free()
+	GameManager.start_run(123456)
+	_bot_say("seed 123456 draws %s" % [GameManager.run_maps.map(func(p): return p.get_file())])
 
 # Every fortune shrine, transmuter and peddler of every map, close up against its wall.
 func _wallprops_session() -> void:
