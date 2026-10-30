@@ -40,10 +40,11 @@ la fase 1.
       alcanzables, pociones) y su prueba en juego (`playtest variants`).
 - [x] Regla de pared del fondo para tragaperras, transmutador y mercader (`assemble.wall_ok`),
       aplicada también a los mapas hechos a mano (`playtest wallprops`).
-- [ ] 4 variantes del nivel 1 con su estilo (Gólem, cripta).
-- [ ] Mostrar la semilla en pausa/victoria y poder escribir una para repetirla.
-- [ ] Paredes agrietadas con salas secretas.
-- [ ] Historia: tablillas y páginas por los mapas, Diario que se guarda entre partidas.
+- [x] 4 variantes del nivel 1 con su estilo (Gólem, cripta): 15 mapas en total.
+- [x] Semilla visible en pausa/victoria y campo para escribirla en la pantalla de cámaras.
+- [x] Paredes agrietadas (`CrackedWall`, 3 golpes) con sala secreta en cada variante generada.
+- [x] Historia: 15 páginas (`Lore`), tablillas `LoreStone` (2 por mapa) y Diario en la pausa,
+      guardado entre partidas (`user://journal.cfg`).
 - [ ] Minimapa en la esquina + mapa completo con TAB.
 - [ ] Altares de elección (p. ej. -20 % vida máxima por una reliquia).
 

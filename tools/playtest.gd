@@ -75,6 +75,7 @@ func _ready() -> void:
 			"variants": await _variants_session()
 			"wallprops": await _wallprops_session()
 			"chamber": await _chamber_session()
+			"secrets": await _secrets_session()
 			"decor_check": await _decor_check_session()
 			"bounds": await _bounds_session()
 			"tutorial": await _tutorial_session()
@@ -1515,6 +1516,51 @@ func _vault_exit_session() -> void:
 	player.interact()
 	await _wait(1.4)
 	_bot_say("after climbing: %s (near the hall stairs %s: %s)" % [player.global_position, down.global_position, player.global_position.distance_to(down.global_position) < 60.0])
+	await _unload()
+
+# A secret room and the story: the cracked wall blocks until three blows bring it down, the
+# tablet behind it gives a page to the Journal (a test journal, never the player's).
+func _secrets_session() -> void:
+	Lore.use_test_journal()
+	await _load_level("res://scenes/levels/level_1_s2.tscn", "knight")
+	player.god_mode = true
+	for e in get_tree().get_nodes_in_group("enemies"):
+		e.queue_free()
+	await _wait(0.5)
+	var cw := level.find_child("CrackedWall", true, false) as CrackedWall
+	var space: PhysicsDirectSpaceState2D = level.get_world_2d().direct_space_state
+	var walls := level.get_node("Walls") as TileMapLayer
+	var probe := PhysicsPointQueryParameters2D.new()
+	probe.position = cw.global_position
+	probe.collision_mask = 1
+	var blocked_before := not space.intersect_point(probe, 1).is_empty()
+	var zcell := cw.cell
+	player.global_position = cw.global_position + Vector2(0, 0) + (Vector2(18, 0) if walls.get_cell_source_id(cw.cell + Vector2i(1, 0)) == -1 else Vector2(-18, 0))
+	await _wait(3.0)
+	await _shot("secret_wall_before")
+	for i in 3:
+		cw.break_open(Vector2.LEFT)
+		await _wait(0.25)
+	await _wait(0.3)
+	await _shot("secret_wall_after")
+	var blocked_after := not space.intersect_point(probe, 1).is_empty()
+	_bot_say("cracked wall: blocked before=%s, wall tile left=%s, blocked after=%s" % [blocked_before, walls.get_cell_source_id(zcell) != -1, blocked_after])
+	var stones := level.find_children("*", "StaticBody2D", true, false).filter(func(n): return n is LoreStone)
+	var st: LoreStone = stones[0]
+	player.global_position = st.global_position + Vector2(0, 16)
+	await _wait(0.6)
+	await _shot("lore_stone")
+	st.interact(player)
+	await _wait(0.5)
+	await _shot("lore_page")
+	_bot_say("tablets in this map: %d; read one: page open=%s, journal %d/%d" % [stones.size(), LoreStone.LorePage.is_open(), Lore.found_count(), Lore.total()])
+	LoreStone.LorePage._open.queue_free()
+	LoreStone.LorePage._open = null
+	get_tree().paused = false
+	JournalMenu.open_menu()
+	await _wait(0.4)
+	await _shot("journal")
+	JournalMenu._open.queue_free()
 	await _unload()
 
 # The chamber screen (seed field) and a seed shown in a level.

@@ -10,7 +10,11 @@
       = original + 4 generadas; el Diario de historia se guarda entre partidas.
 - [x] Tragaperras/transmutador/mercader: regla `wall_ok` (pared del fondo, a 2+ casillas de
       cualquier abertura, sin columnas al lado). Revisado con capturas en los 11 mapas.
-- [ ] Siguiente: variantes del nivel 1, semilla visible/editable, salas secretas, historia + Diario.
+- [x] Variantes del nivel 1 (`forgotten_crypt_s2..5`, builder `variants_only`: nunca toca level_1.tscn),
+      semilla en pausa/victoria y campo en la pantalla de cámaras, salas secretas tras paredes
+      agrietadas (`Z`), 15 páginas de historia en tablillas (`?`) y Diario en la pausa.
+      Tests de historia usan `Lore.use_test_journal()` para no tocar el Diario real.
+      `playtest secrets` (pared, tablilla, página, Diario) y `playtest variants` (15 mapas).
 
 ## HECHO (30-10) — Fase 3
 - [x] 4 arquetipos con sprites de LuizMelo (CC0) y 2 élites nuevas; ver ROADMAP fase 3.
