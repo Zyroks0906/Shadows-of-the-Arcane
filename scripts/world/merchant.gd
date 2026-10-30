@@ -44,11 +44,11 @@ func price(ware: Dictionary) -> int:
 func _find_level_index() -> int:
 	var n: Node = get_parent()
 	while n:
-		var i := GameManager.MAPS.find(n.scene_file_path)
+		var i := GameManager.level_index(n.scene_file_path)
 		if i >= 0:
 			return i
 		n = n.get_parent()
-	return maxi(GameManager.MAPS.find(GameManager.current_map), 0)
+	return maxi(GameManager.level_index(GameManager.current_map), 0)
 
 func _ready() -> void:
 	collision_layer = 1

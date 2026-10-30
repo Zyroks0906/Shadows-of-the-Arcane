@@ -1,0 +1,70 @@
+extends Enemy
+class_name SheetEnemy
+
+# Base for the creatures from LuizMelo's packs (assets/sprites/enemies/LuizMelo, CC0):
+# side-view strips of 150 x 150 frames, one PNG per animation, feet on row FEET_Y. Each
+# creature lists its strips in `sheets`; they are cut into SpriteFrames here and the sprite
+# is scaled so the body stands at `body_px` world pixels next to the ~15 px hero.
+
+const ROOT := "res://assets/sprites/enemies/LuizMelo/%s/%s.png"
+const FRAME := 150
+const FEET_Y := 101
+
+var folder := "Skeleton"
+var body_px := 17.0          # how tall the creature stands, in world pixels
+var art_px := 51.0           # its height in the art (opaque rows of an idle frame)
+# anim -> [file, fps, loop]
+var sheets := {
+	"idle": ["Idle", 7.0, true], "walk": ["Walk", 9.0, true], "attack": ["Attack", 12.0, false],
+	"hurt": ["TakeHit", 12.0, false], "death": ["Death", 9.0, false],
+}
+
+var _body_x := FRAME / 2.0   # the body's centre column in the art (measured on the idle pose)
+
+func _ready() -> void:
+	_init_stats() # each creature names its folder and strips there (Enemy._ready runs it again)
+	animated_sprite.sprite_frames = _build()
+	animated_sprite.centered = false
+	_body_x = _measure_body_x()
+	_anchor()
+	animated_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	animated_sprite.scale = Vector2.ONE * (body_px / art_px)
+	super._ready()
+	animated_sprite.play("idle")
+
+# The artist did not centre every creature in its frame (the skeleton stands 7 px right of
+# the middle). Mirroring a sprite mirrors the art inside the same rectangle, so the body
+# would jump sideways each time it turns: keep its centre column on the origin either way.
+func _process(delta: float) -> void:
+	super._process(delta)
+	_anchor()
+
+func _anchor() -> void:
+	var x := (FRAME - _body_x) if animated_sprite.flip_h else _body_x
+	animated_sprite.offset = Vector2(-x, -FEET_Y)
+
+func _measure_body_x() -> float:
+	var tex := animated_sprite.sprite_frames.get_frame_texture("idle", 0)
+	if not tex:
+		return FRAME / 2.0
+	var r := tex.get_image().get_used_rect()
+	return r.position.x + r.size.x / 2.0
+
+func _build() -> SpriteFrames:
+	var sf := SpriteFrames.new()
+	sf.remove_animation("default")
+	for anim in sheets:
+		var spec: Array = sheets[anim]
+		var path := ROOT % [folder, spec[0]]
+		if not ResourceLoader.exists(path):
+			continue
+		var tex: Texture2D = load(path)
+		sf.add_animation(anim)
+		sf.set_animation_speed(anim, spec[1])
+		sf.set_animation_loop(anim, spec[2])
+		for i in tex.get_width() / FRAME:
+			var at := AtlasTexture.new()
+			at.atlas = tex
+			at.region = Rect2(i * FRAME, 0, FRAME, FRAME)
+			sf.add_frame(anim, at)
+	return sf

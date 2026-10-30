@@ -222,8 +222,10 @@ func _get_default_aura_scene(element: ElementalSystem.Element) -> PackedScene:
 func receive_damage(amount: int) -> void:
 	if not is_alive:
 		return
-	if elite and elite.absorb(amount):
-		return
+	if elite:
+		amount = elite.scale_damage(amount)
+		if elite.absorb(amount):
+			return
 	if amount > 0:
 		_spawn_blood_hit_vfx()
 		CombatFX.flash(animated_sprite)

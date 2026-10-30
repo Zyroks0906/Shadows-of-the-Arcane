@@ -13,6 +13,8 @@ extends Node
 #   entities  'P' player start   'X' exit portal   'B' boss   'e' random enemy   's' slime   'w' wisp   'O' orc
 #             'c' Cryo crystal   'z' Electro crystal   'p' pillar / dormant crystal   'o' pot
 #             '1' silver key   '2' golden key   'D' silver door   'G' golden door   'd' boss door
+#             '?' lore tablet (scripts/world/lore_stone.gd: a page of the story for the Journal)
+#             'Z' cracked wall (scripts/world/cracked_wall.gd: three blows open a secret passage)
 #             'v' wandering peddler (scripts/world/merchant.gd: potions and a random perk for coins)
 #             'h' health potion   'm' mana potion   '$' coin   'C' chest   'x' spike trap
 #   arenas    'R' combat room (the floor region around it, bounded by gates/doors)
@@ -43,6 +45,10 @@ const SCN := {
 	"bat": "res://scenes/entities/Enemies/Bat.tscn",
 	"wisp": "res://scenes/entities/Enemies/Wisp.tscn",
 	"orc": "res://scenes/entities/Enemies/Orc.tscn",
+	"shieldbearer": "res://scenes/entities/Enemies/Shieldbearer.tscn",
+	"charger": "res://scenes/entities/Enemies/Charger.tscn",
+	"summoner": "res://scenes/entities/Enemies/Summoner.tscn",
+	"spitter": "res://scenes/entities/Enemies/Spitter.tscn",
 	"guardian": "res://scenes/entities/Enemies/GuardianBoss.tscn",
 	"golem": "res://scenes/entities/Enemies/Golem.tscn",
 	"champion": "res://scenes/entities/Enemies/Champion.tscn",
@@ -75,7 +81,7 @@ const LEVELS := [
 		"root_name": "Crypt",
 		"wall_tex": "res://assets/tilesets/character and tileset/Dungeon_Tileset.png",
 		"torch_light": Color(1.0, 0.62, 0.3),
-		"pool": ["skeleton", "rat", "bat"],
+		"pool": ["skeleton", "rat", "bat", "shieldbearer"],
 		"elements": [ElementalSystem.Element.PYRO, ElementalSystem.Element.HYDRO],
 		"room_names": ["THE UNDERCROFT"],
 		"boss_name": "",
@@ -95,6 +101,32 @@ const LEVELS := [
 		"boss_name": "",
 	},
 	{
+		# Map 1's seeded layouts (level_1_s2 ... _s5) in the crypt's style. Its first layout is
+		# the hand-made level_1.tscn, which this builder never touches ("variants_only").
+		"theme": "crypt",
+		"variants_only": true,
+		"room_names": [],
+		"sealed_cost": 20,
+		"layout": "res://tools/levels/forgotten_crypt.txt",
+		"out": "res://scenes/levels/level_1.tscn",
+		"root_name": "Level1",
+		"wall_tex": "res://assets/tilesets/character and tileset/Dungeon_Tileset.png",
+		"title": "THE FORGOTTEN CRYPT",
+		"subtitle": "Where the old dead still keep watch",
+		"music": MUSIC + "04 - Silent Forest.mp3",
+		"darkness": Color(0.42, 0.36, 0.5),
+		"player_light": Color(1.0, 0.86, 0.7),
+		"motes": Color(0.9, 0.75, 0.55, 0.45),
+		"mote_gravity": Vector2(0, -4),
+		"torch_light": Color(1.0, 0.62, 0.3),
+		"pool": ["skeleton", "rat", "bat", "shieldbearer", "spitter"],
+		"elements": [ElementalSystem.Element.PYRO, ElementalSystem.Element.HYDRO],
+		"boss": "golem",
+		"boss_name": "Golem",
+		"unlocks": 2,
+		"exit_glow": Color(1.0, 0.7, 0.4),
+	},
+	{
 		"theme": "caverns",
 		"room_names": ["WISP SHRINE", "FORGOTTEN CELLAR", "SLIME POOLS"], # in plan order (top to bottom)
 		"sealed_cost": 25,
@@ -110,7 +142,7 @@ const LEVELS := [
 		"motes": Color(0.55, 0.85, 1.0, 0.55),
 		"mote_gravity": Vector2(0, 5),
 		"torch_light": Color(0.35, 0.75, 1.0),
-		"pool": ["slime", "bat", "rat", "wisp"],
+		"pool": ["slime", "bat", "rat", "wisp", "spitter", "charger"],
 		"elements": [ElementalSystem.Element.HYDRO, ElementalSystem.Element.CRYO, ElementalSystem.Element.ELECTRO],
 		"boss": "guardian",
 		"boss_name": "Guardian",
@@ -134,7 +166,7 @@ const LEVELS := [
 		"motes": Color(0.8, 0.6, 1.0, 0.6),
 		"mote_gravity": Vector2(4, -7),
 		"torch_light": Color(0.8, 0.55, 1.0),
-		"pool": ["skeleton", "orc", "bat", "wisp"],
+		"pool": ["skeleton", "orc", "bat", "wisp", "shieldbearer", "summoner", "charger"],
 		"elements": [ElementalSystem.Element.ANEMO, ElementalSystem.Element.ELECTRO, ElementalSystem.Element.PYRO, ElementalSystem.Element.GEO],
 		"boss": "champion", # its own design and moves (the Golem was reused here before)
 		"boss_name": "Champion",
@@ -159,8 +191,32 @@ func _ready() -> void:
 	rng.seed = GENERATED_SEED
 	_build_enemy_scenes()
 	for def in LEVELS:
-		_build_level(def)
+		if not def.get("variants_only", false):
+			_build_level(def)
+		for v in _variants(def):
+			_build_level(v)
 	get_tree().quit()
+
+# The seeded layouts of a map (tools/levels/assemble.py writes <layout>_sN.txt and a .json
+# with their arena names): each becomes <out>_sN.tscn, the same level dressed the same way.
+func _variants(def: Dictionary) -> Array:
+	var out := []
+	if def.get("fragment", false):
+		return out
+	for k in range(2, 6):
+		var layout: String = def["layout"].replace(".txt", "_s%d.txt" % k)
+		if not FileAccess.file_exists(layout):
+			continue
+		var v: Dictionary = def.duplicate(true)
+		v["layout"] = layout
+		v["out"] = def["out"].replace(".tscn", "_s%d.tscn" % k)
+		var meta := FileAccess.get_file_as_string(layout.replace(".txt", ".json"))
+		if meta != "":
+			var data = JSON.parse_string(meta)
+			if data is Dictionary and data.has("room_names"):
+				v["room_names"] = data["room_names"]
+		out.append(v)
+	return out
 
 # --------------------------------------------------------------------------- grid helpers
 
@@ -346,6 +402,12 @@ func _wall_tile(x: int, y: int) -> Variant:
 		return Vector2i(5, 4)
 	return null
 
+# The colour of the theme's wall bricks (a front wall tile's middle), so a cracked wall
+# drawn in code matches the walls around it.
+func _wall_color(path: String) -> Color:
+	var img := (load(path) as Texture2D).get_image()
+	return img.get_pixel(2 * T + T / 2, T / 2 + 2)
+
 func _floor_tile(theme: String, x: int, y: int) -> Array:
 	var c := ch(x, y)
 	if theme == "skyhold":
@@ -434,6 +496,18 @@ func _build_level(def: Dictionary) -> void:
 				continue
 			var ft := _floor_tile(theme, x, y)
 			_put_tile(floor_layer, x, y, ft[0], ft[1])
+			if c == "Z":
+				# A bricked-up doorway: floor like the passage it closes (so the walls on both
+				# sides run on unbroken), and a breakable block of bricks standing in it, which
+				# blocks with its own body until it falls (see _blocks).
+				var cw := StaticBody2D.new()
+				cw.name = "CrackedWall"
+				cw.set_script(load("res://scripts/world/cracked_wall.gd"))
+				cw.position = cell_center(x, y)
+				cw.cell = Vector2i(x, y)
+				cw.brick = _wall_color(def["wall_tex"])
+				groups["Props"].add_child(cw, true)
+				continue
 			_decorate_floor(theme, x, y, decor)
 
 			var pos := cell_center(x, y)
@@ -482,6 +556,12 @@ func _build_level(def: Dictionary) -> void:
 					shrine.set_script(load("res://scripts/world/fortune_shrine.gd"))
 					shrine.position = pos + Vector2(0, 6)
 					groups["Props"].add_child(shrine, true)
+				"?":
+					var tablet := StaticBody2D.new()
+					tablet.name = "LoreStone"
+					tablet.set_script(load("res://scripts/world/lore_stone.gd"))
+					tablet.position = pos + Vector2(0, 6)
+					groups["Props"].add_child(tablet, true)
 				"v":
 					var peddler := StaticBody2D.new()
 					peddler.name = "Merchant"
@@ -840,6 +920,8 @@ func _build_collision() -> StaticBody2D:
 	return body
 
 func _blocks(x: int, y: int) -> bool:
+	if ch(x, y) == "Z":
+		return false # a cracked wall blocks with its own body until it falls
 	if not solid(x, y):
 		return false
 	if floorish(x, y):

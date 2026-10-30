@@ -11,7 +11,7 @@ func _init() -> void:
 	intelligence = 9
 	resistance = 8
 	wisdom = 10
-	speed = 92.0
+	speed = 84.0 # its run strides ~70 px/s at full pace: a little slide, still quick
 	base_scale = Vector2(0.43, 0.43)
 	skill_name = "Iaido Flurry"
 	skill_cooldown = 5.0

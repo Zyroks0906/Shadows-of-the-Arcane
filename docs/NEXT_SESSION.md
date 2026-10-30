@@ -3,6 +3,31 @@
 (Lo hecho el 28-10, sesión 2, está en HANDOFF §1c y en el historial de git.)
 
 ## Feedback del usuario tras jugar (28-10, tarde). Marca [x] lo que se termine.
+## HECHO (30-10) — Seeds y variantes de mapa (fase 4, primera parte)
+- [x] `GameManager.start_run(seed)` / `variants(level)` / `level_index(path)`; las variantes se
+      descubren solas (`level_N_s2..s5.tscn`). `tools/levels/assemble.py` genera los planos
+      (`python tools/levels/assemble.py`, luego el builder). Plan acordado con el usuario: nivel 1
+      = original + 4 generadas; el Diario de historia se guarda entre partidas.
+- [x] Tragaperras/transmutador/mercader: regla `wall_ok` (pared del fondo, a 2+ casillas de
+      cualquier abertura, sin columnas al lado). Revisado con capturas en los 11 mapas.
+- [x] Variantes del nivel 1 (`forgotten_crypt_s2..5`, builder `variants_only`: nunca toca level_1.tscn),
+      semilla en pausa/victoria y campo en la pantalla de cámaras, salas secretas tras paredes
+      agrietadas (`Z`), 15 páginas de historia en tablillas (`?`) y Diario en la pausa.
+      Tests de historia usan `Lore.use_test_journal()` para no tocar el Diario real.
+      `playtest secrets` (pared, tablilla, página, Diario) y `playtest variants` (15 mapas).
+
+## HECHO (30-10) — Fase 3
+- [x] 4 arquetipos con sprites de LuizMelo (CC0) y 2 élites nuevas; ver ROADMAP fase 3.
+      `playtest phase3` (escudo frente 1/detrás 17, carga, ojos invocados, charco) y `playtest elites2`.
+      Pools: cripta + escudero; nivel 2 + seta y goblin; nivel 3 + escudero, mago y goblin; nivel 1
+      (escena a mano) + escudero y seta en sus 8 puntos de aparición.
+      Se probó antes el pack 0x72 (16 px) y se descartó: al lado del héroe se veía pobre.
+- [x] Revisión de animaciones (`playtest anims`: reposo a ambos lados, andar, ataque, golpe y muerte
+      de los 5): pies alineados en todas; el cuerpo ya no salta al girarse (`SheetEnemy._anchor`).
+      Mago: su animación de fuego lanza ahora una bola de fuego real desde la mano; invoca con otra
+      pose (bastón y chispas violetas). Seta: escupe su propio proyectil rojo mirando al jugador y el
+      charco cae centrado en sus pies, más grande (36x16) y con borde irregular.
+
 ## HECHO (30-10, capturas del usuario en el nivel 3)
 - [x] Pociones del transmutador al otro lado del muro: `pop_out(..., ground)` sale del pie del crisol y
       `_free_spot` solo acepta sitios con línea libre desde ahí.

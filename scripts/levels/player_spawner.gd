@@ -29,9 +29,11 @@ func spawn_player() -> void:
 
 		var animated_sprite = player.find_child("AnimatedSprite2D")
 		if animated_sprite and FileAccess.file_exists(sprite_frames_path):
-			animated_sprite.sprite_frames = load(sprite_frames_path)
+			animated_sprite.sprite_frames = RunCycles.with_run(load(sprite_frames_path), c_name) # + its RUN cycle
 
 
+		if c_name.to_lower() == "necromancer":
+			player.set_meta("hovers", true) # its robe floats: no steps to keep in time
 		add_child(player)
 		player.global_position = spawn_pos
 		# Progression snapshot: dying in this map rolls back to here.

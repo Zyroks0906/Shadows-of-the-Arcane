@@ -165,6 +165,8 @@ def caverns():
     p.rect(60, 18, 7, 3)
     p.put(61, 19, 'C')
     p.put(65, 19, 'C')
+    p.put(63, 18, '?')                        # a story tablet between the reliquary's chests
+    p.put(9, 24, '?')                         # and one in the entrance grotto
     p.save('whispering_caverns.txt')
 
 
@@ -215,6 +217,7 @@ def skyhold():
     p.put(48, 24, 'h')
     p.put(51, 29, 'm')
     p.put(45, 23, 'v')                        # the peddler, against the back wall: a last chance to spend before the boss
+    p.put(51, 23, 'T')                        # transmuter, against the back wall, away from the golden door
     p.door(48, 22, 'G')
     p.rect(48, 15, 1, 7)
     p.door(48, 19, 'd')
@@ -243,13 +246,12 @@ def skyhold():
         p.put(x, y, 'p')
     for x, y in [(51, 39), (57, 39)]:
         p.put(x, y, 'O')
-    for x, y in [(54, 35), (54, 43)]:
+    for x, y in [(52, 38), (54, 43)]:
         p.put(x, y, 'e')
     for x, y in [(48, 35), (60, 35), (60, 43)]:
         p.put(x, y, 'E')
     p.put(60, 40, 'k')
-    p.put(57, 34, 'T')                        # transmuter: rises once the arena is cleared
-    p.put(52, 34, 'J')                        # fortune shrine in the barracks
+    p.put(54, 34, 'J')                        # fortune shrine: back wall, between the columns, clear of the way
     # 8. Sun Sanctum (optional, east of the vestibule): a shaft of sunlight falls through
     #    the broken roof. Turn the mirrors (F) to carry the beam onto the sun sigil; the
     #    sigil raises the grate of the reliquary.
@@ -265,6 +267,8 @@ def skyhold():
     p.rect(74, 25, 5, 5)
     p.put(76, 26, 'C')
     p.put(76, 28, 'C')
+    p.put(77, 25, '?')                        # a story tablet in the sun reliquary
+    p.put(9, 24, '?')                         # and one in the entrance hall
     p.save('skyhold_ruins.txt')
 
 
@@ -283,6 +287,7 @@ def vault():
         p.put(x, y, 'i')
     for x, y in [(3, 7), (25, 7), (6, 15), (22, 15)]:
         p.put(x, y, 'o')
+    p.put(14, 1, '?')                         # a story tablet in the treasure alcove
     p.put(5, 4, 'J')                          # fortune shrine: the vault's other treasure (back wall)
     p.save('vault.txt')
 
@@ -305,6 +310,7 @@ def crypt():
         p.put(x, y, 's' if x in (5, 19) else 'e')
     for x, y in [(10, 3), (14, 3), (12, 4)]:
         p.put(x, y, 'E')
+    p.put(8, 2, '?')                          # a story tablet against the Undercroft's back wall
     p.save('crypt.txt')
 
 

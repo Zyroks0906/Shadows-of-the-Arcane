@@ -51,6 +51,13 @@ func _add_run_summary() -> void:
 			l.custom_minimum_size = Vector2(70 if k == 1 else 170, 0)
 			grid.add_child(l)
 	stats_container.add_child(grid)
+	var seed_l := Label.new()
+	seed_l.text = GameManager.variant_text()
+	seed_l.add_theme_font_override("font", f)
+	seed_l.add_theme_font_size_override("font_size", 22)
+	seed_l.add_theme_color_override("font_color", Color(0.62, 0.58, 0.54))
+	seed_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	stats_container.add_child(seed_l)
 
 func _set_initial_state() -> void:
 	dark_overlay.color.a = 0.0
@@ -103,7 +110,17 @@ func _fit_hero_to_panel() -> void:
 	var bh: float = hero_scale_box.offset_bottom - by
 	if bw <= 0 or bh <= 0:
 		return
-	hero_sprite.scale = Vector2(hero_scale, hero_scale)
+	# Every class draws its frames at its own size (the cleric's are ten times the
+	# knight's): scale by the body actually drawn, so each hero stands about 70% of the box.
+	var scale := hero_scale
+	var tex := hero_sprite.sprite_frames.get_frame_texture(hero_sprite.animation, 0) if hero_sprite.sprite_frames else null
+	if tex:
+		var used := tex.get_image().get_used_rect()
+		if used.size.y > 0:
+			scale = minf(bh * 0.7 / used.size.y, bw * 0.8 / maxf(used.size.x, 1))
+			# The body's middle on the anchor, wherever it sits in its frame.
+			hero_sprite.offset = Vector2(tex.get_size()) / 2.0 - Vector2(used.get_center())
+	hero_sprite.scale = Vector2(scale, scale)
 	hero_sprite.position = Vector2(bx + bw * 0.5, by + bh * 0.6)
 
 func _on_continue_button_pressed() -> void:

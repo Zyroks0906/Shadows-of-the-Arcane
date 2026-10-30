@@ -257,8 +257,10 @@ func _physics_process(delta: float) -> void:
 		last_direction = direction.normalized()
 	_update_facing(direction)
 
+	# The pose follows the body, not the key: the legs start once it actually moves and keep
+	# going while it slows to a stop (no running on the spot, no gliding in the idle pose).
 	if not is_attacking and not _is_hurt:
-		_play_animation("Run" if direction != Vector2.ZERO else "Idle")
+		_play_animation("Run" if _move_vel.length() > 6.0 else "Idle")
 	_update_tilt(delta)
 
 	move_and_slide()
@@ -1112,7 +1114,7 @@ func _spawn_blood_vfx() -> void:
 func interact() -> void:
 	if _is_interacting or interactables_in_range.is_empty(): return
 	# Already inside an interaction window: F must not reach the object again.
-	if FortuneShrine.FortuneMenu.is_open() or Transmuter.TransmuteMenu.is_open() or Merchant.MerchantMenu.is_open(): return
+	if FortuneShrine.FortuneMenu.is_open() or Transmuter.TransmuteMenu.is_open() or Merchant.MerchantMenu.is_open() or LoreStone.LorePage.is_open(): return
 	_is_interacting = true
 
 	var closest = null

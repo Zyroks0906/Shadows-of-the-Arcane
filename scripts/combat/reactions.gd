@@ -134,7 +134,10 @@ static func _hit(target: BaseCharacter, amount: int, color: Color) -> void:
 	if not is_instance_valid(target) or not target.is_alive:
 		return
 	target.next_hit_color = color
+	target.set_meta("reaction_hit", true) # Elemental elites only feel these in full
 	target.receive_damage(amount)
+	if is_instance_valid(target):
+		target.remove_meta("reaction_hit")
 
 # Living characters on the same side as the target, excluding the target itself.
 static func _neighbours(target: BaseCharacter, radius: float) -> Array[BaseCharacter]:

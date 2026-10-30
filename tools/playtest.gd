@@ -69,6 +69,13 @@ func _ready() -> void:
 			"pickups": await _pickups_session()
 			"relics": await _relics_session()
 			"props_reach": await _props_reach_session()
+			"phase3": await _phase3_session()
+			"elites2": await _elites2_session()
+			"anims": await _anims_session()
+			"variants": await _variants_session()
+			"wallprops": await _wallprops_session()
+			"chamber": await _chamber_session()
+			"secrets": await _secrets_session()
 			"decor_check": await _decor_check_session()
 			"bounds": await _bounds_session()
 			"tutorial": await _tutorial_session()
@@ -719,13 +726,17 @@ func _plates_session() -> void:
 func _victory_session() -> void:
 	GameManager.current_map = GameManager.MAPS[0]
 	# In game it is a whole scene; under this Node2D a CanvasLayer gives it the screen size.
-	var holder := CanvasLayer.new()
-	add_child(holder)
-	var v: Node = load("res://scenes/ui/VictoryScreen.tscn").instantiate()
-	holder.add_child(v)
-	await _wait(3.5)
-	await _shot("victory")
-	holder.queue_free()
+	GameManager.start_run(204292)
+	for cls in ["cleric", "knight", "archer"]:
+		GameManager.set_selected_class(CLASSES[cls])
+		var holder := CanvasLayer.new()
+		add_child(holder)
+		var v: Node = load("res://scenes/ui/VictoryScreen.tscn").instantiate()
+		holder.add_child(v)
+		await _wait(3.5)
+		await _shot("victory_%s" % cls)
+		holder.queue_free()
+		await _wait(0.2)
 
 # A walk through every level: spawn, then each interactable spot (chests, passages, puzzles,
 # exits) and each boss, one frame per place, for a visual check of the whole game.
@@ -1511,6 +1522,308 @@ func _vault_exit_session() -> void:
 	_bot_say("after climbing: %s (near the hall stairs %s: %s)" % [player.global_position, down.global_position, player.global_position.distance_to(down.global_position) < 60.0])
 	await _unload()
 
+# A secret room and the story: the cracked wall blocks until three blows bring it down, the
+# tablet behind it gives a page to the Journal (a test journal, never the player's).
+func _secrets_session() -> void:
+	Lore.use_test_journal()
+	await _load_level("res://scenes/levels/level_1_s2.tscn", "knight")
+	player.god_mode = true
+	for e in get_tree().get_nodes_in_group("enemies"):
+		e.queue_free()
+	await _wait(0.5)
+	var cw := level.find_child("CrackedWall", true, false) as CrackedWall
+	var space: PhysicsDirectSpaceState2D = level.get_world_2d().direct_space_state
+	var walls := level.get_node("Walls") as TileMapLayer
+	var probe := PhysicsPointQueryParameters2D.new()
+	probe.position = cw.global_position
+	probe.collision_mask = 1
+	var blocked_before := not space.intersect_point(probe, 1).is_empty()
+	var zcell := cw.cell
+	var cw_pos := cw.global_position
+	player.global_position = cw.global_position + Vector2(0, 0) + (Vector2(18, 0) if walls.get_cell_source_id(cw.cell + Vector2i(1, 0)) == -1 else Vector2(-18, 0))
+	await _wait(3.0)
+	await _shot("secret_wall_before")
+	for i in 3:
+		cw.break_open(Vector2.LEFT)
+		await _wait(0.25)
+	await _wait(0.3)
+	await _shot("secret_wall_after")
+	var blocked_after := not space.intersect_point(probe, 1).is_empty()
+	_bot_say("cracked wall: blocked before=%s, wall tile left=%s, blocked after=%s" % [blocked_before, walls.get_cell_source_id(zcell) != -1, blocked_after])
+	# Nowhere to slip out: the cells above and below the opened doorway are solid wall.
+	var sides := []
+	for d in [Vector2(0, -16), Vector2(0, 16)]:
+		probe.position = cw_pos + d
+		sides.append(not space.intersect_point(probe, 1).is_empty())
+	_bot_say("  above/below the opened doorway solid: %s" % [sides])
+	var stones := level.find_children("*", "StaticBody2D", true, false).filter(func(n): return n is LoreStone)
+	var st: LoreStone = stones[0]
+	player.global_position = st.global_position + Vector2(0, 16)
+	await _wait(0.6)
+	await _shot("lore_stone")
+	st.interact(player)
+	await _wait(0.5)
+	await _shot("lore_page")
+	_bot_say("tablets in this map: %d; read one: page open=%s, journal %d/%d" % [stones.size(), LoreStone.LorePage.is_open(), Lore.found_count(), Lore.total()])
+	LoreStone.LorePage._open.queue_free()
+	LoreStone.LorePage._open = null
+	get_tree().paused = false
+	JournalMenu.open_menu()
+	await _wait(0.4)
+	await _shot("journal")
+	JournalMenu._open.queue_free()
+	await _unload()
+
+# The chamber screen (seed field) and a seed shown in a level.
+func _chamber_session() -> void:
+	var ch: Node = load("res://scenes/Screens/SelectChamber.tscn").instantiate()
+	add_child(ch)
+	await _wait(1.0)
+	ch._seed_edit.text = "123456"
+	await _wait(0.2)
+	await _shot("chamber_seed")
+	ch.queue_free()
+	GameManager.start_run(123456)
+	_bot_say("seed 123456 draws %s" % [GameManager.run_maps.map(func(p): return p.get_file())])
+
+# Every fortune shrine, transmuter and peddler of every map, close up against its wall.
+func _wallprops_session() -> void:
+	var maps := GameManager.variants(0) + GameManager.variants(1) + GameManager.variants(2)
+	var k := 0
+	for path in maps:
+		await _load_level(path, "knight")
+		player.god_mode = true
+		for e in get_tree().get_nodes_in_group("enemies"):
+			e.queue_free()
+		await _wait(0.4)
+		for n in level.find_children("*", "StaticBody2D", true, false):
+			if not (n is FortuneShrine or n is Transmuter or n is Merchant):
+				continue
+			if n is Transmuter and n.state != Transmuter.State.ACTIVE:
+				n.state = Transmuter.State.ACTIVE
+				n._set_active(true)
+			player.global_position = n.global_position + Vector2(-26, 22)
+			await _wait(1.2)
+			await _shot("wall_%02d_%s_%s" % [k, path.get_file().get_basename(), n.get_script().get_global_name()])
+			k += 1
+		await _unload()
+
+# Every seeded layout of maps 2 and 3: it loads, it has what a level needs, its puzzles are
+# built and wired, and no pickup sits in a wall.
+func _variants_session() -> void:
+	for lv in [0, 1, 2]:
+		for path in GameManager.variants(lv):
+			if path == GameManager.MAPS[0]:
+				continue # the hand-made map 1 has its own checks
+			await _load_level(path, "knight")
+			player.god_mode = true
+			await _wait(0.5)
+			var count := func(f: Callable) -> int: return level.find_children("*", "", true, false).filter(f).size()
+			var puzzles: int = count.call(func(n): return n is SluicePuzzle or n is EchoPuzzle or n is MirrorPuzzle)
+			var gates_wired := get_tree().get_nodes_in_group("puzzle_gates").size()
+			var space: PhysicsDirectSpaceState2D = level.get_world_2d().direct_space_state
+			var probe := PhysicsPointQueryParameters2D.new()
+			probe.collision_mask = 1
+			var stuck := 0
+			for c in get_tree().get_nodes_in_group("interactable"):
+				if c.has_method("pop_out"):
+					probe.position = c._item_root().global_position
+					if not space.intersect_point(probe, 1).is_empty():
+						stuck += 1
+			var arenas := level.get_node_or_null("Arenas")
+			var names := []
+			if arenas:
+				for a in arenas.get_children():
+					names.append(a.get("room_name") if a.get("room_name") else a.name)
+			_bot_say("%s: player=%s boss=%s exit=%s merchant=%s arenas=%d %s puzzles=%d puzzle_gates=%d enemies=%d pickups_in_walls=%d" % [
+				path.get_file(), player != null, count.call(func(n): return n is BossBase) > 0,
+				count.call(func(n): return n is LevelExit) > 0, count.call(func(n): return n is Merchant) > 0,
+				arenas.get_child_count() if arenas else 0, names, puzzles, gates_wired,
+				get_tree().get_nodes_in_group("enemies").size(), stuck])
+			await _unload()
+
+# Every animation of every new creature, captured close up and named in the log.
+func _anims_session() -> void:
+	await _load_level("res://scenes/levels/level_2.tscn", "knight")
+	player.god_mode = true
+	for e in get_tree().get_nodes_in_group("enemies"):
+		e.queue_free()
+	await _wait(4.0)
+	var base := player.global_position
+	for kind in ["Shieldbearer", "Charger", "Summoner", "Spitter", "Eyeling"]:
+		var e := _phase3_spawn(kind, base + Vector2(20, 0))
+		e.set_physics_process(false)
+		e.player = player
+		await _wait(0.3)
+		var at := e.global_position + Vector2(0, -7)
+		var log := []
+		var snap := func(tag: String) -> void:
+			log.append("%s=%s:%d%s" % [tag, e.animated_sprite.animation, e.animated_sprite.frame, "L" if e.animated_sprite.flip_h else "R"])
+			await _shot("anim_%s_%s" % [kind, tag], at)
+		e.animated_sprite.flip_h = false
+		await snap.call("idleR")
+		e.animated_sprite.flip_h = true
+		await _wait(0.05)
+		await snap.call("idleL")
+		e.animated_sprite.flip_h = false
+		e._play_animation("walk")
+		await _wait(0.25)
+		await snap.call("walk")
+		e._play_animation("idle")
+		await _wait(0.1)
+		match kind:
+			"Spitter": e._spit()
+			"Summoner": e._cast_fire()
+			_: e._melee_attack(e.attack_delay, 1, 0.0, "attack")
+		await _wait(0.2)
+		await snap.call("windup")
+		await _wait(maxf(e.attack_delay, 0.5) - 0.1)
+		await snap.call("strike")
+		await _wait(1.0)
+		e.is_attacking = false
+		e._play_hurt_anim()
+		await _wait(0.12)
+		await snap.call("hurt")
+		await _wait(0.6)
+		e.die()
+		await _wait(0.2)
+		await snap.call("death1")
+		await _wait(0.35)
+		await snap.call("death2")
+		_bot_say("%s: %s" % [kind, " ".join(log)])
+		for x in get_tree().get_nodes_in_group("enemies"):
+			x.queue_free()
+		await _wait(0.6)
+	await _unload()
+
+# The two new elite kinds, measured.
+func _elites2_session() -> void:
+	await _load_level("res://scenes/levels/level_2.tscn", "knight")
+	player.god_mode = true
+	for e in get_tree().get_nodes_in_group("enemies"):
+		e.queue_free()
+	await _wait(0.5)
+	var base := player.global_position
+	EliteAffix.enabled = true
+	EliteAffix.forced = EliteAffix.Kind.PHANTOM
+	var ph := _phase3_spawn("Spitter", base + Vector2(40, 0))
+	ph.set_physics_process(false)
+	var landed := 0
+	var phased := 0
+	for i in 25:
+		var h := ph.current_health
+		ph.receive_damage(1)
+		if ph.current_health < h:
+			landed += 1
+		else:
+			phased += 1
+		await _wait(0.2)
+	_bot_say("phantom over 5 s: %d blows landed, %d passed through; alpha now %.2f" % [landed, phased, ph.modulate.a])
+	ph.queue_free()
+	EliteAffix.forced = EliteAffix.Kind.ELEMENTAL
+	var el := _phase3_spawn("Shieldbearer", base + Vector2(40, 0))
+	el.set_physics_process(false)
+	await _wait(0.3)
+	var h0 := el.current_health
+	el.receive_damage(20)
+	var plain := h0 - el.current_health
+	h0 = el.current_health
+	Reactions._hit(el, 20, Color.WHITE)
+	_bot_say("elemental: a plain 20 hit deals %d, a reaction's 20 deals %d; carries element %d" % [plain, h0 - el.current_health, el.current_imbued_element])
+	await _shot("elites2_elemental")
+	EliteAffix.forced = -1
+	EliteAffix.enabled = false
+	el.queue_free()
+	await _unload()
+
+# Phase 3 archetypes: a line-up next to the hero, then each behaviour measured.
+func _phase3_spawn(scene: String, at: Vector2) -> Enemy:
+	var e: Enemy = load("res://scenes/entities/Enemies/%s.tscn" % scene).instantiate()
+	level.add_child(e)
+	e.global_position = at
+	return e
+
+func _phase3_session() -> void:
+	await _load_level("res://scenes/levels/level_2.tscn", "knight")
+	player.god_mode = true
+	for e in get_tree().get_nodes_in_group("enemies"):
+		e.queue_free()
+	await _wait(4.0)
+	var base := player.global_position
+	var line := []
+	for k in ["Shieldbearer", "Charger", "Summoner", "Spitter", "Eyeling"].size():
+		var e := _phase3_spawn(["Shieldbearer", "Charger", "Summoner", "Spitter", "Eyeling"][k], base + Vector2(-48 + k * 22, -26))
+		e.set_physics_process(false)
+		line.append(e)
+	await _wait(0.4)
+	await _shot("phase3_lineup")
+	for e in line:
+		e.queue_free()
+	await _wait(0.2)
+	# Shield: same blow from the front and from behind.
+	var sb := _phase3_spawn("Shieldbearer", base + Vector2(30, 0))
+	sb.set_physics_process(false)
+	sb.facing = Vector2.LEFT
+	var h0 := sb.current_health
+	sb.take_elemental_hit(20, ElementalSystem.Element.NONE, player)
+	var front := h0 - sb.current_health
+	sb.facing = Vector2.RIGHT
+	h0 = sb.current_health
+	sb.take_elemental_hit(20, ElementalSystem.Element.NONE, player)
+	_bot_say("shieldbearer: a 20 blow from the front deals %d, from behind %d" % [front, h0 - sb.current_health])
+	sb.queue_free()
+	# Ogre: charges from middle range; then a charge into a wall stuns it.
+	var og := _phase3_spawn("Charger", base + Vector2(90, 0))
+	var hp0 := player.current_health
+	player.god_mode = false
+	player.max_health = 999
+	player.current_health = 999
+	hp0 = player.current_health
+	await _wait(0.5)
+	await _shot("phase3_charge_tell")
+	await _wait(1.0)
+	_bot_say("ogre charge: player hit for %d (charging=%s)" % [hp0 - player.current_health, og._charging])
+	player.god_mode = true
+	og.queue_free()
+	# Shaman: raises skeletons while it sees the player.
+	var sh := _phase3_spawn("Summoner", base + Vector2(70, 0))
+	await _wait(2.0)
+	var raised := get_tree().get_nodes_in_group("enemies").filter(func(e): return e is Eyeling).size()
+	await _shot("phase3_summon")
+	sh.die()
+	await _wait(0.5)
+	var left := get_tree().get_nodes_in_group("enemies").filter(func(e): return e is Eyeling and e.is_alive).size()
+	_bot_say("shaman: raised %d flying eyes; after it dies %d still stand" % [raised, left])
+	# Evil wizard: a fireball from its hand, aimed at the player.
+	var wz := _phase3_spawn("Summoner", base + Vector2(70, 0))
+	wz.set_physics_process(false)
+	wz.player = player
+	player.god_mode = false
+	player.current_health = 999
+	player._invulnerable_until_ms = 0
+	await _wait(0.2)
+	wz._cast_fire()
+	await _wait(0.75)
+	await _shot("phase3_fireball")
+	await _wait(0.8)
+	_bot_say("wizard fireball from 70 px: player lost %d" % (999 - player.current_health))
+	player.god_mode = true
+	wz.queue_free()
+	# Chort: spits, the pool burns the player standing in it.
+	var ch := _phase3_spawn("Spitter", base + Vector2(70, 0))
+	player.god_mode = false
+	player.current_health = 999
+	for k in 4:
+		await _wait(0.18)
+		await _shot("phase3_spore_%d" % k)
+	await _wait(0.48)
+	await _shot("phase3_acid")
+	await _wait(2.0)
+	_bot_say("chort acid: player lost %d standing still for ~3 s; pools %d" % [999 - player.current_health, level.find_children("*", "Node2D", false, false).filter(func(n): return n is AcidPool).size()])
+	player.god_mode = true
+	ch.queue_free()
+	await _unload()
+
 # Next to the back-wall props: the shrine's ambush spawns and the crucible's potions must
 # land on ground the player can reach (not behind the wall or in the void).
 func _props_reach_session() -> void:
@@ -1693,11 +2006,12 @@ func _stride_session() -> void:
 		var spr := player.animated_sprite
 		var ss := player.get_node("StrideSync") as StrideSync
 		var anim := String(spr.animation)
-		var h := ss._height(anim) * absf(spr.global_scale.y)
 		var fr := spr.sprite_frames.get_frame_count(anim)
 		var fps := spr.sprite_frames.get_animation_speed(anim)
-		var cycle := float(fr) / (fps * spr.speed_scale)
-		_bot_say("%-11s anim %s h=%.1fpx speed=%.0f scale=%.2f -> %.2f cycles/s, %.1f px per cycle (was %.1f)" % [cls, anim, h, player.velocity.length(), spr.speed_scale, 1.0 / cycle, player.velocity.length() * cycle, player.velocity.length() * fr / fps])
+		var art := ss.cycle_px(anim) * absf(spr.global_scale.x)
+		var t_cycle := float(fr) / (fps * spr.speed_scale)
+		var travelled := player.velocity.length() * t_cycle
+		_bot_say("%-11s %s: feet cover %.1f px a cycle, body travels %.1f px (%.0f%% slide), played at %.0f fps (was %.0f px, %.0f fps)" % [cls, anim, art, travelled, maxf(travelled / maxf(art, 0.1) - 1.0, 0.0) * 100.0, fps * spr.speed_scale, player.velocity.length() * fr / fps, fps])
 		if cls == "knight":
 			for i in 4:
 				await _wait(0.12)

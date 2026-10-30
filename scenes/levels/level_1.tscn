@@ -60,6 +60,8 @@
 [ext_resource type="PackedScene" uid="uid://bx7umq3w1gbsn" path="res://scenes/entities/Enemies/Bat.tscn" id="101_bat"]
 [ext_resource type="Script" uid="uid://dde6773lqrne8" path="res://scripts/levels/level1_extras.gd" id="900_extras"]
 [ext_resource type="Script" uid="uid://caunrs3kgd421" path="res://scripts/world/merchant.gd" id="991_merchant"]
+[ext_resource type="PackedScene" path="res://scenes/entities/Enemies/Shieldbearer.tscn" id="992_shield"]
+[ext_resource type="PackedScene" path="res://scenes/entities/Enemies/Spitter.tscn" id="993_spitter"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r50bh"]
 texture = ExtResource("2_s6mhf")
@@ -4196,42 +4198,42 @@ enemy_scene = ExtResource("57_3rt2t")
 [node name="RandomSpawner" type="Marker2D" parent="EnemySpawners" unique_id=123456789]
 position = Vector2(877, 130)
 script = ExtResource("55_c4k6i")
-random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t")])
+random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t"), ExtResource("992_shield"), ExtResource("993_spitter")])
 
 [node name="RandomSpawner2" type="Marker2D" parent="EnemySpawners" unique_id=1838924890]
 position = Vector2(1006, 358)
 script = ExtResource("55_c4k6i")
-random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t")])
+random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t"), ExtResource("992_shield"), ExtResource("993_spitter")])
 
 [node name="RandomSpawner3" type="Marker2D" parent="EnemySpawners" unique_id=386238016]
 position = Vector2(1106, 352)
 script = ExtResource("55_c4k6i")
-random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t")])
+random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t"), ExtResource("992_shield"), ExtResource("993_spitter")])
 
 [node name="RandomSpawner4" type="Marker2D" parent="EnemySpawners" unique_id=74382947]
 position = Vector2(1055, 393)
 script = ExtResource("55_c4k6i")
-random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t")])
+random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t"), ExtResource("992_shield"), ExtResource("993_spitter")])
 
 [node name="RandomSpawner5" type="Marker2D" parent="EnemySpawners" unique_id=1541880828]
 position = Vector2(1035, 261)
 script = ExtResource("55_c4k6i")
-random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t")])
+random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t"), ExtResource("992_shield"), ExtResource("993_spitter")])
 
 [node name="RandomSpawner6" type="Marker2D" parent="EnemySpawners" unique_id=2143259126]
 position = Vector2(1125, 264)
 script = ExtResource("55_c4k6i")
-random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t")])
+random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t"), ExtResource("992_shield"), ExtResource("993_spitter")])
 
 [node name="RandomSpawner7" type="Marker2D" parent="EnemySpawners" unique_id=914175914]
 position = Vector2(360, 304)
 script = ExtResource("55_c4k6i")
-random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t")])
+random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t"), ExtResource("992_shield"), ExtResource("993_spitter")])
 
 [node name="RandomSpawner8" type="Marker2D" parent="EnemySpawners" unique_id=1079885874]
 position = Vector2(540, 302)
 script = ExtResource("55_c4k6i")
-random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t")])
+random_pool = Array[PackedScene]([ExtResource("57_3rt2t"), ExtResource("100_rat"), ExtResource("101_bat"), ExtResource("56_3rt2t"), ExtResource("992_shield"), ExtResource("993_spitter")])
 
 [node name="ArrowTraps" type="Node2D" parent="." unique_id=908686213]
 
