@@ -164,7 +164,30 @@ func _ready() -> void:
 	_build_enemy_scenes()
 	for def in LEVELS:
 		_build_level(def)
+		for v in _variants(def):
+			_build_level(v)
 	get_tree().quit()
+
+# The seeded layouts of a map (tools/levels/assemble.py writes <layout>_sN.txt and a .json
+# with their arena names): each becomes <out>_sN.tscn, the same level dressed the same way.
+func _variants(def: Dictionary) -> Array:
+	var out := []
+	if def.get("fragment", false):
+		return out
+	for k in range(2, 6):
+		var layout: String = def["layout"].replace(".txt", "_s%d.txt" % k)
+		if not FileAccess.file_exists(layout):
+			continue
+		var v: Dictionary = def.duplicate(true)
+		v["layout"] = layout
+		v["out"] = def["out"].replace(".tscn", "_s%d.tscn" % k)
+		var meta := FileAccess.get_file_as_string(layout.replace(".txt", ".json"))
+		if meta != "":
+			var data = JSON.parse_string(meta)
+			if data is Dictionary and data.has("room_names"):
+				v["room_names"] = data["room_names"]
+		out.append(v)
+	return out
 
 # --------------------------------------------------------------------------- grid helpers
 
