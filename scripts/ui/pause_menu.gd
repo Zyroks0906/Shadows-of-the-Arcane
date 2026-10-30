@@ -14,10 +14,17 @@ func _ready() -> void:
 	options_btn.pressed.connect(show_options)
 	menu_btn.pressed.connect(go_to_menu)
 	quit_btn.pressed.connect(quit_game)
+	# The Journal: the story pages found so far (kept across runs).
+	var journal: Button = options_btn.duplicate()
+	journal.name = "JournalButton"
+	journal.text = "JOURNAL"
+	options_btn.get_parent().add_child(journal)
+	options_btn.get_parent().move_child(journal, options_btn.get_index() + 1)
+	journal.pressed.connect(JournalMenu.open_menu)
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause") or event.is_action_pressed("ui_cancel"):
-		if (PerkPicker.is_open() or DeathScreen.is_open() or Transmuter.TransmuteMenu.is_open() or ControlsMenu.is_open()):
+		if (PerkPicker.is_open() or DeathScreen.is_open() or Transmuter.TransmuteMenu.is_open() or ControlsMenu.is_open() or JournalMenu.is_open() or LoreStone.LorePage.is_open()):
 			return  # the perk choice owns the pause until a card is picked
 		var uic = get_node_or_null("/root/UIController")
 		if uic and uic.options_overlay and uic.options_overlay.visible:

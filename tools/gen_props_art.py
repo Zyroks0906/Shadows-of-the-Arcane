@@ -397,3 +397,36 @@ big = mp.resize((MW * 10, MH * 10), Image.NEAREST)
 bg = Image.new('RGBA', big.size, (34, 26, 40, 255)); bg.alpha_composite(big)
 bg.save(os.path.join(os.environ.get('TEMP', OUT), 'merchant_preview.png'))
 print('merchant ok')
+
+# --- Lore tablet (scripts/world/lore_stone.gd), 16 x 20 -------------------------------------
+# A leaning stone slab on a small plinth, its face cut with lines of old script. The game
+# lights a rune at the top while it still holds a page the player has not read.
+lt = _img(16, 20); p = lt.load()
+for y in range(20):
+    for x in range(16):
+        if y >= 17:                                  # plinth
+            if 1 <= x <= 14:
+                p[x, y] = O if (y == 19 or x in (1, 14)) else (ST_L if y == 17 else ST_M)
+            continue
+        if y < 2 and not (4 <= x <= 11):
+            continue
+        if y < 1 and not (5 <= x <= 10):
+            continue
+        if not (2 <= x <= 13) and y >= 2:
+            continue
+        edge = x in (2, 13) or y == 0 or (y == 1 and x in (4, 11)) or (y < 2 and x in (5, 10) and y == 0)
+        p[x, y] = O if edge else (ST_L if x <= 4 else (ST_D if x >= 11 else ST_M))
+for x in range(5, 11):
+    p[x, 1] = ST_H
+# Lines of script cut into the face.
+for y in (7, 9, 11, 13, 15):
+    for x in range(4, 12):
+        if (x * 3 + y) % 5 != 0:
+            p[x, y] = RUNE_D
+# The rune socket at the top (lit by the game).
+for (x, y) in [(7, 3), (8, 3), (7, 4), (8, 4), (7, 5), (8, 5)]:
+    p[x, y] = RUNE_D
+for (x, y) in [(2, 16), (3, 16), (12, 16), (13, 16)]:
+    p[x, y] = MOSS
+_save(lt, 'lore_stone.png')
+print('lore stone ok')

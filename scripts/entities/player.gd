@@ -1112,7 +1112,7 @@ func _spawn_blood_vfx() -> void:
 func interact() -> void:
 	if _is_interacting or interactables_in_range.is_empty(): return
 	# Already inside an interaction window: F must not reach the object again.
-	if FortuneShrine.FortuneMenu.is_open() or Transmuter.TransmuteMenu.is_open() or Merchant.MerchantMenu.is_open(): return
+	if FortuneShrine.FortuneMenu.is_open() or Transmuter.TransmuteMenu.is_open() or Merchant.MerchantMenu.is_open() or LoreStone.LorePage.is_open(): return
 	_is_interacting = true
 
 	var closest = null
