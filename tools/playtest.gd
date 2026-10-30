@@ -726,13 +726,17 @@ func _plates_session() -> void:
 func _victory_session() -> void:
 	GameManager.current_map = GameManager.MAPS[0]
 	# In game it is a whole scene; under this Node2D a CanvasLayer gives it the screen size.
-	var holder := CanvasLayer.new()
-	add_child(holder)
-	var v: Node = load("res://scenes/ui/VictoryScreen.tscn").instantiate()
-	holder.add_child(v)
-	await _wait(3.5)
-	await _shot("victory")
-	holder.queue_free()
+	GameManager.start_run(204292)
+	for cls in ["cleric", "knight", "archer"]:
+		GameManager.set_selected_class(CLASSES[cls])
+		var holder := CanvasLayer.new()
+		add_child(holder)
+		var v: Node = load("res://scenes/ui/VictoryScreen.tscn").instantiate()
+		holder.add_child(v)
+		await _wait(3.5)
+		await _shot("victory_%s" % cls)
+		holder.queue_free()
+		await _wait(0.2)
 
 # A walk through every level: spawn, then each interactable spot (chests, passages, puzzles,
 # exits) and each boss, one frame per place, for a visual check of the whole game.

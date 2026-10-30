@@ -279,7 +279,7 @@ grow_vertical = 2
 
 [node name="VBoxLayout" type="VBoxContainer" parent="ContentPanel/ContentCenter" unique_id=296605906]
 layout_mode = 2
-theme_override_constants/separation = 40
+theme_override_constants/separation = 18
 
 [node name="Title" type="Label" parent="ContentPanel/ContentCenter/VBoxLayout" unique_id=1281194881]
 layout_mode = 2
@@ -295,7 +295,7 @@ color = Color(1, 0.75, 0.15, 0.7)
 
 [node name="StatsContainer" type="VBoxContainer" parent="ContentPanel/ContentCenter/VBoxLayout" unique_id=1287343213]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 8
 
 [node name="LevelLabel" type="Label" parent="ContentPanel/ContentCenter/VBoxLayout/StatsContainer" unique_id=1646827813]
 layout_mode = 2
@@ -310,16 +310,16 @@ label_settings = SubResource("LabelSettings_stat")
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="ContentPanel/ContentCenter/VBoxLayout" unique_id=1755394857]
-custom_minimum_size = Vector2(0, 20)
+custom_minimum_size = Vector2(0, 0)
 layout_mode = 2
 
 [node name="ButtonsGroup" type="VBoxContainer" parent="ContentPanel/ContentCenter/VBoxLayout" unique_id=1833814676]
 layout_mode = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = 12
 alignment = 1
 
 [node name="ContinueButton" type="Button" parent="ContentPanel/ContentCenter/VBoxLayout/ButtonsGroup" unique_id=2147135088]
-custom_minimum_size = Vector2(280, 80)
+custom_minimum_size = Vector2(280, 56)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_pressed")
@@ -340,7 +340,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="MenuButton" type="Button" parent="ContentPanel/ContentCenter/VBoxLayout/ButtonsGroup" unique_id=1806373920]
-custom_minimum_size = Vector2(280, 80)
+custom_minimum_size = Vector2(280, 56)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_pressed")
