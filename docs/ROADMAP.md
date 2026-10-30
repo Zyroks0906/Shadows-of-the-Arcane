@@ -12,12 +12,14 @@ la fase 1.
       (`scripts/world/tutorial_stone.gd`, `playtest tutorial`).
 
 ## Fase 2 — Reliquias y mercader
-- [ ] ~20 reliquias con efecto real (rebote de proyectiles, estela de hielo al esquivar, golpe
-      crítico cada 10, curar al matar élites, reacciones que encadenan…). Iconos en el HUD.
-- [ ] 4–6 sinergias escondidas entre reliquias.
-- [ ] Origen: cofre sellado, jefe y mercader.
+- [x] 12 reliquias con efecto real (`scripts/global/relics.gd`): Ascua, Colmillo de lobo, Anillo de
+      tormenta, Marca del cazador, Última resistencia, Cañón de cristal, Piedra de sangre, Cáliz rojo,
+      Dado trucado, Corazón de piedra, Talones de escarcha, Pluma de fénix. Iconos en el HUD con descripción.
+- [x] 4 sinergias escondidas: Plasma, Depredador alfa, Festín sanguíneo, Glaciar.
+- [x] Origen: todos los jefes, cofres sellados (35 %) y el mercader ("Curio").
+- [ ] Más reliquias (rebote de proyectiles, estela al esquivar…) y elegir entre 2 al matar un jefe.
 - [x] Mercader en cada nivel: pociones y una perk al azar, precios por nivel (`scripts/world/merchant.gd`).
-- [ ] Mercader: añadir reliquia al azar y "cambiar las mejoras ofrecidas" cuando existan las reliquias.
+- [ ] Mercader: "cambiar las mejoras ofrecidas" (reroll).
 
 ## Fase 3 — Enemigos y élites
 - [ ] Arquetipos: Escudero (bloqueo frontal), Invocador (llama esqueletos y huye), Embestidor

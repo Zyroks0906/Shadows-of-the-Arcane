@@ -67,6 +67,7 @@ func _ready() -> void:
 			"merchant": await _merchant_session()
 			"stride": await _stride_session()
 			"pickups": await _pickups_session()
+			"relics": await _relics_session()
 			"decor_check": await _decor_check_session()
 			"bounds": await _bounds_session()
 			"tutorial": await _tutorial_session()
@@ -1507,6 +1508,78 @@ func _vault_exit_session() -> void:
 	player.interact()
 	await _wait(1.4)
 	_bot_say("after climbing: %s (near the hall stairs %s: %s)" % [player.global_position, down.global_position, player.global_position.distance_to(down.global_position) < 60.0])
+	await _unload()
+
+# Relics: each hook measured, the HUD row and a synergy banner.
+func _relics_session() -> void:
+	await _load_level("res://scenes/levels/level_2.tscn", "knight")
+	await _wait(0.5)
+	var foes: Array = get_tree().get_nodes_in_group("enemies").filter(func(e): return e is Enemy and not (e is BossBase))
+	for e in foes:
+		e.set_physics_process(false)
+	var e: Enemy = foes[0]
+	e.max_health = 100000
+	e.current_health = 100000
+	e.resistance = 0
+	# No relics: a 10 hit deals 10.
+	var h0 := e.current_health
+	e.take_elemental_hit(10, ElementalSystem.Element.NONE, player)
+	_bot_say("no relics: hit 10 -> %d" % (h0 - e.current_health))
+	Progression.relics = ["wolf_fang"]
+	Relics.reset()
+	var dealt := []
+	for i in 8:
+		h0 = e.current_health
+		e.take_elemental_hit(10, ElementalSystem.Element.NONE, player)
+		dealt.append(h0 - e.current_health)
+	_bot_say("wolf fang, 8 hits of 10: %s" % [dealt])
+	Progression.relics = ["glass_cannon"]
+	h0 = e.current_health
+	e.take_elemental_hit(10, ElementalSystem.Element.NONE, player)
+	var hp0 := player.current_health
+	player._invulnerable_until_ms = 0
+	player.receive_damage(20)
+	_bot_say("glass cannon: deals %d, takes %d of 20" % [h0 - e.current_health, hp0 - player.current_health])
+	Progression.relics = ["stone_heart"]
+	Relics.reset()
+	hp0 = player.current_health
+	player._invulnerable_until_ms = 0
+	player.receive_damage(20)
+	var first := hp0 - player.current_health
+	player._invulnerable_until_ms = 0
+	player.receive_damage(20)
+	_bot_say("stone heart: first hit takes %d, second %d" % [first, hp0 - first - player.current_health])
+	Progression.relics = ["phoenix_feather"]
+	player._invulnerable_until_ms = 0
+	player.receive_damage(99999)
+	_bot_say("phoenix: alive=%s hp %d/%d, feather left=%s" % [player.is_alive, player.current_health, player.max_health, Relics.has("phoenix_feather")])
+	Progression.relics = ["bloodstone", "loaded_die"]
+	player.current_health = 50
+	var coins := GameManager.total_coins
+	var k: Enemy = foes[1]
+	k.take_elemental_hit(99999, ElementalSystem.Element.NONE, player)
+	await _wait(0.2)
+	_bot_say("bloodstone + die on a kill: hp 50 -> %d, coins +%d" % [player.current_health, GameManager.total_coins - coins])
+	Progression.relics = ["frost_heels"]
+	var f: Enemy = foes[2]
+	f.set_physics_process(true)
+	f.global_position = player.global_position + Vector2(16, 0)
+	player._dodge_ready_ms = 0
+	player._try_dodge(Vector2.LEFT)
+	await _wait(0.1)
+	_bot_say("frost heels: foe beside the dodge frozen=%s" % f.is_frozen)
+	# The HUD row and the banners: two relics, then the one that completes a synergy.
+	Progression.relics = []
+	Progression.relics_changed.emit()
+	Relics.grant("ember_heart")
+	Relics.grant("bloodstone")
+	await _wait(0.4)
+	Relics.grant("storm_ring")
+	await _wait(0.6)
+	await _shot("relics_banner")
+	await _wait(3.0)
+	await _shot("relics_synergy")
+	_bot_say("owned %s, plasma=%s" % [Progression.relics, Relics.has_synergy("plasma")])
 	await _unload()
 
 # No pickup (coin, potion, key) may sit in a wall or past the edge of the floor.

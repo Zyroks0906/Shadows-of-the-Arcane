@@ -4,6 +4,8 @@
 
 ## Feedback del usuario tras jugar (28-10, tarde). Marca [x] lo que se termine.
 ### Bugs
+- [x] Reliquias (fase 2): `Relics` + `RelicBar`; ganchos en Enemy.take_elemental_hit/die y Player.receive_damage/_try_dodge. `playtest relics` mide cada una.
+- [x] Objetos en muros: `collectible.gd` coloca cualquier objeto en suelo libre al aparecer y al caer (`_free_spot`). `playtest pickups` lanza 60 monedas contra muros por nivel: 0 fuera.
 - [x] Puerta del Gólem (nivel 1): solo baja con el jugador dos casillas dentro de la sala (`GOLEM_ROOM`) y el Gólem en combate; si el jugador acaba fuera con las rejas bajadas, se suben. `playtest golem_gate`. También `BreakablePot.is_pot` ya no consulta celdas vacías (300 errores por carga).
 - [x] Personajes que "patinaban": el ciclo de andar se reproducía a fps fijos (el caballero recorría ~115 px por zancada). `StrideSync` (scripts/entities/stride_sync.gd, en jugador y enemigos) ajusta la velocidad de la animación a la velocidad real: una zancada = 2,2 alturas del cuerpo (~30 px). `playtest stride`.
 - [x] Tragaperras: probabilidades y premios nuevos (tabla en la cabecera de fortune_shrine.gd). Antes 59 % de tiradas sin nada y 1 % de jackpot; ahora ~1 de cada 5 es trío, 3 % jackpot, 56 % gana algo. Premios nuevos: 3 lunas (perk a elegir), 2 estrellas (perk al azar), 2 pociones, x2 y x5.
