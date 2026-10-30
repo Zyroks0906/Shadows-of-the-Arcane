@@ -892,7 +892,32 @@ func _add_zones(parent: Node2D) -> void:
 func _light_tex() -> GradientTexture2D:
 	return LevelAmbience.light_texture()
 
+# Props that are often nudged by hand in the editor. Each remembers where the builder put
+# it ("built_at"); if the saved scene has it somewhere else, someone moved it on purpose and
+# a rebuild keeps that spot instead of undoing it.
+const HAND_PLACED := ["Merchant", "FortuneShrine", "Transmuter"]
+
+func _keep_hand_placed(root: Node, path: String) -> void:
+	var old: Node = null
+	if ResourceLoader.exists(path):
+		var packed := load(path) as PackedScene
+		if packed:
+			old = packed.instantiate()
+	for n in HAND_PLACED:
+		var now := root.get_node_or_null("Props/" + n) as Node2D
+		if not now:
+			continue
+		var built := now.position
+		now.set_meta("built_at", built)
+		var before := old.get_node_or_null("Props/" + n) as Node2D if old else null
+		if before and before.position != before.get_meta("built_at", before.position):
+			now.position = before.position
+			print("  kept the hand-placed ", n, " at ", before.position, " (built at ", built, ")")
+	if old:
+		old.free()
+
 func _save(root: Node, path: String) -> void:
+	_keep_hand_placed(root, path)
 	_own(root, root)
 	var packed := PackedScene.new()
 	var err := packed.pack(root)
