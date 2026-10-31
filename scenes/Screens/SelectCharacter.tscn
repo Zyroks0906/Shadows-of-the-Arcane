@@ -12,6 +12,7 @@
 [ext_resource type="SpriteFrames" uid="uid://chusrjioahjtn" path="res://assets/sprites/sprite_frames/mage.tres" id="10_ub0sm"]
 [ext_resource type="SpriteFrames" uid="uid://iwrju2rykkiq" path="res://assets/sprites/sprite_frames/cleric.tres" id="11_6ltoi"]
 [ext_resource type="SpriteFrames" uid="uid://lrwugrt1aopw" path="res://assets/sprites/sprite_frames/gladiator.tres" id="12_30c4p"]
+[ext_resource type="Script" uid="uid://bjte5b4b1loan" path="res://scripts/Screens/SelectCharacter/back_to_menu.gd" id="990_back"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q643g"]
 atlas = ExtResource("2_imblf")
@@ -359,3 +360,6 @@ position = Vector2(-11.295654, -44.75171)
 scale = Vector2(3.2002878, 2.8998113)
 sprite_frames = ExtResource("12_30c4p")
 animation = &"Idle"
+
+[node name="BackToMenu" type="Node" parent="."]
+script = ExtResource("990_back")
