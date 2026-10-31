@@ -76,6 +76,8 @@ func _ready() -> void:
 			"wallprops": await _wallprops_session()
 			"chamber": await _chamber_session()
 			"secrets": await _secrets_session()
+			"tutorial_variants": await _tutorial_variants_session()
+			"charselect": await _charselect_session()
 			"decor_check": await _decor_check_session()
 			"bounds": await _bounds_session()
 			"tutorial": await _tutorial_session()
@@ -1521,6 +1523,39 @@ func _vault_exit_session() -> void:
 	await _wait(1.4)
 	_bot_say("after climbing: %s (near the hall stairs %s: %s)" % [player.global_position, down.global_position, player.global_position.distance_to(down.global_position) < 60.0])
 	await _unload()
+
+# The character screen with its way back to the title screen.
+func _charselect_session() -> void:
+	var cs: Node = load("res://scenes/Screens/SelectCharacter.tscn").instantiate()
+	add_child(cs)
+	await _wait(1.0)
+	await _shot("charselect")
+	_bot_say("back button: %s" % [cs.find_children("*", "Button", true, false).map(func(b): return b.text)])
+	cs.queue_free()
+
+# The tutorial stones in every generated layout of map 1 (entrance room, below the start):
+# all five on clear floor, the first one reachable.
+func _tutorial_variants_session() -> void:
+	TutorialStone.force_show = true
+	for path in GameManager.variants(0):
+		if path == GameManager.MAPS[0]:
+			continue
+		await _load_level(path, "knight")
+		await _wait(0.5)
+		var stones := level.find_children("*", "StaticBody2D", true, false).filter(func(n): return n is TutorialStone)
+		var ground := MapBounds.ground_layers(player)
+		var bad := 0
+		for st in stones:
+			if not MapBounds.on_map(ground, st.global_position):
+				bad += 1
+		_bot_say("%s: %d tutorial stones, %d off the floor" % [path.get_file(), stones.size(), bad])
+		if path.ends_with("_s2.tscn"):
+			await _wait(3.0)
+			await _shot("tutorial_variant")
+		for st in stones:
+			st.queue_free()
+		await _unload()
+	TutorialStone.force_show = false
 
 # A secret room and the story: the cracked wall blocks until three blows bring it down, the
 # tablet behind it gives a page to the Journal (a test journal, never the player's).
