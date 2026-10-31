@@ -38,7 +38,7 @@ func level_index(path: String) -> int:
 	return -1
 
 # A new run: a seed (given, to replay or share one, or rolled) and a layout per level drawn
-# from it. The very first run (tutorial not done yet) always opens on the hand-made level 1.
+# from it. Any layout of map 1 can open a run: the tutorial stones stand in every one.
 func start_run(seed: int = 0) -> void:
 	run_seed = seed if seed > 0 else randi_range(100000, 999999)
 	var rng := RandomNumberGenerator.new()
@@ -46,10 +46,7 @@ func start_run(seed: int = 0) -> void:
 	run_maps = []
 	for i in MAPS.size():
 		var v := variants(i)
-		var pick := rng.randi_range(0, v.size() - 1)
-		if i == 0 and not TutorialStone.finished():
-			pick = 0
-		run_maps.append(v[pick])
+		run_maps.append(v[rng.randi_range(0, v.size() - 1)])
 
 func map_for(level: int) -> String:
 	if run_maps.size() != MAPS.size():
