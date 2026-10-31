@@ -28,7 +28,11 @@ var _t := 0.0
 var _glow := 0.0
 var _flash := 0.0
 
+static var force_show := false # tests: show the stones whatever the player's save says
+
 static func finished() -> bool:
+	if force_show:
+		return false
 	var cfg := ConfigFile.new()
 	return cfg.load(SAVE) == OK and cfg.get_value("tutorial", "done", false)
 

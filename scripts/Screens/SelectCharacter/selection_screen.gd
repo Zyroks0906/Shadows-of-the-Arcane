@@ -63,7 +63,10 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 			match _sprite.name:
 				"Confirm":
 					if selected_character:
-						DifficultyPopup.ask(func(): SceneManager.load_scene(GameData.current_level_path))
+						# A new run: its own seed, so map 1 is any of its layouts, not always the same.
+						DifficultyPopup.ask(func():
+							GameManager.start_run()
+							SceneManager.load_scene(GameManager.map_for(0)))
 					else:
 						popup.popup_centered()
 				"SelectChamber":

@@ -32,6 +32,14 @@ func spawn_player() -> void:
 			animated_sprite.sprite_frames = RunCycles.with_run(load(sprite_frames_path), c_name) # + its RUN cycle
 
 
+		# The tutorial: the hand-made map 1 places its own stones; its generated layouts get
+		# them in their entrance room, in a row below the start (the room's free middle rows).
+		var map_root: Node = owner if owner else get_tree().current_scene
+		if not TutorialStone.finished() and GameManager.level_index(map_root.scene_file_path) == 0 				and map_root.scene_file_path != GameManager.MAPS[0] and not map_root.find_child("TutorialPath", true, false):
+			var spots := []
+			for k in TutorialStone.LESSONS.size():
+				spots.append(spawn_pos + Vector2(20 + k * 24, 32))
+			TutorialStone.TutorialPath.build.call_deferred(map_root, spots)
 		if c_name.to_lower() == "necromancer":
 			player.set_meta("hovers", true) # its robe floats: no steps to keep in time
 		add_child(player)
